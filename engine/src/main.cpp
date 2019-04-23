@@ -6,6 +6,7 @@
 #define INCLUDE_SDL
 
 #include "SDL_include.h"
+#include "InputManager.h"
 
 using namespace std;
 
@@ -100,13 +101,9 @@ int main()
     glUseProgram(shaderProgram);
     SDL_Event event;
 
-    while (true)
+    while (not InputManager::GetInstance().QuitRequested())
     {
-        if(SDL_PollEvent(&event))
-            if (event.type == SDL_QUIT)
-                break;
-
-        //TODO Add the input manager
+        InputManager::GetInstance().Update();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
