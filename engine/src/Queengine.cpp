@@ -54,9 +54,21 @@ Queengine::~Queengine() {
 }
 
 Queengine *Queengine::GetInstance() {
-  if (this->instance == nullptr) {
-    this->instance = new Queengine();
+  if (instance == nullptr) {
+    instance = new Queengine();
   }
 
-  return this->instance;
+  return instance;
+}
+
+void Queengine::Run(unsigned int VAO) {
+  while (not InputManager::GetInstance().QuitRequested()) {
+    InputManager::GetInstance().Update();
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    SDL_GL_SwapWindow(this->window);
+  }
 }

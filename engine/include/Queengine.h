@@ -13,7 +13,8 @@ class Queengine {
 
   public:
     ~Queengine();
-    Queengine *GetInstance(); 
+    void Run(unsigned int VAO);
+    static Queengine *GetInstance(); 
 };
 
 #endif
