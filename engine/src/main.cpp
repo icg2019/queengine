@@ -35,8 +35,10 @@ int main()
       SDL_WINDOWPOS_CENTERED,         // initial y position
       0,                            // width, in pixels
       0,                            // height, in pixels
-      (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN)           // flag
+      (SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)           // flag
     );
+
+    SDL_MaximizeWindow(window);
 
     if (window == nullptr) {
       // In the case that the window could not be made...
@@ -52,9 +54,9 @@ int main()
         return -1;
     }
 
-    int screenWidth = 1000;
-    int screenHeight = 800;
-    glViewport(0, 0, screenWidth, screenHeight);
+    SDL_DisplayMode currentDisplay;
+    SDL_GetCurrentDisplayMode(0, &currentDisplay);
+    glViewport(0, 0, currentDisplay.w, currentDisplay.h);
 
     float  vertices[] = {
         -0.5f, 0.0f,
