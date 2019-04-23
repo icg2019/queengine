@@ -1,5 +1,7 @@
 dir = build/
 
+all: build
+
 clean:
 	@echo "Cleaning...	"
 	@rm -rf $(dir)
@@ -7,9 +9,11 @@ clean:
 build:
 	@echo "Building..."
 	@mkdir $(dir) && \
-	 cd $(dir) && \
-	 cmake .. && \
-	 make
+	@cd $(dir) && \
+	@cmake ..
+
+compile:
+	@make
 
 run:
 	@cd $(dir) && \
