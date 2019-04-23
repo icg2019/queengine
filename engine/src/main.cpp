@@ -12,11 +12,9 @@ using namespace std;
 
 unsigned int compile_shader(string filename, bool is_fragment);
 
-int main()
-{
-
+int main() {
     //Initialize SDL
-    if(SDL_Init(SDL_INIT_VIDEO)){
+    if(SDL_Init(SDL_INIT_VIDEO)) {
       cout << "SDL_Init failed: %s\n" << SDL_GetError();
       exit(-1);
     }
@@ -27,8 +25,6 @@ int main()
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
     //criando a janela
-    //TODO Make the window fullscreen
-
     SDL_Window* window = SDL_CreateWindow(
       "Queengine",                  // window title
       SDL_WINDOWPOS_CENTERED,         // initial x position
@@ -48,8 +44,7 @@ int main()
 
     SDL_GLContext context = SDL_GL_CreateContext(window);
 
-    if (!gladLoadGLLoader(SDL_GL_GetProcAddress))
-    {
+    if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -58,7 +53,7 @@ int main()
     SDL_GetCurrentDisplayMode(0, &currentDisplay);
     glViewport(0, 0, currentDisplay.w, currentDisplay.h);
 
-    float  vertices[] = {
+    float vertices[] = {
         -0.5f, 0.0f,
         0.0f, 0.75f,
         0.5f, 0.0f
@@ -103,8 +98,7 @@ int main()
     glUseProgram(shaderProgram);
     SDL_Event event;
 
-    while (not InputManager::GetInstance().QuitRequested())
-    {
+    while (not InputManager::GetInstance().QuitRequested()) {
         InputManager::GetInstance().Update();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -124,36 +118,35 @@ int main()
     return 0;
 }
 
-unsigned int compile_shader(string filename, bool is_fragment)
-{
+unsigned int compile_shader(string filename, bool is_fragment) {
     filename = "engine/assets/shaders/" + filename;
     ifstream file(filename);
     string src = "";
 
-    if(file.is_open())
-    {
+    if(file.is_open()) {
         string line;
         while(getline(file, line)) src += line + "\n";
         file.close();
-    }
-    else
-    {
+    } else {
         cout << "Could not load file [" << filename << "]" << endl;
         return 0;
     }
     
     unsigned int shader;
-    if (is_fragment) shader = glCreateShader(GL_FRAGMENT_SHADER);
-    else shader = glCreateShader(GL_VERTEX_SHADER);
-    
+    if (is_fragment) {
+        shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    } else {
+        shader = glCreateShader(GL_VERTEX_SHADER);
+    }
+
     const char * src_str = src.c_str();
     glShaderSource(shader, 1, &src_str, NULL);
     glCompileShader(shader);
     
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
+    if (!success) {
         char log[512];
         glGetShaderInfoLog(shader, 512, NULL, log);
         cout << "Shader [" << filename << "] compilation failed: " << log << endl;
