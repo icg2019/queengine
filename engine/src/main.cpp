@@ -9,8 +9,11 @@
 
 using namespace std;
 
+unsigned int compile_shader(string filename, bool is_fragment);
+
 int main()
 {
+
     //Initialize SDL
     if(SDL_Init(SDL_INIT_VIDEO)){
       cout << "SDL_Init failed: %s\n" << SDL_GetError();
@@ -29,9 +32,9 @@ int main()
       "Queengine",                  // window title
       SDL_WINDOWPOS_CENTERED,         // initial x position
       SDL_WINDOWPOS_CENTERED,         // initial y position
-      1000,                            // width, in pixels
-      800,                            // height, in pixels
-      SDL_WINDOW_OPENGL           // flag
+      0,                            // width, in pixels
+      0,                            // height, in pixels
+      (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN)           // flag
     );
 
     if (window == nullptr) {
@@ -40,9 +43,7 @@ int main()
       exit(-1);
     }
 
-    SDL_GLContext context = SDL_GL_CreateContext(window); 
-   
-    
+    SDL_GLContext context = SDL_GL_CreateContext(window);
 
     if (!gladLoadGLLoader(SDL_GL_GetProcAddress))
     {
@@ -50,70 +51,69 @@ int main()
         return -1;
     }
 
-    int screenWidth = 800;
-    int screenHeight = 600;
+    int screenWidth = 1000;
+    int screenHeight = 800;
     glViewport(0, 0, screenWidth, screenHeight);
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-    float vertices[] = {
-        //   x      y     z        r     g     b        s     t
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 1.0f};
+    float  vertices[] = {
+        -0.5f, 0.0f,
+        0.0f, 0.75f,
+        0.5f, 0.0f
+    };
 
     unsigned int indices[] = {
-        0, 1, 2};
+        0, 1, 2
+    };
 
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
+    unsigned int v_shader = compile_shader("vertex.glsl", false);
+    unsigned int f_shader = compile_shader("fragment.glsl", true);
 
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
+    unsigned int  shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram,v_shader);
+    glAttachShader(shaderProgram,f_shader);
+    glLinkProgram(shaderProgram);
+    glUseProgram(shaderProgram);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     unsigned int VAO;
+    unsigned int  VBO, EBO;
+    glGenBuffers(1,&VBO);
+    glGenBuffers(1,&EBO);
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof vertices, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (void*)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    glEnable(GL_DEPTH_TEST);
+    glUseProgram(shaderProgram);
+    SDL_Event event;
 
     while (true)
     {
-        // processInput(window);
+        if(SDL_PollEvent(&event))
+            if (event.type == SDL_QUIT)
+                break;
 
         //TODO Add the input manager
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        glBindVertexArray(0);
-
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
         SDL_GL_SwapWindow(window);
     }
-
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
@@ -123,4 +123,43 @@ int main()
     SDL_Quit();
 
     return 0;
+}
+
+unsigned int compile_shader(string filename, bool is_fragment)
+{
+    filename = "engine/assets/shaders/" + filename;
+    ifstream file(filename);
+    string src = "";
+
+    if(file.is_open())
+    {
+        string line;
+        while(getline(file, line)) src += line + "\n";
+        file.close();
+    }
+    else
+    {
+        cout << "Could not load file [" << filename << "]" << endl;
+        return 0;
+    }
+    
+    unsigned int shader;
+    if (is_fragment) shader = glCreateShader(GL_FRAGMENT_SHADER);
+    else shader = glCreateShader(GL_VERTEX_SHADER);
+    
+    const char * src_str = src.c_str();
+    glShaderSource(shader, 1, &src_str, NULL);
+    glCompileShader(shader);
+    
+    int success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        char log[512];
+        glGetShaderInfoLog(shader, 512, NULL, log);
+        cout << "Shader [" << filename << "] compilation failed: " << log << endl;
+        return 0;
+    }
+    
+    return shader;
 }
