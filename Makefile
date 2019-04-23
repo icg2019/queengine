@@ -9,11 +9,12 @@ clean:
 build:
 	@echo "Building..."
 	@mkdir $(dir) && \
-	@cd $(dir) && \
-	@cmake ..
+	cd $(dir) && \
+	cmake ..
 
-compile:
-	@make
+comp:
+	cd $(dir) && \
+	make
 
 run:
 	@cd $(dir) && \
