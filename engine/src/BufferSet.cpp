@@ -1,9 +1,9 @@
 #include "BufferSet.hpp"
-#include <glad/glad.h>
 
 
-BufferSet::BufferSet() {
+BufferSet::BufferSet(GLuint program) {
     glGenVertexArrays(1, &this->id);
+    this->program = program;
 }
 
 BufferSet::~BufferSet() {}
@@ -13,20 +13,22 @@ BufferSet::~BufferSet() {}
     Join multiples buffers into a VertexObjectArray
     under the hood.
 */
-void BufferSet::add(int type) {
+void BufferSet::add(int type, void* data) {
     glBindVertexArray(this->id);
 
     switch(type){
-        case ARRAY_BUFFER:
-            GLuint ARRAY;
-            glGenBuffers(1, &ARRAY);
-            this->buffers.push_back(ARRAY);
-        break;
+        case VERTEX_BUFFER:
+            BufferInterface b = VertexBuffer();
+            b.bind(data);
+            break;
+        case ELEMENT_BUFFER:
+            BufferInterface b = ElementBuffer();
+            b.bind(data);
+            break;
         case TEXTURE_BUFFER:
-            GLuint TEX;
-            glGenTextures(1, &TEX);
-            this->buffers.push_back(TEX);
-        break;
+            BufferInterface b = TextureBuffer();            
+            b.bind(data);
+            break;
         default: break;
     }
 
