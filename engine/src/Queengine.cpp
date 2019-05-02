@@ -42,9 +42,8 @@ Queengine::Queengine() {
       exit(-1);
     }
 
-    SDL_DisplayMode currentDisplay;
-    SDL_GetCurrentDisplayMode(0, &currentDisplay);
-    glViewport(0, 0, currentDisplay.w, currentDisplay.h);
+    SDL_GetCurrentDisplayMode(0, &(this->currentDisplay));
+    glViewport(0, 0, this->currentDisplay.w, this->currentDisplay.h);
 }
 
 Queengine::~Queengine() {

@@ -47,6 +47,9 @@ class InputManager {
     bool MouseRelease(int button);
     bool QuitRequested();
     static InputManager& GetInstance();
+
+    float GetMouseXCanvasCoord();
+    float GetMouseYCanvasCoord();
 };
 
 #endif

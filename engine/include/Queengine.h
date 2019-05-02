@@ -12,9 +12,10 @@ class Queengine {
     Queengine();
 
   public:
+    SDL_DisplayMode currentDisplay;
     ~Queengine();
     void Run(unsigned int VAO);
-    static Queengine *GetInstance(); 
+    static Queengine *GetInstance();
 };
 
 #endif
