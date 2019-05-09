@@ -41,9 +41,15 @@ Queengine::Queengine() {
       std::cout << "Failed to initialize GLAD" << std::endl;
       exit(-1);
     }
-
+    
     SDL_GetCurrentDisplayMode(0, &(this->currentDisplay));
-    glViewport(0, 0, this->currentDisplay.w, this->currentDisplay.h);
+    int glWidth = this->currentDisplay.w / 2;
+    int glHeight = this->currentDisplay.h; 
+    int glXPosition = (this->currentDisplay.w - glWidth) / 2;
+    int glYPosition = 0;
+    // glViewport(this->currentDisplay.w/4, 0, this->currentDisplay.w/2.0, this->currentDisplay.h);
+    this->glCanvasArea = Rect(glXPosition, glYPosition, glWidth, glHeight);
+    glViewport(this->glCanvasArea.x, this->glCanvasArea.y, this->glCanvasArea.w, this->glCanvasArea.h);
 }
 
 Queengine::~Queengine() {
@@ -70,4 +76,8 @@ void Queengine::Run(unsigned int VAO) {
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
     SDL_GL_SwapWindow(this->window);
   }
+}
+
+Rect Queengine::GetGLCanvasArea() {
+  return this->glCanvasArea;
 }

@@ -37,7 +37,10 @@ int main(int argc, char **argv) {
   glLinkProgram(shaderProgram);
   glUseProgram(shaderProgram);
 
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  Rect glArea = Queengine::GetInstance()->GetGLCanvasArea();
+  glScissor(glArea.x, glArea.y, glArea.w, glArea.h);
+  glEnable(GL_SCISSOR_TEST);
+  glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 
   unsigned int VAO;
   unsigned int  VBO, EBO;
