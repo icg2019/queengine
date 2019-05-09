@@ -13,25 +13,11 @@ BufferSet::~BufferSet() {}
     Join multiples buffers into a VertexObjectArray
     under the hood.
 */
-void BufferSet::add(int type, void* data) {
+template <class T>
+void BufferSet::add(T *data) {
     glBindVertexArray(this->id);
-
-    switch(type){
-        case VERTEX_BUFFER:
-            BufferInterface b = VertexBuffer();
-            b.bind(data);
-            break;
-        case ELEMENT_BUFFER:
-            BufferInterface b = ElementBuffer();
-            b.bind(data);
-            break;
-        case TEXTURE_BUFFER:
-            BufferInterface b = TextureBuffer();            
-            b.bind(data);
-            break;
-        default: break;
-    }
-
+    Buffer b = Buffer();
+    b.bind(data);
+    this->buffers.push_back(b);
     glBindVertexArray(0);
-
 }
