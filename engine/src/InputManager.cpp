@@ -39,9 +39,6 @@ void InputManager::Update() {
   this->updateCounter++;
   SDL_GetMouseState(&(this->mouseX), &(this->mouseY));
 
-  this->mouseX += mouseX;
-  this->mouseY += mouseY;
-
  	while (SDL_PollEvent(&event)) {
     if(not event.key.repeat) {
  		  if(event.type == SDL_KEYDOWN) {
@@ -65,6 +62,7 @@ void InputManager::Update() {
       }
     }
  	}
+
 }
 
 bool InputManager::IsKeyDown(int key) {
@@ -90,7 +88,6 @@ bool InputManager::IsMouseDown(int button) {
 }
 
 int InputManager::GetMouseX() {
-  printf("X: %d\n\n", mouseX);
   return mouseX;
 }
 
@@ -98,15 +95,10 @@ float InputManager::GetMouseXCanvasCoord(){
   int screenWidth = Queengine::GetInstance()->currentDisplay.w;
   float canvasCoord = this->GetMouseX()*2/((float) screenWidth);
   float normalizedCoord = canvasCoord - 2/2;
-
-  printf("XCanvas: %lf \n", normalizedCoord);
-  printf("ScreenWidth: %d\n\n", screenWidth);
-
   return normalizedCoord;
 }
 
 int InputManager::GetMouseY() {
-  printf("Y: %d\n\n", mouseY);
   return mouseY;
 }
 
@@ -114,9 +106,6 @@ float InputManager::GetMouseYCanvasCoord(){
   int screenHeight = Queengine::GetInstance()->currentDisplay.h;
   float canvasCoord = this->GetMouseY()*2/((float) screenHeight);
   float normalizedCoord = canvasCoord - 2/2;
-  
-  printf("YCanvas: %lf \n", normalizedCoord*-1);
-  printf("ScreenWidth: %d\n\n", screenWidth);
   return normalizedCoord*-1;
 }
 
