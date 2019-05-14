@@ -1,13 +1,17 @@
 #include <iostream>
-#include <glad/glad.h>
 #include <fstream>
 #include <cmath>
+
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
 
 #define INCLUDE_SDL
 
 #include "SDL_include.h"
 #include "InputManager.h"
 #include "Queengine.h"
+#include "BufferSet.hpp"
 
 using namespace std;
 
@@ -18,20 +22,32 @@ int main(int argc, char **argv) {
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
-  float vertices[] = {
-    -0.5f, 0.0f,
-    0.0f, 0.75f,
-    0.5f, 0.0f
-  };
+  glm::vec3* data = (glm::vec3*) malloc(3*sizeof(glm::vec3));
+  
+  data[0] = glm::vec3(-0.5f, 0.0f, 0.0f);
+  data[1] = glm::vec3(0.0f, 0.75f, 0.0f);
+  data[2] = glm::vec3(0.5f, 0.0f, 0.0f);
 
-  unsigned int indices[] = {
-    0, 1, 2
-  };
+  // float vertices[] = {
+  //   -0.5f, 0.0f,
+  //   0.0f, 0.75f,
+  //   0.5f, 0.0f
+  // };
 
-  unsigned int v_shader = CompileShader("vertex.glsl", false);
-  unsigned int f_shader = CompileShader("fragment.glsl", true);
+  glm::vec1* indices = (glm::vec1*) malloc(3*sizeof(glm::vec1));
 
-  unsigned int  shaderProgram = glCreateProgram();
+  indices[0] = glm::vec1(0.0f);
+  indices[0] = glm::vec1(1.0f);
+  indices[0] = glm::vec1(2.0f);
+
+  // unsigned int indices[] = {
+  //   0, 1, 2
+  // };
+
+  GLuint v_shader = CompileShader("vertex.glsl", false);
+  GLuint f_shader = CompileShader("fragment.glsl", true);
+
+  GLuint shaderProgram = glCreateProgram();
   glAttachShader(shaderProgram,v_shader);
   glAttachShader(shaderProgram,f_shader);
   glLinkProgram(shaderProgram);
@@ -39,31 +55,38 @@ int main(int argc, char **argv) {
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  unsigned int VAO;
-  unsigned int  VBO, EBO;
-  glGenBuffers(1,&VBO);
-  glGenBuffers(1,&EBO);
-  glGenVertexArrays(1, &VAO);
+  BufferSet bufferSet = BufferSet(shaderProgram);
+  
+  bufferSet.add(data, "aPos");
+  bufferSet.add(indices, "");
 
-  glBindVertexArray(VAO);
+  // unsigned int VAO;
+  // unsigned int  VBO, EBO;
+  // glGenBuffers(1,&VBO);
+  // glGenBuffers(1,&EBO);
+  // glGenVertexArrays(1, &VAO);
 
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (void*)0);
-  glEnableVertexAttribArray(0);
+  // glBindVertexArray(VAO);
 
-  glBindVertexArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  // glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
+
+  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
+
+  // glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (void*)0);
+  // glEnableVertexAttribArray(0);
+
+  // glBindVertexArray(0);
+  // glBindBuffer(GL_ARRAY_BUFFER, 0);
+  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 
-  engine->Run(VAO);
+  engine->Run(bufferSet.getId());
 
   return 0;
 }

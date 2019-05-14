@@ -2,6 +2,12 @@
 #define QUEENGINE_H
 #define INCLUDE_SDL
 
+#include <iostream>
+#include <glad/glad.h>
+#include <fstream>
+#include <cmath>
+
+#include "InputManager.h"
 #include "SDL_include.h"
 
 class Queengine {
@@ -13,7 +19,7 @@ class Queengine {
 
   public:
     ~Queengine();
-    void Run(unsigned int VAO);
+    void Run(GLuint VAO);
     static Queengine *GetInstance(); 
 };
 

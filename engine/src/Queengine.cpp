@@ -1,10 +1,4 @@
 #include "Queengine.h"
-#include <iostream>
-#include <glad/glad.h>
-#include <fstream>
-#include <cmath>
-
-#include "InputManager.h"
 
 Queengine *Queengine::instance = nullptr;
 
@@ -61,7 +55,7 @@ Queengine *Queengine::GetInstance() {
   return instance;
 }
 
-void Queengine::Run(unsigned int VAO) {
+void Queengine::Run(GLuint VAO) {
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
 

@@ -18,6 +18,8 @@ class BufferSet {
         BufferSet(GLuint program);
         ~BufferSet();
         
-        template <class T>
-        void add(T *data);
+        GLuint getId();
+        void add(glm::vec3* data, std::string shader_var);
+        void add(glm::vec2* data, std::string shader_var);
+        void add(glm::vec1* data, std::string shader_var);
 };
