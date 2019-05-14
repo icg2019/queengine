@@ -9,8 +9,9 @@ private:
 	std::string m_FilePath;
 	unsigned char* m_LocalBuffer;
 	int m_Width, m_Height, m_BPP;
+	int wrapping, filtering;
 public:
-	TextureLoader(const std::string& path);
+	TextureLoader(const std::string& path, int wrapping = 0, int filtering = 0);
 	~TextureLoader();
 
 	void Bind(unsigned int slot = 0) const;
