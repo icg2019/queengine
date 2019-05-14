@@ -8,6 +8,7 @@ using namespace std;
 
 int main(){
 	IOS;
+	Rectangle r = Rectangle(1,2);
 
 
 

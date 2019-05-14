@@ -5,8 +5,7 @@
 
 class Rectangle {
     public:
-        Primitive primitive;
-        Rectangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d);
-        Rectangle(glm::vec2 a, glm::vec2 b);
-        Rectangle(double width, double height);
+        Rectangle(glm::vec2, glm::vec2, glm::vec2, glm::vec2);
+        Rectangle(glm::vec2, glm::vec2);
+        Rectangle(double, double);
 };
