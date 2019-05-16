@@ -1,4 +1,4 @@
-#include "primitive.hpp"
+#include "../include/primitive.hpp"
 
 Primitive::Primitive(std::vector<glm::vec3> coordinates,
 		std::vector<glm::vec2> textureCoordinates,

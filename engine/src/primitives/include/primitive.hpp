@@ -18,6 +18,7 @@ class Primitive {
             std::vector<glm::vec1> indices
         );
         Primitive();
+		void printTexture();
 };
 
 #endif

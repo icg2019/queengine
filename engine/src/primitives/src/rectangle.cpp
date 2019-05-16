@@ -1,4 +1,4 @@
-#include "rectangle.hpp"
+#include "../include/rectangle.hpp"
 
 Rectangle::Rectangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d){
 	std::cout << "Create rectangle vertices" << std::endl;
@@ -26,6 +26,8 @@ Rectangle::Rectangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d){
 		glm::vec1(3.0),
 		glm::vec1(0.0)
 	};
+
+	this->primitive = Primitive(coordinates, textureCoordinates, texturePath, indices);
 }
 
 Rectangle::Rectangle(glm::vec2 a, glm::vec2 b){
