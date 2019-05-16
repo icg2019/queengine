@@ -1,6 +1,6 @@
 #include "../include/triangle.hpp"
 
-Triangle::Triangle(){
+Triangle::Triangle() {
 	std::clog << "Create triangle with success\n";
 
 	std::vector<glm::vec3> coordinates = {
@@ -66,4 +66,36 @@ bool Triangle::is_a_valid_triangle(double a, double b, double c){
 bool Triangle::is_a_valid_triangle(glm::vec3 a, glm::vec3 b, glm::vec3 c){
 	double det = abs((a[0]*b[1] + a[1]*c[0] + b[0]*c[1]) - (c[0]*b[1] + c[1]*a[0] + b[0]*a[1]));
 	return det != 0;
+}
+
+std::vector<glm::vec3> Triangle::getCoordinates(){
+	return this->primitive.coordinates;
+}
+
+void Triangle::setCoordinates(std::vector<glm::vec3> coordinates){
+	this->primitive.coordinates = coordinates;
+}
+
+std::vector<glm::vec2> Triangle::getTextureCoordinates(){
+	return this->primitive.textureCoordinates;
+}
+
+void Triangle::getTextureCoordinates(std::vector<glm::vec2> textureCoordinates){
+	this->primitive.textureCoordinates = textureCoordinates;
+}
+
+std::string Triangle::getTexturePath(){
+	return this->primitive.texturePath;
+}
+
+void Triangle::setTexturePath(std::string texturePath){
+	this->primitive.texturePath = texturePath;
+}
+
+std::vector<glm::vec1> Triangle::getIndices(){
+	return this->primitive.indices;
+}
+
+void Triangle::setIndices(std::vector<glm::vec1> indices){
+	this->primitive.indices = indices;
 }
