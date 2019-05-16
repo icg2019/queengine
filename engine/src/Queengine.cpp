@@ -56,6 +56,7 @@ Queengine *Queengine::GetInstance() {
 }
 
 void Queengine::Run(GLuint VAO) {
+  DEBUG("Queengine Run: VAO " << VAO);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
 

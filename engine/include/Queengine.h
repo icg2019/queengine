@@ -10,6 +10,8 @@
 #include "InputManager.h"
 #include "SDL_include.h"
 
+#include "log.h"
+
 class Queengine {
   private:
     SDL_GLContext context;

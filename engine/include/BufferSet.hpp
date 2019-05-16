@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 
 #include "Buffer.hpp"
+ 
+#include "log.h"
 
 class BufferSet {
 
@@ -19,7 +21,21 @@ class BufferSet {
         ~BufferSet();
         
         GLuint getId();
-        void add(glm::vec3* data, std::string shader_var);
-        void add(glm::vec2* data, std::string shader_var);
-        void add(glm::vec1* data, std::string shader_var);
+        template <class T>
+        void add(T* data, std::string shader_var){
+            glBindVertexArray(this->id);
+
+            for(Buffer b : this->buffers){
+                GLint location = glGetAttribLocation(this->program, shader_var.c_str());
+                //glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec3)*3, (void *) 0);
+                glEnableVertexAttribArray(location);
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
+            }
+
+            Buffer buffer = Buffer();
+            buffer.bind(this->program, shader_var, data);
+            this->buffers.push_back(buffer);
+            
+            glBindVertexArray(0);
+        }
 };

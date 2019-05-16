@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <string>
 
+#include "log.h"
+
 class Buffer {
     public:
         GLuint id;
@@ -11,5 +13,5 @@ class Buffer {
         ~Buffer();
         void bind(GLuint program, std::string shader_var, glm::vec3 *data);
         void bind(GLuint program, std::string shader_var, glm::vec2 *data);
-        void bind(GLuint program, std::string shader_var, glm::vec1 *data);
+        void bind(GLuint program, std::string shader_var, unsigned int *data);
 };

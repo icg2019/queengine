@@ -13,6 +13,8 @@
 #include "Queengine.h"
 #include "BufferSet.hpp"
 
+#include "../include/log.h"
+
 using namespace std;
 
 unsigned int CompileShader(string filename, bool is_fragment);
@@ -34,15 +36,16 @@ int main(int argc, char **argv) {
   //   0.5f, 0.0f
   // };
 
-  glm::vec1* indices = (glm::vec1*) malloc(3*sizeof(glm::vec1));
+  // glm::vec1* indices = (glm::vec1*) malloc(4*sizeof(glm::vec1));
 
-  indices[0] = glm::vec1(0.0f);
-  indices[0] = glm::vec1(1.0f);
-  indices[0] = glm::vec1(2.0f);
+  // indices[0] = glm::vec1(0);
+  // indices[1] = glm::vec1(1);
+  // indices[2] = glm::vec1(2);
+  // indices[3] = glm::vec1(0);
 
-  // unsigned int indices[] = {
-  //   0, 1, 2
-  // };
+  unsigned int indices[] = {
+    0, 1, 2, 0
+  };
 
   GLuint v_shader = CompileShader("vertex.glsl", false);
   GLuint f_shader = CompileShader("fragment.glsl", true);
@@ -55,34 +58,39 @@ int main(int argc, char **argv) {
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+  INFO("Initializing VAO");
   BufferSet bufferSet = BufferSet(shaderProgram);
-  
+  // glBindVertexArray(bufferSet.getId());
+
+  // GLuint VAO;
+  // glGenVertexArrays(1, &VAO);
+  // glBindVertexArray(VAO);
+
+  // GLuint IND;
+  // glGenBuffers(1, &IND);
+
+  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IND);
+  // glBufferData(GL_ELEMENT_ARRAY_BUFFER, (sizeof (float))*4, indices, GL_STATIC_DRAW);
+ 
+  // GLuint VERTEX;
+  // glGenBuffers(1, &VERTEX);
+  // glBindBuffer(GL_ARRAY_BUFFER, VERTEX);
+
+  // glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*3, data, GL_STATIC_DRAW);
+  // GLint location = glGetAttribLocation(shaderProgram, "aPos");
+  // glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *) 0);
+
+  // glEnableVertexAttribArray(location);
+
+  //glBindBuffer(GL_ARRAY_BUFFER, 0);
   bufferSet.add(data, "aPos");
   bufferSet.add(indices, "");
 
-  // unsigned int VAO;
-  // unsigned int  VBO, EBO;
-  // glGenBuffers(1,&VBO);
-  // glGenBuffers(1,&EBO);
-  // glGenVertexArrays(1, &VAO);
-
-
-
-  // glBindVertexArray(VAO);
-
-  // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  // glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
-
-  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
-
-  // glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (void*)0);
-  // glEnableVertexAttribArray(0);
+    
 
   // glBindVertexArray(0);
-  // glBindBuffer(GL_ARRAY_BUFFER, 0);
-  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+  //glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 
