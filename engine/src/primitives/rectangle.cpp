@@ -23,8 +23,9 @@ Rectangle::Rectangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d){
 		glm::vec1(0.0),
 		glm::vec1(1.0),
 		glm::vec1(2.0),
+		glm::vec1(0.0),
 		glm::vec1(3.0),
-		glm::vec1(0.0)
+		glm::vec1(2.0)
 	};
 }
 
@@ -51,8 +52,9 @@ Rectangle::Rectangle(glm::vec2 a, glm::vec2 b){
 		glm::vec1(0.0),
 		glm::vec1(1.0),
 		glm::vec1(2.0),
+		glm::vec1(0.0),
 		glm::vec1(3.0),
-		glm::vec1(0.0)
+		glm::vec1(2.0)
 	};
 
 	this->primitive = Primitive(coordinates, textureCoordinates, texturePath, indices);
@@ -81,8 +83,9 @@ Rectangle::Rectangle(double width, double height){
 		glm::vec1(0.0),
 		glm::vec1(1.0),
 		glm::vec1(2.0),
+		glm::vec1(0.0),
 		glm::vec1(3.0),
-		glm::vec1(0.0)
+		glm::vec1(2.0)
 	};
 	
 	this->primitive = Primitive(coordinates, textureCoordinates, texturePath, indices);
