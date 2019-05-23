@@ -12,9 +12,11 @@ Rectangle::Rectangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d){
 	
 	std::vector<glm::vec2> textureCoordinates = {
 		glm::vec2(0.0, 0.0),
+		glm::vec2(0.0, 1.0),
+		glm::vec2(1.0, 1.0),
 		glm::vec2(0.0, 0.0),
-		glm::vec2(0.0, 0.0),
-		glm::vec2(0.0, 0.0)
+		glm::vec2(1.0, 0.0),
+		glm::vec2(1.0, 1.0)
 	};
 	
 	std::string texturePath = "./texture.png";
@@ -43,9 +45,11 @@ Rectangle::Rectangle(glm::vec2 a, glm::vec2 b){
 	
 	std::vector<glm::vec2> textureCoordinates = {
 		glm::vec2(0.0, 0.0),
+		glm::vec2(0.0, 1.0),
+		glm::vec2(1.0, 1.0),
 		glm::vec2(0.0, 0.0),
-		glm::vec2(0.0, 0.0),
-		glm::vec2(0.0, 0.0)
+		glm::vec2(1.0, 0.0),
+		glm::vec2(1.0, 1.0)
 	};
 
 	std::string texturePath = "./texture.png";
@@ -74,9 +78,11 @@ Rectangle::Rectangle(double width, double height){
 	
 	std::vector<glm::vec2> textureCoordinates = {
 		glm::vec2(0.0, 0.0),
+		glm::vec2(0.0, 1.0),
+		glm::vec2(1.0, 1.0),
 		glm::vec2(0.0, 0.0),
-		glm::vec2(0.0, 0.0),
-		glm::vec2(0.0, 0.0)
+		glm::vec2(1.0, 0.0),
+		glm::vec2(1.0, 1.0)
 	};
 	
 	std::string texturePath = "./texture.png";
