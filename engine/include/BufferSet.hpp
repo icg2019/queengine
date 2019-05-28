@@ -27,7 +27,6 @@ class BufferSet {
 
             for(Buffer b : this->buffers){
                 GLint location = glGetAttribLocation(this->program, shader_var.c_str());
-                //glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec3)*3, (void *) 0);
                 glEnableVertexAttribArray(location);
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
