@@ -30,6 +30,8 @@ int main(int argc, char **argv) {
   data->push_back(glm::vec3(0.0f, 0.75f, 0.0f));
   data->push_back(glm::vec3(0.5f, 0.0f, 0.0f));
 
+  DEBUG("Vector size: " << data->data()->length());
+
   // float vertices[] = {
   //   -0.5f, 0.0f,
   //   0.0f, 0.75f,

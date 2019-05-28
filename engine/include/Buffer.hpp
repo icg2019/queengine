@@ -21,16 +21,26 @@ class Buffer {
                 glBindBuffer(GL_ARRAY_BUFFER, this->id);
                 glBufferData(GL_ARRAY_BUFFER, sizeof(T) * data->size(), data->data(), GL_STATIC_DRAW);
 
+                //DEBUG("Size: " << size(static_cast<T *>(data->data()))); 
+
                 GLint location = glGetAttribLocation(program, shader_var.c_str());
-                glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(T), (void *) 0);
+                glVertexAttribPointer(location, size(data->data()), GL_FLOAT, GL_FALSE, sizeof(T), (void *) 0);
                 glEnableVertexAttribArray(location);
             }
             else {
                 glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->id);
                 glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(T) * data->size(), data->data(), GL_STATIC_DRAW);
             }
-
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
 
+    private:
+        template <class T>
+        int size(T *data)
+        {
+            if(typeid(T) == typeid(glm::vec3)) return 3;
+            else if(typeid(T) == typeid(glm::vec2)) return 2;
+            else if(typeid(T) == typeid(glm::vec1)) return 1;
+            else return -1;
+        }
 };
