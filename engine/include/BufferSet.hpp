@@ -22,7 +22,7 @@ class BufferSet {
         
         GLuint getId();
         template <class T>
-        void add(T* data, std::string shader_var){
+        void add(std::vector<T> *data, std::string shader_var){
             glBindVertexArray(this->id);
 
             for(Buffer b : this->buffers){

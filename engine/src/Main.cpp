@@ -24,11 +24,11 @@ int main(int argc, char **argv) {
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
-  glm::vec3* data = (glm::vec3*) malloc(3*sizeof(glm::vec3));
-  
-  data[0] = glm::vec3(-0.5f, 0.0f, 0.0f);
-  data[1] = glm::vec3(0.0f, 0.75f, 0.0f);
-  data[2] = glm::vec3(0.5f, 0.0f, 0.0f);
+  std::vector<glm::vec3> *data = new std::vector<glm::vec3>(); 
+
+  data->push_back(glm::vec3(-0.5f, 0.0f, 0.0f));
+  data->push_back(glm::vec3(0.0f, 0.75f, 0.0f));
+  data->push_back(glm::vec3(0.5f, 0.0f, 0.0f));
 
   // float vertices[] = {
   //   -0.5f, 0.0f,
@@ -43,9 +43,12 @@ int main(int argc, char **argv) {
   // indices[2] = glm::vec1(2);
   // indices[3] = glm::vec1(0);
 
-  unsigned int indices[] = {
-    0, 1, 2, 0
-  };
+  std::vector<unsigned int> *indices = new std::vector<unsigned int>();
+
+  indices->push_back(0);
+  indices->push_back(1);
+  indices->push_back(2);
+  indices->push_back(3);
 
   GLuint v_shader = CompileShader("vertex.glsl", false);
   GLuint f_shader = CompileShader("fragment.glsl", true);
