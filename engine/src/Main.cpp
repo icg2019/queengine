@@ -22,6 +22,142 @@ unsigned int CompileShader(string filename, bool is_fragment);
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
+  float rotation[16] = {
+      0.5, 0, -0.9, 0,
+      0, 1.0, 0, 0,
+      0.9, 0, 0.5, 0,
+      0, 0, 0, 1
+  };
+
+  float rotation2[16] = {
+      1, 0, 0, 0,
+      0, 0.5, -0.9, 0,
+      0, 0.9, 0.5, 0,
+      0, 0, 0, 1
+  };
+  float light[3] = {1, 0, 0};
+  float vertices[108] = {
+    -0.5f, -0.5f, 0,
+    -0.5, 0.5f, 0,
+    0.5f, -0.5f, 0,
+
+    -0.5f, 0.5f, 0,
+    0.5f, 0.5f, 0,
+    0.5f, -0.5f, 0,
+
+    -0.5f, -0.5f, -1,
+    -0.5, 0.5f, -1,
+    0.5f, -0.5f, -1,
+
+    -0.5f, 0.5f, -1,
+    0.5f, 0.5f, -1,
+    0.5f, -0.5f, -1,
+
+    0.5f, -0.5f, 0,
+    0.5f, 0.5f, 0,
+    0.5f, -0.5f, -1,
+
+    0.5f, 0.5f, 0,
+    0.5f, 0.5f, -1,
+    0.5f, -0.5f, -1,
+
+    -0.5f, -0.5f, 0,
+    -0.5f, 0.5f, 0,
+    -0.5f, -0.5f, -1,
+
+    -0.5f, 0.5f, 0,
+    -0.5f, 0.5f, -1,
+    -0.5f, -0.5f, -1,
+
+    -0.5f, 0.5f, 0,
+    -0.5f, 0.5f, -1,
+    0.5f, 0.5f, -1,
+
+    -0.5f, 0.5f, 0,
+    0.5f, 0.5f, -1,
+    0.5f, 0.5f, 0,
+
+    -0.5f, -0.5f, 0,
+    -0.5f, -0.5f, -1,
+    0.5f, -0.5f, -1,
+
+    -0.5f, -0.5f, 0,
+    0.5f, -0.5f, -1,
+    0.5f, -0.5f, 0
+  };
+
+  // std::vector<unsigned int> *indices = new std::vector<unsigned int>();
+  unsigned int indices[36] = {
+    0, 1, 2,
+    3, 4, 5,
+    6, 7, 8,
+    9, 10, 11,
+    12, 13, 14,
+    15, 16, 17,
+    18, 19, 20,
+    21, 22, 23,
+    24, 25, 26,
+    27, 28, 29,
+    30, 31, 32,
+    33, 34, 35
+  };
+
+  std::vector<unsigned int> *p_indices = new std::vector<unsigned int>(indices, indices + sizeof(indices) / sizeof(unsigned int));
+  std::vector<float> *p_vertices = new std::vector<float>(vertices, vertices + sizeof(vertices) / sizeof(float));
+  std::vector<float> *p_light = new std::vector<float>(light, light + sizeof(light) / sizeof(float));
+  std::vector<float> *p_rotation = new std::vector<float>(rotation, rotation + sizeof(rotation) / sizeof(float));
+  std::vector<float> *p_rotation2 = new std::vector<float>(rotation2, rotation2 + sizeof(rotation2) / sizeof(float));
+
+  float normal[108] = {
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+
+    0, 0, 1,
+    0, 0, 1,
+    0, 0, 1,
+
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+
+    0, 0, -1,
+    0, 0, -1,
+    0, 0, -1,
+
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+
+    1, 0, 0,
+    1, 0, 0,
+    1, 0, 0,
+
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+
+    -1, 0, 0,
+    -1, 0, 0,
+    -1, 0, 0,
+
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+
+    0, 1, 0,
+    0, 1, 0,
+    0, 1, 0,
+
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0,
+
+    0, -1, 0,
+    0, -1, 0,
+    0, -1, 0
+  };
+
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
   std::vector<glm::vec3> *data = new std::vector<glm::vec3>(); 
@@ -31,26 +167,6 @@ int main(int argc, char **argv) {
   data->push_back(glm::vec3(0.5f, 0.0f, 0.0f));
 
   DEBUG("Vector size: " << data->data()->length());
-
-  // float vertices[] = {
-  //   -0.5f, 0.0f,
-  //   0.0f, 0.75f,
-  //   0.5f, 0.0f
-  // };
-
-  // glm::vec1* indices = (glm::vec1*) malloc(4*sizeof(glm::vec1));
-
-  // indices[0] = glm::vec1(0);
-  // indices[1] = glm::vec1(1);
-  // indices[2] = glm::vec1(2);
-  // indices[3] = glm::vec1(0);
-
-  std::vector<unsigned int> *indices = new std::vector<unsigned int>();
-
-  indices->push_back(0);
-  indices->push_back(1);
-  indices->push_back(2);
-  indices->push_back(3);
 
   GLuint v_shader = CompileShader("vertex.glsl", false);
   GLuint f_shader = CompileShader("fragment.glsl", true);
@@ -65,37 +181,25 @@ int main(int argc, char **argv) {
 
   INFO("Initializing VAO");
   BufferSet bufferSet = BufferSet(shaderProgram);
-  // glBindVertexArray(bufferSet.getId());
-
-  // GLuint VAO;
-  // glGenVertexArrays(1, &VAO);
-  // glBindVertexArray(VAO);
-
-  // GLuint IND;
-  // glGenBuffers(1, &IND);
-
-  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IND);
-  // glBufferData(GL_ELEMENT_ARRAY_BUFFER, (sizeof (float))*4, indices, GL_STATIC_DRAW);
- 
-  // GLuint VERTEX;
-  // glGenBuffers(1, &VERTEX);
-  // glBindBuffer(GL_ARRAY_BUFFER, VERTEX);
-
-  // glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*3, data, GL_STATIC_DRAW);
-  // GLint location = glGetAttribLocation(shaderProgram, "aPos");
-  // glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *) 0);
-
-  // glEnableVertexAttribArray(location);
-
-  //glBindBuffer(GL_ARRAY_BUFFER, 0);
+  
   bufferSet.add(data, "aPos");
-  bufferSet.add(indices, "");
+  bufferSet.add(p_indices, "");
 
-    
+  bufferSet.add_uniform(p_rotation, "rotation");
+  bufferSet.add_uniform(p_rotation2, "rotation2");
 
-  // glBindVertexArray(0);
-  //glBindBuffer(GL_ARRAY_BUFFER, 0);
-  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      
+  // Material
+  bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.ambient");
+  bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.diffuse");
+  bufferSet.add_uniform(new glm::vec3({0.5f,0.5f,0.5f}),"material.specular");
+  bufferSet.add_uniform(new glm::vec1({32.0f}),"material.shininess");
+
+  bufferSet.add_uniform(new glm::vec3({1.2f, 1.0f, 2.0f}), "light.position");
+  bufferSet.add_uniform(new glm::vec3({0.2f, 0.2f, 0.2f}), "light.ambient");
+  bufferSet.add_uniform(new glm::vec3({0.5f, 0.5f, 0.5f}), "light.diffuse");
+  bufferSet.add_uniform(new glm::vec3({1.0f, 1.0f, 1.0f}), "light.specular");
+
   glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 

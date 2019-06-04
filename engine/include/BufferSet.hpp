@@ -37,4 +37,18 @@ class BufferSet {
             
             glBindVertexArray(0);
         }
+        void add_uniform(std::vector<float> *data, std::string shader_var){
+            GLuint transformLoc = glGetUniformLocation(this->program, shader_var.c_str());
+            glUniformMatrix4fv(transformLoc, 1, GL_FALSE, data->data());
+        }
+        
+        void add_uniform(glm::vec3 *data, std::string shader_var){
+            GLuint transformLoc = glGetUniformLocation(this->program, shader_var.c_str());
+            glUniform3f(transformLoc, data->x, data->y, data->z); 
+        }
+
+        void add_uniform(glm::vec1 *data, std::string shader_var){
+            GLuint transformLoc = glGetUniformLocation(this->program, shader_var.c_str());
+            glUniform1f(transformLoc, data->x);
+        }
 };

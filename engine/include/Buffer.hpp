@@ -21,8 +21,6 @@ class Buffer {
                 glBindBuffer(GL_ARRAY_BUFFER, this->id);
                 glBufferData(GL_ARRAY_BUFFER, sizeof(T) * data->size(), data->data(), GL_STATIC_DRAW);
 
-                //DEBUG("Size: " << size(static_cast<T *>(data->data()))); 
-
                 GLint location = glGetAttribLocation(program, shader_var.c_str());
                 glVertexAttribPointer(location, size(data->data()), GL_FLOAT, GL_FALSE, sizeof(T), (void *) 0);
                 glEnableVertexAttribArray(location);
