@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 #define INCLUDE_SDL
 
@@ -22,74 +24,85 @@ unsigned int CompileShader(string filename, bool is_fragment);
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
-  float rotation[16] = {
+  std::vector<float> rotation = {
       0.5, 0, -0.9, 0,
       0, 1.0, 0, 0,
       0.9, 0, 0.5, 0,
       0, 0, 0, 1
   };
 
-  float rotation2[16] = {
+  std::vector<float> rotation2 = {
       1, 0, 0, 0,
       0, 0.5, -0.9, 0,
       0, 0.9, 0.5, 0,
       0, 0, 0, 1
   };
 
-  float light[3] = {1, 0, 0};
+  std::vector<float> light = {1, 0, 0};
 
   std::vector<float> vertices = {
-    -0.5f, -0.5f, 0,
-    -0.5, 0.5f, 0,
-    0.5f, -0.5f, 0,
+      // Top
 
-    -0.5f, 0.5f, 0,
-    0.5f, 0.5f, 0,
-    0.5f, -0.5f, 0,
+      -0.5f, -0.5f, 0,
+      -0.5, 0.5f, 0,
+      0.5f, -0.5f, 0,
 
-    -0.5f, -0.5f, -1,
-    -0.5, 0.5f, -1,
-    0.5f, -0.5f, -1,
+      -0.5f, 0.5f, 0,
+      0.5f, 0.5f, 0,
+      0.5f, -0.5f, 0,
 
-    -0.5f, 0.5f, -1,
-    0.5f, 0.5f, -1,
-    0.5f, -0.5f, -1,
+    // Bottom
 
-    0.5f, -0.5f, 0,
-    0.5f, 0.5f, 0,
-    0.5f, -0.5f, -1,
+      -0.5f, -0.5f, -1,
+      -0.5, 0.5f, -1,
+      0.5f, -0.5f, -1,
 
-    0.5f, 0.5f, 0,
-    0.5f, 0.5f, -1,
-    0.5f, -0.5f, -1,
+      -0.5f, 0.5f, -1,
+      0.5f, 0.5f, -1,
+      0.5f, -0.5f, -1,
 
-    -0.5f, -0.5f, 0,
-    -0.5f, 0.5f, 0,
-    -0.5f, -0.5f, -1,
+    // Front
 
-    -0.5f, 0.5f, 0,
-    -0.5f, 0.5f, -1,
-    -0.5f, -0.5f, -1,
+      0.5f, -0.5f, 0,
+      0.5f, 0.5f, 0,
+      0.5f, -0.5f, -1,
 
-    -0.5f, 0.5f, 0,
-    -0.5f, 0.5f, -1,
-    0.5f, 0.5f, -1,
+      0.5f, 0.5f, 0,
+      0.5f, 0.5f, -1,
+      0.5f, -0.5f, -1,
 
-    -0.5f, 0.5f, 0,
-    0.5f, 0.5f, -1,
-    0.5f, 0.5f, 0,
+    // Back
 
-    -0.5f, -0.5f, 0,
-    -0.5f, -0.5f, -1,
-    0.5f, -0.5f, -1,
+      -0.5f, -0.5f, 0,
+      -0.5f, 0.5f, 0,
+      -0.5f, -0.5f, -1,
 
-    -0.5f, -0.5f, 0,
-    0.5f, -0.5f, -1,
-    0.5f, -0.5f, 0
+      -0.5f, 0.5f, 0,
+      -0.5f, 0.5f, -1,
+      -0.5f, -0.5f, -1,
+
+    // Left side
+
+      -0.5f, 0.5f, 0,
+      -0.5f, 0.5f, -1,
+      0.5f, 0.5f, -1,
+
+      -0.5f, 0.5f, 0,
+      0.5f, 0.5f, -1,
+      0.5f, 0.5f, 0,
+
+    // Right side
+
+      -0.5f, -0.5f, 0,
+      -0.5f, -0.5f, -1,
+      0.5f, -0.5f, -1,
+
+      -0.5f, -0.5f, 0,
+      0.5f, -0.5f, -1,
+      0.5f, -0.5f, 0
   };
 
-  // std::vector<unsigned int> *indices = new std::vector<unsigned int>();
-  unsigned int indices[36] = {
+  std::vector<unsigned int> indices = {
     0, 1, 2,
     3, 4, 5,
     6, 7, 8,
@@ -104,60 +117,58 @@ int main(int argc, char **argv) {
     33, 34, 35
   };
 
-  std::vector<unsigned int> *p_indices = new std::vector<unsigned int>(indices, indices + sizeof(indices) / sizeof(unsigned int));
-  std::vector<float> *p_light = new std::vector<float>(light, light + sizeof(light) / sizeof(float));
-  std::vector<float> *p_rotation = new std::vector<float>(rotation, rotation + sizeof(rotation) / sizeof(float));
-  std::vector<float> *p_rotation2 = new std::vector<float>(rotation2, rotation2 + sizeof(rotation2) / sizeof(float));
+  std::vector<float> tex_coords = {
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0,
 
-  std::vector<float> normal = {
-    0, 0, 1,
-    0, 0, 1,
-    0, 0, 1,
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0,
+    
 
-    0, 0, 1,
-    0, 0, 1,
-    0, 0, 1,
+    0.0f,0.0f,
+    0.0f, 1.0f,
+    1.0f, 0.0,
 
-    0, 0, -1,
-    0, 0, -1,
-    0, 0, -1,
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0,
+    
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0,
 
-    0, 0, -1,
-    0, 0, -1,
-    0, 0, -1,
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0,
+    
+    0.0,0.0,
+    0.0, 1.0,
+    1.0, 0.0,
 
-    1, 0, 0,
-    1, 0, 0,
-    1, 0, 0,
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0,
 
-    1, 0, 0,
-    1, 0, 0,
-    1, 0, 0,
+    0.0,0.0,
+    0.0, 1.0,
+    1.0, 0.0,
 
-    -1, 0, 0,
-    -1, 0, 0,
-    -1, 0, 0,
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0,
 
-    -1, 0, 0,
-    -1, 0, 0,
-    -1, 0, 0,
+    0.0,0.0,
+    0.0, 1.0,
+    1.0, 0.0,
 
-    0, 1, 0,
-    0, 1, 0,
-    0, 1, 0,
+    0.0f, 0.0,
+    0.0f, 1.0,
+    1.0f, 0.0
+   };
 
-    0, 1, 0,
-    0, 1, 0,
-    0, 1, 0,
 
-    0, -1, 0,
-    0, -1, 0,
-    0, -1, 0,
-
-    0, -1, 0,
-    0, -1, 0,
-    0, -1, 0
-  };
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
@@ -176,11 +187,45 @@ int main(int argc, char **argv) {
   BufferSet bufferSet = BufferSet(shaderProgram);
   
   bufferSet.add(vertices, "aPos", 3);
-  bufferSet.add(normal, "normal", 3);
-  bufferSet.add(p_indices);
+  bufferSet.add(&indices);
 
-  bufferSet.add_uniform(p_rotation, "rotation");
-  bufferSet.add_uniform(p_rotation2, "rotation2");
+  bufferSet.add(tex_coords,"tex_coords", 2);
+  // -----------------------------------------------------------------------------------------------------//
+  // Texture crap because we dont have a bind of textures
+
+  glBindVertexArray(bufferSet.getId());
+
+  for(Buffer b : bufferSet.buffers)
+  {
+      GLint location = glGetAttribLocation(bufferSet.program, b.shader_var.c_str());
+      glEnableVertexAttribArray(location);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
+
+  unsigned int TEX;
+  glGenTextures(1, &TEX);
+
+  stbi_set_flip_vertically_on_load(true); 
+  int width, height, nrChannels;
+  unsigned char *data = stbi_load("../texture.jpg", &width, &height, &nrChannels, 0); 
+  if (data)
+  {
+          glBindTexture(GL_TEXTURE_2D, TEX);
+          glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+          glGenerateMipmap(GL_TEXTURE_2D);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT ); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat 
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  }else{
+      std::cout << "Failed to load texture" << std::endl;
+  }   
+  stbi_image_free(data);
+
+  glBindVertexArray(0);
+  // -----------------------------------------------------------------------------------------------------//
+  bufferSet.add_uniform(&rotation, "rotation");
+  bufferSet.add_uniform(&rotation2, "rotation2");
       
   // Material
   bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.ambient");

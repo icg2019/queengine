@@ -12,13 +12,18 @@
 class Buffer {
     public:
         GLuint id;
+        std::string shader_var;
         Buffer();
 
         template <class T>
         void bind(GLuint program, std::string shader_var, std::vector<T> *data)
         {
+            this->shader_var = shader_var;
+
             if(typeid(T) != typeid(unsigned int)) {
+
                 glBindBuffer(GL_ARRAY_BUFFER, this->id);
+
                 glBufferData(GL_ARRAY_BUFFER, sizeof(T) * data->size(), data->data(), GL_STATIC_DRAW);
 
                 GLint location = glGetAttribLocation(program, shader_var.c_str());

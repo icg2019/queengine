@@ -1,20 +1,21 @@
-#pragma once
+// #pragma once
 
-#define STB_IMAGE_IMPLEMENTATION
+// #define STB_IMAGE_IMPLEMENTATION
+// #include <stb/stb_image.h>
 
-#include <glad/glad.h>
-#include <stb/stb_image.h>
-#include <string>
+// #include <glad/glad.h>
 
-class TextureBuffer {
-    private:
-        bool isActive;
-        GLuint id;
-    public:
-        TextureBuffer();
-        ~TextureBuffer();
-        void bind(std::string path);
+// #include <string>
 
-        void activate();
-        void deactivate();
-}; 
+// class TextureBuffer {
+//     private:
+//         bool isActive;
+//         GLuint id;
+//     public:
+//         TextureBuffer();
+//         ~TextureBuffer();
+//         void bind(std::string path);
+
+//         void activate();
+//         void deactivate();
+// }; 

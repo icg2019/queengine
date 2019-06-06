@@ -56,7 +56,8 @@ Queengine *Queengine::GetInstance() {
 }
 
 void Queengine::Run(GLuint VAO) {
-  DEBUG("Queengine Run: VAO " << VAO);
+  glEnable(GL_DEPTH_TEST);
+
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
 

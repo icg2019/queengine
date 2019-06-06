@@ -13,10 +13,10 @@ class BufferSet {
 
     private:
         GLuint id;
-        GLuint program;
-        std::vector<Buffer> buffers;
 
     public:
+        GLuint program;
+        std::vector<Buffer> buffers;
         BufferSet(GLuint program);
         ~BufferSet();
         
@@ -26,7 +26,7 @@ class BufferSet {
             glBindVertexArray(this->id);
 
             for(Buffer b : this->buffers){
-                GLint location = glGetAttribLocation(this->program, shader_var.c_str());
+                GLint location = glGetAttribLocation(this->program, b.shader_var.c_str());
                 glEnableVertexAttribArray(location);
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
             }
