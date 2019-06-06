@@ -35,8 +35,10 @@ int main(int argc, char **argv) {
       0, 0.9, 0.5, 0,
       0, 0, 0, 1
   };
+
   float light[3] = {1, 0, 0};
-  float vertices[108] = {
+
+  std::vector<float> vertices = {
     -0.5f, -0.5f, 0,
     -0.5, 0.5f, 0,
     0.5f, -0.5f, 0,
@@ -103,12 +105,11 @@ int main(int argc, char **argv) {
   };
 
   std::vector<unsigned int> *p_indices = new std::vector<unsigned int>(indices, indices + sizeof(indices) / sizeof(unsigned int));
-  std::vector<float> *p_vertices = new std::vector<float>(vertices, vertices + sizeof(vertices) / sizeof(float));
   std::vector<float> *p_light = new std::vector<float>(light, light + sizeof(light) / sizeof(float));
   std::vector<float> *p_rotation = new std::vector<float>(rotation, rotation + sizeof(rotation) / sizeof(float));
   std::vector<float> *p_rotation2 = new std::vector<float>(rotation2, rotation2 + sizeof(rotation2) / sizeof(float));
 
-  float normal[108] = {
+  std::vector<float> normal = {
     0, 0, 1,
     0, 0, 1,
     0, 0, 1,
@@ -160,14 +161,6 @@ int main(int argc, char **argv) {
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
-  std::vector<glm::vec3> *data = new std::vector<glm::vec3>(); 
-
-  data->push_back(glm::vec3(-0.5f, 0.0f, 0.0f));
-  data->push_back(glm::vec3(0.0f, 0.75f, 0.0f));
-  data->push_back(glm::vec3(0.5f, 0.0f, 0.0f));
-
-  DEBUG("Vector size: " << data->data()->length());
-
   GLuint v_shader = CompileShader("vertex.glsl", false);
   GLuint f_shader = CompileShader("fragment.glsl", true);
 
@@ -182,12 +175,12 @@ int main(int argc, char **argv) {
   INFO("Initializing VAO");
   BufferSet bufferSet = BufferSet(shaderProgram);
   
-  bufferSet.add(data, "aPos");
-  bufferSet.add(p_indices, "");
+  bufferSet.add(vertices, "aPos", 3);
+  bufferSet.add(normal, "normal", 3);
+  bufferSet.add(p_indices);
 
   bufferSet.add_uniform(p_rotation, "rotation");
   bufferSet.add_uniform(p_rotation2, "rotation2");
-
       
   // Material
   bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.ambient");
@@ -195,6 +188,7 @@ int main(int argc, char **argv) {
   bufferSet.add_uniform(new glm::vec3({0.5f,0.5f,0.5f}),"material.specular");
   bufferSet.add_uniform(new glm::vec1({32.0f}),"material.shininess");
 
+  // Light
   bufferSet.add_uniform(new glm::vec3({1.2f, 1.0f, 2.0f}), "light.position");
   bufferSet.add_uniform(new glm::vec3({0.2f, 0.2f, 0.2f}), "light.ambient");
   bufferSet.add_uniform(new glm::vec3({0.5f, 0.5f, 0.5f}), "light.diffuse");

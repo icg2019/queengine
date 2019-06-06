@@ -22,7 +22,7 @@ class BufferSet {
         
         GLuint getId();
         template <class T>
-        void add(std::vector<T> *data, std::string shader_var){
+        void add(std::vector<T> *data, std::string shader_var = ""){
             glBindVertexArray(this->id);
 
             for(Buffer b : this->buffers){
@@ -37,18 +37,12 @@ class BufferSet {
             
             glBindVertexArray(0);
         }
-        void add_uniform(std::vector<float> *data, std::string shader_var){
-            GLuint transformLoc = glGetUniformLocation(this->program, shader_var.c_str());
-            glUniformMatrix4fv(transformLoc, 1, GL_FALSE, data->data());
-        }
-        
-        void add_uniform(glm::vec3 *data, std::string shader_var){
-            GLuint transformLoc = glGetUniformLocation(this->program, shader_var.c_str());
-            glUniform3f(transformLoc, data->x, data->y, data->z); 
-        }
 
-        void add_uniform(glm::vec1 *data, std::string shader_var){
-            GLuint transformLoc = glGetUniformLocation(this->program, shader_var.c_str());
-            glUniform1f(transformLoc, data->x);
-        }
+        void add(std::vector<float> , std::string, int);
+
+        void add_uniform(std::vector<float> *data, std::string shader_var);
+        
+        void add_uniform(glm::vec3 *data, std::string shader_var);
+
+        void add_uniform(glm::vec1 *data, std::string shader_var);
 };

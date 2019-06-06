@@ -63,7 +63,7 @@ void Queengine::Run(GLuint VAO) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 108, GL_UNSIGNED_INT, 0);
     SDL_GL_SwapWindow(this->window);
   }
 }
