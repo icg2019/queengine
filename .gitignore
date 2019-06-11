@@ -1,0 +1,21 @@
+### CMake ###
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+build/
+glfw_config.h
+libs/**/Makefile
+
+### CMake Patch ###
+# External projects
+*-prefix/
+.DS_Store
+.vscode
+  
