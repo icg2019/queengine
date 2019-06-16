@@ -11,8 +11,6 @@
 
 using namespace std;
 
-unsigned int CompileShader(string filename, bool is_fragment);
-
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
@@ -28,14 +26,9 @@ int main(int argc, char **argv) {
     0, 1, 2
   };
 
-  unsigned int v_shader = CompileShader("vertex.glsl", false);
-  unsigned int f_shader = CompileShader("fragment.glsl", true);
-
-  unsigned int  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram,v_shader);
-  glAttachShader(shaderProgram,f_shader);
-  glLinkProgram(shaderProgram);
-  glUseProgram(shaderProgram);
+  Shader shader("engine/assets/shaders/vertex.glsl",
+                "engine/assets/shaders/fragment.glsl");
+  shader.Use();
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -60,47 +53,10 @@ int main(int argc, char **argv) {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  glUseProgram(shaderProgram);
+  shader.Use();
   // -------------------------------------------------------------------------------------------------- //
 
-  engine->Run(VAO);
+  engine->Run(VAO, &shader);
 
   return 0;
-}
-
-unsigned int CompileShader(string filename, bool is_fragment) {
-  filename = "engine/assets/shaders/" + filename;
-  ifstream file(filename);
-  string src = "";
-
-  if(file.is_open()) {
-    string line;
-    while(getline(file, line)) src += line + "\n";
-    file.close();
-  } else {
-    cout << "Could not load file [" << filename << "]" << endl;
-    return 0;
-  }
-
-  unsigned int shader;
-  if (is_fragment) {
-    shader = glCreateShader(GL_FRAGMENT_SHADER);
-  } else {
-    shader = glCreateShader(GL_VERTEX_SHADER);
-  }
-
-  const char * src_str = src.c_str();
-  glShaderSource(shader, 1, &src_str, NULL);
-  glCompileShader(shader);
-
-  int success;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    char log[512];
-    glGetShaderInfoLog(shader, 512, NULL, log);
-    cout << "Shader [" << filename << "] compilation failed: " << log << endl;
-    return 0;
-  }
-
-  return shader;
 }

@@ -3,6 +3,7 @@
 #define INCLUDE_SDL
 
 #include "SDL_include.h"
+#include "Shader.h"
 
 class Queengine {
   private:
@@ -13,8 +14,8 @@ class Queengine {
 
   public:
     ~Queengine();
-    void Run(unsigned int VAO);
-    static Queengine *GetInstance(); 
+    void Run(unsigned int VAO, Shader *shader);
+    static Queengine *GetInstance();
 };
 
 #endif

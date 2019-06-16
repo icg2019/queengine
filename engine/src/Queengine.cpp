@@ -61,14 +61,23 @@ Queengine *Queengine::GetInstance() {
   return instance;
 }
 
-void Queengine::Run(unsigned int VAO) {
+void BindUniforms(Shader *shader) {
+  float _resolution = 1.0;
+  shader->Set("iResolution", 1, &_resolution);
+  shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
+}
+
+void Queengine::Run(unsigned int VAO, Shader *shader) {
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
+
+    shader->Use();
+    BindUniforms(shader);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     SDL_GL_SwapWindow(this->window);
   }
 }
