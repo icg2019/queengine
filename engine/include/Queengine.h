@@ -16,7 +16,7 @@ class Queengine {
 
   public:
     ~Queengine();
-    void Run(unsigned int VAO, vector<Shader> shaders);
+    void Run(unsigned int VAO, vector<tuple<Shader, int>> shaders);
     static Queengine *GetInstance();
 };
 

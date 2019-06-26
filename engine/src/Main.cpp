@@ -29,24 +29,32 @@ int main(int argc, char **argv) {
   };
   unsigned int NUMBER_OBJECTS = 2;
 
-  vector<Shader> shaders;
+  vector<tuple<Shader, int>> shaders;
 
   Shader base_object_shader("engine/assets/shaders/vertex.glsl",
                             "engine/assets/shaders/base_fragment.glsl");
   base_object_shader.active = true;
+  tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL); 
 
   Shader first_object_shader("engine/assets/shaders/vertex.glsl",
                 "engine/assets/shaders/fragment.glsl");
   first_object_shader.active = false;
-  // Shader second_object_shader("engine/assets/shaders/vertex0.glsl",
-  //               "engine/assets/shaders/fragment0.glsl");
-  // Shader third_object_shader("engine/assets/shaders/vertex1.glsl",
-  //               "engine/assets/shaders/fragment0.glsl");
+  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1); 
 
-  shaders.push_back(base_object_shader);
-  shaders.push_back(first_object_shader);
-  // shaders.push_back(second_object_shader);
-  // shaders.push_back(third_object_shader);
+  Shader second_object_shader("engine/assets/shaders/vertex0.glsl",
+                "engine/assets/shaders/fragment0.glsl");
+  second_object_shader.active = false;
+  tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2); 
+
+  Shader third_object_shader("engine/assets/shaders/vertex1.glsl",
+                "engine/assets/shaders/fragment0.glsl");
+  third_object_shader.active = false;
+  tuple<Shader, int> thirdShader = make_tuple(third_object_shader, SDLK_3);
+
+  shaders.push_back(baseShader);
+  shaders.push_back(firstShader);
+  shaders.push_back(secondShader);
+  shaders.push_back(thirdShader);
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 

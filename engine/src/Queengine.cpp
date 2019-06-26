@@ -69,21 +69,20 @@ void BindUniforms(Shader *shader) {
   shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
 }
 
-void Queengine::Run(unsigned int VAO, vector<Shader> shaders) {
+void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
 
   while (not InputManager::GetInstance().QuitRequested()) {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
 
-    if(InputManager::GetInstance().KeyPress(SDLK_1)){
-      shaders[1].active = !shaders[1].active;
-    }
-
-    for(int i = 0; i < shaders.size(); i++){
-      if(shaders[i].active){
-        shaders[i].Use();
-        BindUniforms(&shaders[i]);
+    for(int i = 0; i < shaderList.size(); i++){
+      if(InputManager::GetInstance().KeyPress(get<1>(shaderList[i]))){
+        get<0>(shaderList[i]).active = !get<0>(shaderList[i]).active;
+      }
+      if(get<0>(shaderList[i]).active){
+        get<0>(shaderList[i]).Use();
+        BindUniforms(&get<0>(shaderList[i]));
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
       }
