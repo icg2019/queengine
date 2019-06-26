@@ -19,6 +19,7 @@ class Shader {
         Shader(const string & vertex_file, const string & fragment_file);
 
         void Use();
+        bool active;
 
         void Set(const string & name, float v1);
         void Set(const string & name, float v1, float v2);

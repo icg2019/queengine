@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 #include <fstream>
 #include <cmath>
+#include <unistd.h>
+#include <vector>
 
 #include "InputManager.h"
 
@@ -67,17 +69,26 @@ void BindUniforms(Shader *shader) {
   shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
 }
 
-void Queengine::Run(unsigned int VAO, Shader *shader) {
-  while (not InputManager::GetInstance().QuitRequested()) {
-    InputManager::GetInstance().Update();
+void Queengine::Run(unsigned int VAO, vector<Shader> shaders) {
 
-    shader->Use();
-    BindUniforms(shader);
+  while (not InputManager::GetInstance().QuitRequested()) {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    InputManager::GetInstance().Update();
 
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    if(InputManager::GetInstance().KeyPress(SDLK_1)){
+      shaders[1].active = !shaders[1].active;
+    }
+
+    for(int i = 0; i < shaders.size(); i++){
+      if(shaders[i].active){
+        shaders[i].Use();
+        BindUniforms(&shaders[i]);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+      }
+    }
+
     SDL_GL_SwapWindow(this->window);
   }
 }
