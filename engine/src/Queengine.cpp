@@ -63,8 +63,11 @@ Queengine *Queengine::GetInstance() {
   return instance;
 }
 
-void BindUniforms(Shader *shader, int mouseX, int mouseY) {
+void BindUniforms(Shader *shader) {
   float _resolution = 1.0;
+  int mouseX = InputManager::GetInstance().GetMouseX();
+  int mouseY = InputManager::GetInstance().GetMouseY();
+
   shader->Set("iResolution", 1, &_resolution);
   shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
   shader->Set("iGlobalTime", (float) (SDL_GetTicks()/1000.0));
@@ -76,8 +79,6 @@ void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
-    int mouseX = InputManager::GetInstance().GetMouseX();
-    int mouseY = InputManager::GetInstance().GetMouseY();
 
     for(int i = 0; i < shaderList.size(); i++){
       if(InputManager::GetInstance().KeyPress(get<1>(shaderList[i]))){
@@ -85,9 +86,9 @@ void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
       }
       if(get<0>(shaderList[i]).active){
         get<0>(shaderList[i]).Use();
-        BindUniforms(&get<0>(shaderList[i]), mouseX, mouseY);
+        BindUniforms(&get<0>(shaderList[i]));
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
       }
     }
 

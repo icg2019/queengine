@@ -27,24 +27,23 @@ int main(int argc, char **argv) {
   unsigned int object_indices[] = {
     0, 1, 2,
   };
-  unsigned int NUMBER_OBJECTS = 2;
 
   vector<tuple<Shader, int>> shaders;
 
   Shader base_object_shader("engine/assets/shaders/vertex.glsl",
                             "engine/assets/shaders/base_fragment.glsl");
   base_object_shader.active = true;
-  tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL); 
+  tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
 
   Shader first_object_shader("engine/assets/shaders/vertex.glsl",
                 "engine/assets/shaders/fragment.glsl");
   first_object_shader.active = false;
-  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1); 
+  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
   Shader second_object_shader("engine/assets/shaders/vertex0.glsl",
                 "engine/assets/shaders/fragment0.glsl");
   second_object_shader.active = false;
-  tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2); 
+  tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2);
 
   Shader third_object_shader("engine/assets/shaders/vertex1.glsl",
                 "engine/assets/shaders/fragment0.glsl");
@@ -79,31 +78,6 @@ int main(int argc, char **argv) {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  float fobject_vertice[] = {
-    object_vertices[0], object_vertices[1],
-    object_vertices[2], object_vertices[3],
-    object_vertices[4], object_vertices[5],
-  };
-
-  float sobject_vertice[] = {
-    object_vertices[6], object_vertices[7],
-    object_vertices[8], object_vertices[9],
-    object_vertices[10], object_vertices[11],
-  };
-
-  unsigned int fobject_indice[] = {
-    object_indices[0], object_indices[1], object_indices[2],
-  };
-
-  unsigned int sobject_indice[] = {
-    object_indices[3], object_indices[4], object_indices[5],
-  };
-
-  // thread first_object_thread(&Queengine::Run, engine, fobject_vertice, fobject_indice, VAO, &first_object_shader);
-  // first_object_thread.join();
-
-  // thread second_object_thread(&Queengine::Run, engine, sobject_vertice, sobject_indice, VAO, &second_object_shader);
-  // second_object_thread.join();
   engine->Run(VAO, shaders);
 
   return 0;
