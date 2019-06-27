@@ -11,59 +11,32 @@
 
 using namespace std;
 
-unsigned int CompileShader(string filename, bool is_fragment=false)
-{
+string BuildShaderFile(string filename) {
+  ifstream file(filename);
+  string line, src;
+
+  if(file.is_open()) {
+    while(getline(file, line)) src += line + "\n";
+    file.close();
+  } else {
+    cout << "Could not load file [" << filename << "]" << endl;
+    return "";
+  }
+
+  return src;
+}
+
+unsigned int CompileShader(string filename, bool is_fragment=false) {
     ifstream file(filename);
-    ifstream file_basic("../engine/assets/shaders/fragment_base_uniforms.glsl");
-    ifstream file_main("../engine/assets/shaders/fragment_main_image.glsl");
     string src = "";
 
-    // chama o base_uniforms
-    if(is_fragment){
-      if(file_basic.is_open())
-      {
-        string line;
-        while(getline(file_basic, line)) src += line + "\n";
-        file_basic.close();
-      }
-      else
-      {
-          cout << "Could not load file [" << filename << "]" << endl;
-          return 0;
-      }
+    if (is_fragment){
+      src += BuildShaderFile("../engine/assets/shaders/fragment_base_uniforms.glsl");
+      src += BuildShaderFile(filename);
+      src += BuildShaderFile("../engine/assets/shaders/fragment_main_image.glsl");
+    }else{
+      src += BuildShaderFile(filename);
     }
-
-    if(file.is_open())
-    {
-        string line;
-        while(getline(file, line)){
-          src += line + "\n";
-        }
-
-        file.close();
-    }
-    else
-    {
-        cout << "Could not load file [" << filename << "]" << endl;
-        return 0;
-    }
-
-    if(is_fragment){
-      if(file_main.is_open())
-      {
-          string line;
-          while(getline(file_main, line)){
-            src += line + "\n";
-          }
-      }
-      else
-      {
-          cout << "Could not load file [" << filename << "]" << endl;
-          return 0;
-      }
-    }
-
-    cout << src << endl;
 
     unsigned int shader;
     if (is_fragment) shader = glCreateShader(GL_FRAGMENT_SHADER);
