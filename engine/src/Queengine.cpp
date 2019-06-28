@@ -67,11 +67,13 @@ void BindUniforms(Shader *shader) {
   float _resolution = 1.0;
   int mouseX = InputManager::GetInstance().GetMouseX();
   int mouseY = InputManager::GetInstance().GetMouseY();
+  int _frame = 0;
 
   shader->Set("iResolution", 1, &_resolution);
   shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
   shader->Set("iGlobalTime", (float) (SDL_GetTicks()/1000.0));
   shader->Set("iMouse", mouseX * _resolution, mouseY * _resolution, mouseX * _resolution, mouseY * _resolution);
+  shader->Set("iFrame", &_frame);
 }
 
 void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
