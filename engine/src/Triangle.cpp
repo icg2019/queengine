@@ -1,4 +1,4 @@
-#include "../include/triangle.hpp"
+#include "../include/Triangle.hpp"
 
 Triangle::Triangle() {
 	std::vector<glm::vec3> coordinates = {
