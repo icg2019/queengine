@@ -53,6 +53,10 @@ float* Triangle::get_coordinates(){
 	return float_array;
 }
 
+unsigned int Triangle::get_coordinates_size(){
+	return this->coordinates.size() * 2 * sizeof(float);
+}
+
 void Triangle::set_coordinates(std::vector<glm::vec3> coordinates){
 	this->coordinates = coordinates;
 }
@@ -81,6 +85,10 @@ unsigned int* Triangle::get_indices(){
 	}
 
 	return indices_array;
+}
+
+unsigned int Triangle::get_indices_size(){
+	return this->indices.size() * sizeof(unsigned int);
 }
 
 void Triangle::set_indices(std::vector<glm::vec1> indices){
