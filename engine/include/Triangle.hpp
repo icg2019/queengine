@@ -21,7 +21,7 @@ class Triangle {
             std::vector<glm::vec1> indices
         );
 
-		std::vector<glm::vec3> get_coordinates();
+		float* get_coordinates();
 		void set_coordinates(std::vector<glm::vec3>);
 
 		std::vector<glm::vec2> get_texture_coordinates();
@@ -30,7 +30,7 @@ class Triangle {
 		std::string get_texture_path();
 		void set_texture_path(const std::string&);
 
-		std::vector<glm::vec1> get_indices();
+		unsigned int* get_indices();
 		void set_indices(std::vector<glm::vec1>);
 
         bool is_a_valid_path(std::string &);

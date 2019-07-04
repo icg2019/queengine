@@ -2,9 +2,9 @@
 
 Triangle::Triangle() {
 	std::vector<glm::vec3> coordinates = {
-		glm::vec3(0.0, 0.0, 0.0),
-		glm::vec3(1.0, 1.0, 1.0),
-		glm::vec3(0.5, 0.5, 0.5),
+		glm::vec3(-0.5, 0.0, 0.0),
+		glm::vec3(0.0, 0.75, 0.0),
+		glm::vec3(0.5, 0.0, 0.0),
 	};
 
 	std::vector<glm::vec2> texture_coordinates = {
@@ -21,8 +21,6 @@ Triangle::Triangle() {
 		glm::vec1(0.0),
 		glm::vec1(1.0),
 		glm::vec1(2.0),
-		glm::vec1(3.0),
-		glm::vec1(0.0)
 	};
 
     this->coordinates = coordinates;
@@ -44,8 +42,15 @@ Triangle::Triangle(std::vector<glm::vec3> coordinates,
         std::cout << "Create triangle with constructor" << std::endl;
 }
 
-std::vector<glm::vec3> Triangle::get_coordinates(){
-	return this->coordinates;
+float* Triangle::get_coordinates(){
+	float* float_array = (float*) malloc(sizeof(float) * this->coordinates.size() * 2);
+
+	for(int i = 0, array_index = 0; i < this->coordinates.size(); i++, array_index += 2){
+		float_array[array_index] = this->coordinates[i].x;
+		float_array[array_index+1] = this->coordinates[i].y;
+	}
+	
+	return float_array;
 }
 
 void Triangle::set_coordinates(std::vector<glm::vec3> coordinates){
@@ -68,8 +73,14 @@ void Triangle::set_texture_path(const std::string &texture_path){
 	this->texture_path = texture_path;
 }
 
-std::vector<glm::vec1> Triangle::get_indices(){
-	return this->indices;
+unsigned int* Triangle::get_indices(){
+	unsigned int* indices_array = (unsigned int*) malloc(sizeof(unsigned int) * this->indices.size());
+
+	for(int i = 0; i < this->indices.size(); i++){
+		indices_array[i] = this->indices[i].x;
+	}
+
+	return indices_array;
 }
 
 void Triangle::set_indices(std::vector<glm::vec1> indices){
