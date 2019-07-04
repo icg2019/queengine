@@ -26,7 +26,7 @@ struct Channel {
 uniform Channel iChannel[4];
 
 in vec2 fragCoord;
-in vec2 tex_coord;
+in vec2 texCoord;
 in vec2 v_color;
 
 out vec4 fragColor;

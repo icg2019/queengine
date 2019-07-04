@@ -182,23 +182,28 @@ void Shader::Set(const string & name, unsigned int v1, unsigned int v2, unsigned
     glUniform4ui(Location(name), v1, v2, v3, v4);
 }
 
-void Shader::Set(const string & name, int res, float * value)
+void Shader::Set(const string & name, int res, float *value)
 {
-    // int size = sizeof(value)/sizeof(float *);
-    // cout << "size: " << size << endl;
-
+    // int size = value.size();
+    //
+    // float values[size];
+    //
+    // for(int i = 0; i < size; i++){
+    //   values[i] = value[i];
+    // }
+    //
     // switch(size){
     //   case 1:
-    //     glUniform1fv(location(name), res, value);
+    //     glUniform1fv(Location(name), res, values);
     //     break;
     //   case 2:
-    //     glUniform2fv(location(name), res, value);
+    //     glUniform2fv(Location(name), res, values);
     //     break;
     //   case 3:
-    glUniform3fv(Location(name), res, value);
+        glUniform3fv(Location(name), res, value);
     //     break;
     //   case 4:
-    //     glUniform4fv(location(name), res, value);
+    //     glUniform4fv(Location(name), res, values);
     //     break;
     // }
 }

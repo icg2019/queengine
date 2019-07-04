@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
+#include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace std;
@@ -34,7 +35,7 @@ class Shader {
         void Set(const string & name, unsigned int v1, unsigned int v2);
         void Set(const string & name, unsigned int v1, unsigned int v2, unsigned int v3);
         void Set(const string & name, unsigned int v1, unsigned int v2, unsigned int v3, unsigned int v4);
-        void Set(const string & name, int res, float * value);
+        void Set(const string & name, int res, float *value);
         void Set(const string & name, int res, int * value);
         void Set(const string & name, int res, unsigned int * value);
         void Set(const string & name, const glm::mat4 & value);
