@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangle1.get_indices_size(), indices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, (void*)0);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);

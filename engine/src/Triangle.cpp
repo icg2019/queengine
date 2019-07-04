@@ -43,18 +43,19 @@ Triangle::Triangle(std::vector<glm::vec3> coordinates,
 }
 
 float* Triangle::get_coordinates(){
-	float* float_array = (float*) malloc(sizeof(float) * this->coordinates.size() * 2);
+	float* float_array = (float*) malloc(sizeof(float) * this->coordinates.size() * 3);
 
-	for(int i = 0, array_index = 0; i < this->coordinates.size(); i++, array_index += 2){
+	for(int i = 0, array_index = 0; i < this->coordinates.size(); i++, array_index += 3){
 		float_array[array_index] = this->coordinates[i].x;
 		float_array[array_index+1] = this->coordinates[i].y;
+		float_array[array_index+2] = this->coordinates[i].z;
 	}
 	
 	return float_array;
 }
 
 unsigned int Triangle::get_coordinates_size(){
-	return this->coordinates.size() * 2 * sizeof(float);
+	return this->coordinates.size() * 3 * sizeof(float);
 }
 
 void Triangle::set_coordinates(std::vector<glm::vec3> coordinates){
