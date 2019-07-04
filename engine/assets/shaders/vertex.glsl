@@ -5,11 +5,12 @@ precision highp int;
 
 layout(location = 0) in vec3 uPosition;
 
+uniform mat4 view;
+
 out vec2 fragCoord;
 
 void main() {
-    gl_Position.xyz = uPosition;
-    gl_Position.w = 1.0;
+    gl_Position = view * vec4(uPosition, 1.0);
 
-    fragCoord = gl_Position.xy*gl_Position.xy;
+    fragCoord = gl_Position.xy;
 }

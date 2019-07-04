@@ -1,6 +1,8 @@
 #include "Queengine.h"
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <fstream>
 #include <cmath>
 #include <unistd.h>
@@ -64,16 +66,51 @@ Queengine *Queengine::GetInstance() {
 }
 
 void BindUniforms(Shader *shader) {
-  float _resolution = 1.0;
+  vector<float> _ifFragCoordOffsetXY;
+  _ifFragCoordOffsetXY.push_back(0.0f);
+  _ifFragCoordOffsetXY.push_back(0.0f);
+
+  float _ifFragCoordScale = 1.0f;
+
+  int width;
+  int height;
+  SDL_DisplayMode currentDisplay;
+  SDL_GetCurrentDisplayMode(0, &currentDisplay);
+  width = currentDisplay.w;
+  height = currentDisplay.h;
+
+  // vector<float> _resolution;
+  // _resolution.push_back(width/_ifFragCoordScale);
+  // //_resolution.push_back(1.0f);
+  // _resolution.push_back(height/_ifFragCoordScale);
+  // //_resolution.push_back(1.0f);
+  // _resolution.push_back(1.0f);
+
+  glm::vec3 _resolution(1.0f, 1.0f, 1.0f);
+  // float _resolution = -0.00000000001;
   int mouseX = InputManager::GetInstance().GetMouseX();
   int mouseY = InputManager::GetInstance().GetMouseY();
   int _frame = 0;
 
-  shader->Set("iResolution", 1, &_resolution);
+  // shader->Set("ifFragCoordOffsetUniform", 1, _ifFragCoordOffsetXY);
+  shader->Set("iResolution", 1, &_resolution.x);
   shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
   shader->Set("iGlobalTime", (float) (SDL_GetTicks()/1000.0));
-  shader->Set("iMouse", mouseX * _resolution, mouseY * _resolution, mouseX * _resolution, mouseY * _resolution);
+  shader->Set(
+    "iMouse",
+    mouseX * _resolution[0],
+    mouseY * _resolution[0],
+    mouseX * _resolution[0],
+    mouseY * _resolution[0]
+  );
   shader->Set("iFrame", &_frame);
+
+  glm::vec3 _scale(10.0f, 10.0f, 0.0f);
+  glm::mat4 modelMatrix = glm::mat4();
+  modelMatrix = glm::scale(modelMatrix, _scale);
+
+  // glUniformMatrix4fv("model", 1, GL_FALSE, glm::value_ptr(modelMatrix));
+  shader->Set("model", modelMatrix);
 }
 
 void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
@@ -90,7 +127,7 @@ void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
         get<0>(shaderList[i]).Use();
         BindUniforms(&get<0>(shaderList[i]));
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
       }
     }
 
