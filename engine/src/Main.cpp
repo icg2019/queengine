@@ -14,20 +14,6 @@ using namespace std;
 
 unsigned int CompileShader(string filename, bool is_fragment);
 
-void print_array(float* array, int size){
-  for(int i = 0; i < size; i++){
-    cout << array[i] << " ";
-  }
-  cout << endl;
-}
-
-void print_array2(unsigned int* array, int size){
-  for(int i = 0; i < size; i++){
-    cout << array[i] << " ";
-  }
-  cout << endl;
-}
-
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
@@ -43,15 +29,11 @@ int main(int argc, char **argv) {
 
   float* vertices = triangle1.get_coordinates();
 
-  print_array(vertices, 6);
-
   // unsigned int indices[] = {
   //   0, 1, 2
   // };
 
   unsigned int* indices = triangle1.get_indices();
-
-  print_array2(indices, 3);
 
   unsigned int v_shader = CompileShader("vertex.glsl", false);
   unsigned int f_shader = CompileShader("fragment.glsl", true);
