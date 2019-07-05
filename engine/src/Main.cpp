@@ -19,7 +19,19 @@ int main(int argc, char **argv) {
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
-  Triangle triangle1 = Triangle();
+  vector<glm::vec3> my_coordinates = {
+		glm::vec3(-0.5, 0.0, 0.0),
+		glm::vec3(0.0, 0.75, 0.0),
+		glm::vec3(0.5, 0.0, 0.0),
+	};
+
+  std::vector<glm::vec1> my_indices = {
+		glm::vec1(0.0),
+		glm::vec1(1.0),
+		glm::vec1(2.0),
+	};
+
+  Triangle triangle1 = Triangle(my_coordinates, my_indices);
   
   // float vertices[] = {
   //   -0.5f, 0.0f,

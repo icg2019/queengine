@@ -28,18 +28,14 @@ Triangle::Triangle() {
     this->texture_path = texture_path;
     this->indices = indices;
 
-	std::clog << "Create triangle with success\n";
+	// std::clog << "Create triangle with success\n";
 }
 
 Triangle::Triangle(std::vector<glm::vec3> coordinates,
-		std::vector<glm::vec2> texture_coordinates,
-		std::string texture_path,
 		std::vector<glm::vec1> indices) :
-	coordinates( coordinates ),
-	texture_coordinates( texture_coordinates ),
-	texture_path( texture_path ),
-	indices ( indices ) {
-        std::cout << "Create triangle with constructor" << std::endl;
+	coordinates(coordinates),
+	indices (indices) {
+	
 }
 
 float* Triangle::get_coordinates(){

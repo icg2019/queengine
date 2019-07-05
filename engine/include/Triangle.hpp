@@ -16,8 +16,6 @@ class Triangle {
         Triangle();
 		Triangle(
             std::vector<glm::vec3> coordinates,
-            std::vector<glm::vec2> textureCoordinates,
-            std::string texturePath,
             std::vector<glm::vec1> indices
         );
 
