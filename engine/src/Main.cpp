@@ -1,3 +1,4 @@
+#include <vector>
 #include <iostream>
 #include <glad/glad.h>
 #include <fstream>
@@ -5,9 +6,11 @@
 
 #define INCLUDE_SDL
 
+#include <glm/glm.hpp>
 #include "SDL_include.h"
 #include "InputManager.h"
 #include "Queengine.h"
+#include "Model.hpp"
 
 using namespace std;
 
@@ -18,11 +21,6 @@ int main(int argc, char **argv) {
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
-  float vertices[] = {
-    -0.5f, 0.0f,
-    0.0f, 0.75f,
-    0.5f, 0.0f
-  };
 
   unsigned int indices[] = {
     0, 1, 2
@@ -39,6 +37,12 @@ int main(int argc, char **argv) {
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+  std::vector<glm::vec3> vertices;
+  std::vector<glm::vec2> textcoord;
+  std::vector<glm::vec3> normal;
+
+  bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
+
   unsigned int VAO;
   unsigned int  VBO, EBO;
   glGenBuffers(1,&VBO);
@@ -48,7 +52,7 @@ int main(int argc, char **argv) {
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
