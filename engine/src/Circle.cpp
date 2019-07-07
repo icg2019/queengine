@@ -17,16 +17,25 @@ Circle::Circle(glm::vec3 center, float radius, float definition) : center(center
 
     this->coordinates.push_back({origin.first, origin.second, 0.0});
 
-    do{
+    
+    while(angle_sum <= 2 * acos(-1)){
         this->coordinates.push_back({current_point.first, current_point.second, 0.0});
         current_point = rotate_point(origin, intern_angle, current_point);
         angle_sum += intern_angle;
-    }while(angle_sum < 2 * acos(-1));
+    }
 
     for(int i = 2; i < this->coordinates.size(); i++){
         this->indices.push_back(glm::vec1(0.0));
         this->indices.push_back(glm::vec1(i-1));
         this->indices.push_back(glm::vec1(i));
+    }
+
+    // Making sure that the last triangle has the starting point as one of its vertices
+    if(this->coordinates.back().x != starting_point.first || this->coordinates.back().y != starting_point.second){
+        this->coordinates.push_back({starting_point.first, starting_point.second, 0.0});
+        this->indices.push_back(glm::vec1(0));
+        this->indices.push_back(glm::vec1(this->coordinates.size()-2));
+        this->indices.push_back(glm::vec1(this->coordinates.size()-1));
     }
 
 }
