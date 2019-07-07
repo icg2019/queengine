@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "Queengine.h"
 #include "Triangle.hpp"
+#include "Circle.hpp"
 
 using namespace std;
 
@@ -31,7 +32,9 @@ int main(int argc, char **argv) {
 		glm::vec1(2.0),
 	};
 
-  Triangle triangle1 = Triangle(my_coordinates, my_indices);
+  // Triangle triangle1 = Triangle(my_coordinates, my_indices);
+  // Circle circle1 = Circle();
+  Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 10);
   
   // float vertices[] = {
   //   -0.5f, 0.0f,
@@ -39,13 +42,21 @@ int main(int argc, char **argv) {
   //   0.5f, 0.0f
   // };
 
-  float* vertices = triangle1.get_coordinates();
+  // float* vertices = triangle1.get_coordinates();
+  float* vertices = circle1.get_coordinates();
 
   // unsigned int indices[] = {
   //   0, 1, 2
   // };
 
-  unsigned int* indices = triangle1.get_indices();
+  // unsigned int* indices = triangle1.get_indices();
+  unsigned int* indices = circle1.get_indices();
+
+  // int coordinates_size = triangle1.get_coordinates_size();
+  // int indices_size = triangle1.get_indices_size();
+
+  int coordinates_size = circle1.get_coordinates_size();
+  int indices_size = circle1.get_indices_size();
 
   unsigned int v_shader = CompileShader("vertex.glsl", false);
   unsigned int f_shader = CompileShader("fragment.glsl", true);
@@ -67,10 +78,10 @@ int main(int argc, char **argv) {
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, triangle1.get_coordinates_size() , vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, coordinates_size, vertices, GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangle1.get_indices_size(), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_size, indices, GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, (void*)0);
   glEnableVertexAttribArray(0);

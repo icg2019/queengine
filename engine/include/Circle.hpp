@@ -25,9 +25,6 @@ class Circle {
 
         unsigned int get_coordinates_size();
 
-		std::vector<glm::vec2> get_texture_coordinates();
-		void set_texture_coordinates(std::vector<glm::vec2>);
-
 		unsigned int* get_indices();
 		void set_indices(std::vector<glm::vec1>);
 
