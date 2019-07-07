@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include <fstream>
 #include <cmath>
+#include <vector>
+#include <glm/glm.hpp>
 
 #define INCLUDE_SDL
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,6 +12,7 @@
 #include "InputManager.h"
 #include "Queengine.h"
 #include "texture.hpp"
+#include "Model.hpp"
 
 using namespace std;
 
@@ -36,45 +39,11 @@ int main(int argc, char **argv) {
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
  
-  
-  float vertices[] = {
-    -1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		 1.0f, 1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		 1.0f,-1.0f,-1.0f,
-		 1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		-1.0f,-1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f,-1.0f, 1.0f,
-		 1.0f,-1.0f, 1.0f,
-		 1.0f, 1.0f, 1.0f,
-		 1.0f,-1.0f,-1.0f,
-		 1.0f, 1.0f,-1.0f,
-		 1.0f,-1.0f,-1.0f,
-		 1.0f, 1.0f, 1.0f,
-		 1.0f,-1.0f, 1.0f,
-		 1.0f, 1.0f, 1.0f,
-		 1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f,-1.0f,
-		 1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f,-1.0f,
-		-1.0f, 1.0f, 1.0f,
-		 1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		 1.0f,-1.0f, 1.0f
-  };
+  std::vector<glm::vec3> vertices;
+  std::vector<glm::vec2> textcoord;
+  std::vector<glm::vec3> normal;
+
+  bool fileOpened = load3DOBJ("engine/assets/obj/cube.obj", vertices, textcoord, normal);
 
   unsigned int indices[] = {
     0, 1, 2,
@@ -140,55 +109,17 @@ int main(int argc, char **argv) {
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
   // glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
 
   
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
-// One uv for each vertex. They were generated randomly.
-	static const GLfloat g_uv_buffer_data[] = { 
-		0.000059f, 1.0f-0.000004f, 
-		0.000103f, 1.0f-0.336048f, 
-		0.335973f, 1.0f-0.335903f, 
-		1.000023f, 1.0f-0.000013f, 
-		0.667979f, 1.0f-0.335851f, 
-		0.999958f, 1.0f-0.336064f, 
-		0.667979f, 1.0f-0.335851f, 
-		0.336024f, 1.0f-0.671877f, 
-		0.667969f, 1.0f-0.671889f, 
-		1.000023f, 1.0f-0.000013f, 
-		0.668104f, 1.0f-0.000013f, 
-		0.667979f, 1.0f-0.335851f, 
-		0.000059f, 1.0f-0.000004f, 
-		0.335973f, 1.0f-0.335903f, 
-		0.336098f, 1.0f-0.000071f, 
-		0.667979f, 1.0f-0.335851f, 
-		0.335973f, 1.0f-0.335903f, 
-		0.336024f, 1.0f-0.671877f, 
-		1.000004f, 1.0f-0.671847f, 
-		0.999958f, 1.0f-0.336064f, 
-		0.667979f, 1.0f-0.335851f, 
-		0.668104f, 1.0f-0.000013f, 
-		0.335973f, 1.0f-0.335903f, 
-		0.667979f, 1.0f-0.335851f, 
-		0.335973f, 1.0f-0.335903f, 
-		0.668104f, 1.0f-0.000013f, 
-		0.336098f, 1.0f-0.000071f, 
-		0.000103f, 1.0f-0.336048f, 
-		0.000004f, 1.0f-0.671870f, 
-		0.336024f, 1.0f-0.671877f, 
-		0.000103f, 1.0f-0.336048f, 
-		0.336024f, 1.0f-0.671877f, 
-		0.335973f, 1.0f-0.335903f, 
-		0.667969f, 1.0f-0.671889f, 
-		1.000004f, 1.0f-0.671847f, 
-		0.667979f, 1.0f-0.335851f
-	};
+
   GLuint uvbuffer;
 	glGenBuffers(1, &uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, textcoord.size() * sizeof(glm::vec2), &textcoord[0], GL_STATIC_DRAW);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, (void*)0);
 
 
