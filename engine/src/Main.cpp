@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
 
   // Triangle triangle1 = Triangle(my_coordinates, my_indices);
   // Circle circle1 = Circle();
-  Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 10);
+  Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 100);
   
   // float vertices[] = {
   //   -0.5f, 0.0f,
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
   glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 
-  engine->Run(VAO);
+  engine->Run(VAO, indices_size/sizeof(unsigned int));
 
   return 0;
 }

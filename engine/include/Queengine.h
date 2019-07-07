@@ -14,6 +14,7 @@ class Queengine {
   public:
     ~Queengine();
     void Run(unsigned int VAO);
+    void Run(unsigned int VAO, int number_of_triangles);
     static Queengine *GetInstance(); 
 };
 

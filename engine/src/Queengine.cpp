@@ -62,13 +62,17 @@ Queengine *Queengine::GetInstance() {
 }
 
 void Queengine::Run(unsigned int VAO) {
+  Queengine::Run(VAO, 3);
+}
+
+void Queengine::Run(unsigned int VAO, int number_of_triangles) {
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
     SDL_GL_SwapWindow(this->window);
   }
 }
