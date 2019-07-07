@@ -22,10 +22,6 @@ int main(int argc, char **argv) {
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
 
-  unsigned int indices[] = {
-    0, 1, 2
-  };
-
   unsigned int v_shader = CompileShader("vertex.glsl", false);
   unsigned int f_shader = CompileShader("fragment.glsl", true);
 
@@ -44,18 +40,14 @@ int main(int argc, char **argv) {
   bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
 
   unsigned int VAO;
-  unsigned int  VBO, EBO;
+  unsigned int  VBO;
   glGenBuffers(1,&VBO);
-  glGenBuffers(1,&EBO);
   glGenVertexArrays(1, &VAO);
 
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (void*)0);
   glEnableVertexAttribArray(0);
