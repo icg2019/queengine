@@ -43,26 +43,13 @@ int main(int argc, char **argv) {
   std::vector<glm::vec2> textcoord;
   std::vector<glm::vec3> normal;
 
-  // bool fileOpened = load3DOBJ("engine/assets/obj/cube.obj", vertices, textcoord, normal);
   bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
-
-  // std::vector<unsigned short> indices;
-  // std::vector<glm::vec3> indexed_vertices;
-  // std::vector<glm::vec2> indexed_uvs;
-  // std::vector<glm::vec3> indexed_normals;
-  // indexVBO(vertices, textcoord, normal, indices, indexed_vertices, indexed_uvs, indexed_normals);
-
 
   unsigned int indices[vertices.size()];
 
   for(int i = 0; i < vertices.size();i++) {
     indices[i] = i;
   }
-
-  // std::vector<glm::vec3> vertices;
-  // std::vector<glm::vec2> textcoord;
-  // std::vector<glm::vec3> normal;
-
 
   unsigned int v_shader = CompileShader("vertex.glsl", false);
   unsigned int f_shader = CompileShader("fragment.glsl", true);
@@ -100,9 +87,11 @@ int main(int argc, char **argv) {
 
   unsigned int VAO;
   unsigned int  VBO, EBO, NBO;
+  GLuint uvbuffer;
   glGenBuffers(1,&VBO);
   glGenBuffers(1,&EBO);
   glGenBuffers(1,&NBO);
+	glGenBuffers(1, &uvbuffer);
 
   glGenVertexArrays(1, &VAO);
 
@@ -110,24 +99,24 @@ int main(int argc, char **argv) {
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-  // glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
-
   
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
 
-  GLuint uvbuffer;
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, textcoord.size() * sizeof(glm::vec2), &textcoord[0], GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, (void*)0);
 
-
-  // 1rst attribute buffer : vertices
+  // 1st attribute buffer : vertices
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, (void*)0);
+  glVertexAttribPointer(
+    0,
+    3,
+    GL_FLOAT,
+    GL_TRUE,
+    0,
+    (void*)0
+  );
 
+  // 2nd attribute buffer : normals
   glBindBuffer(GL_ARRAY_BUFFER, NBO);
   glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
 
@@ -142,7 +131,10 @@ int main(int argc, char **argv) {
   );
 
 
-  // 2nd attribute buffer : uvs
+  // 3rd attribute buffer : uvs
+	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, textcoord.size() * sizeof(glm::vec2), &textcoord[0], GL_STATIC_DRAW);
+  
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
   glVertexAttribPointer(

@@ -16,9 +16,9 @@ bool load3DOBJ(
 	printf("Loading OBJ file %s...\n", path);
 
     std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<glm::vec3> temp_vertices; 
-	std::vector<glm::vec2> temp_uvs;
-	std::vector<glm::vec3> temp_normals;
+	std::vector<glm::vec3> temp_vertices;      // Obj Vertices
+	std::vector<glm::vec2> temp_uvs;           // Texture Coord
+	std::vector<glm::vec3> temp_normals;       // Suface normals
 
     FILE *file = fopen(path, "r");
     if (file == NULL) {
@@ -61,9 +61,9 @@ bool load3DOBJ(
                 vertexIndices.push_back(vertexIndex[0]);
                 vertexIndices.push_back(vertexIndex[1]);
                 vertexIndices.push_back(vertexIndex[2]);
-                uvIndices    .push_back(uvIndex[0]);
-                uvIndices    .push_back(uvIndex[1]);
-                uvIndices    .push_back(uvIndex[2]);
+                uvIndices.push_back(uvIndex[0]);
+                uvIndices.push_back(uvIndex[1]);
+                uvIndices.push_back(uvIndex[2]);
                 normalIndices.push_back(normalIndex[0]);
                 normalIndices.push_back(normalIndex[1]);
                 normalIndices.push_back(normalIndex[2]);
@@ -82,8 +82,8 @@ bool load3DOBJ(
 		glm::vec3 normal = temp_normals[ normalIndex-1 ];
 
         out_vertices.push_back(vertex);
-		out_uvs     .push_back(uv);
-		out_normals .push_back(normal);
+		out_uvs.push_back(uv);
+		out_normals.push_back(normal);
     }
     fclose(file);
 	return true;
