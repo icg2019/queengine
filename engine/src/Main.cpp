@@ -43,28 +43,26 @@ int main(int argc, char **argv) {
   std::vector<glm::vec2> textcoord;
   std::vector<glm::vec3> normal;
 
-  bool fileOpened = load3DOBJ("engine/assets/obj/cube.obj", vertices, textcoord, normal);
+  // bool fileOpened = load3DOBJ("engine/assets/obj/cube.obj", vertices, textcoord, normal);
+  bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
 
-  unsigned int indices[] = {
-    0, 1, 2,
-    3, 4, 5,
-    6, 7, 8,
-    9, 10, 11,
-    12, 13, 14,
-    15, 16, 17,
-    18, 19, 20,
-    21, 22, 23,
-    24, 25, 26,
-    27, 28, 29,
-    30, 31, 32,
-    33, 34, 35
-  };
+  // std::vector<unsigned short> indices;
+  // std::vector<glm::vec3> indexed_vertices;
+  // std::vector<glm::vec2> indexed_uvs;
+  // std::vector<glm::vec3> indexed_normals;
+  // indexVBO(vertices, textcoord, normal, indices, indexed_vertices, indexed_uvs, indexed_normals);
+
+
+  unsigned int indices[vertices.size()];
+
+  for(int i = 0; i < vertices.size();i++) {
+    indices[i] = i;
+  }
 
   // std::vector<glm::vec3> vertices;
   // std::vector<glm::vec2> textcoord;
   // std::vector<glm::vec3> normal;
 
-  // bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
 
   unsigned int v_shader = CompileShader("vertex.glsl", false);
   unsigned int f_shader = CompileShader("fragment.glsl", true);
@@ -101,9 +99,11 @@ int main(int argc, char **argv) {
   glUniform1i(TextureID, 0);
 
   unsigned int VAO;
-  unsigned int  VBO, EBO;
+  unsigned int  VBO, EBO, NBO;
   glGenBuffers(1,&VBO);
   glGenBuffers(1,&EBO);
+  glGenBuffers(1,&NBO);
+
   glGenVertexArrays(1, &VAO);
 
   glBindVertexArray(VAO);
@@ -128,9 +128,10 @@ int main(int argc, char **argv) {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, (void*)0);
 
-  // 2nd attribute buffer : uvs
+  glBindBuffer(GL_ARRAY_BUFFER, NBO);
+  glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
+
   glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
   glVertexAttribPointer(
     1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
     3,                                // size
@@ -139,6 +140,7 @@ int main(int argc, char **argv) {
     0,                                // stride
     (void*)0                          // array buffer offset
   );
+
 
   // 2nd attribute buffer : uvs
   glEnableVertexAttribArray(1);
@@ -160,7 +162,7 @@ int main(int argc, char **argv) {
   glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 
-  engine->Run(VAO);
+  engine->Run(VAO, vertices.size());
 
   return 0;
 }

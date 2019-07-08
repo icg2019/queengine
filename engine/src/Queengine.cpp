@@ -61,14 +61,14 @@ Queengine *Queengine::GetInstance() {
   return instance;
 }
 
-void Queengine::Run(unsigned int VAO) {
+void Queengine::Run(unsigned int VAO, int indices) {
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 108, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
     SDL_GL_SwapWindow(this->window);
   }
 }
