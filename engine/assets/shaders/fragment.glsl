@@ -7,5 +7,5 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     vec3 col = 0.5 + 0.5*cos((iTime*5.0)+uv.xyx+vec3(0,2,4));
 
     // Output to screen
-    fragColor = vec4(col,0.5);
+    fragColor = vec4(col, 0.2);
 }

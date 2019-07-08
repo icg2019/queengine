@@ -6,6 +6,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include <vector>
+#include <tuple>
 
 class Queengine {
   private:
@@ -16,8 +17,8 @@ class Queengine {
 
   public:
     ~Queengine();
-    void Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList);
-    void Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList);
+    void Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures);
+    void Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures);
     static Queengine *GetInstance();
 };
 

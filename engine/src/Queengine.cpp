@@ -65,34 +65,22 @@ Queengine *Queengine::GetInstance() {
   return instance;
 }
 
-void BindUniforms(Shader *shader) {
-  vector<float> _ifFragCoordOffsetXY;
-  _ifFragCoordOffsetXY.push_back(0.0f);
-  _ifFragCoordOffsetXY.push_back(0.0f);
-
+void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
+  glm::vec2 _ifFragCoordOffsetXY(0.0f, 0.0f);
   float _ifFragCoordScale = 1.0f;
 
-  int width;
-  int height;
+  int width, height;
   SDL_DisplayMode currentDisplay;
   SDL_GetCurrentDisplayMode(0, &currentDisplay);
   width = currentDisplay.w;
   height = currentDisplay.h;
 
-  // vector<float> _resolution;
-  // _resolution.push_back(width/_ifFragCoordScale);
-  // //_resolution.push_back(1.0f);
-  // _resolution.push_back(height/_ifFragCoordScale);
-  // //_resolution.push_back(1.0f);
-  // _resolution.push_back(1.0f);
-
-  glm::vec3 _resolution(1.0f, 1.0f, 1.0f);
-  // float _resolution = -0.00000000001;
+  glm::vec3 _resolution(1.0f, 1.0f, 0.5f);
   int mouseX = InputManager::GetInstance().GetMouseX();
   int mouseY = InputManager::GetInstance().GetMouseY();
   int _frame = 0;
 
-  // shader->Set("ifFragCoordOffsetUniform", 1, _ifFragCoordOffsetXY);
+  shader->Set("ifFragCoordOffsetUniform", 1, &_ifFragCoordOffsetXY.x);
   shader->Set("iResolution", 1, &_resolution.x);
   shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
   shader->Set("iGlobalTime", (float) (SDL_GetTicks()/1000.0));
@@ -105,23 +93,17 @@ void BindUniforms(Shader *shader) {
   );
   shader->Set("iFrame", &_frame);
 
-  glm::vec3 _scale(10.0f, 10.0f, 0.0f);
-  glm::mat4 modelMatrix = glm::mat4();
-  modelMatrix = glm::scale(modelMatrix, _scale);
-
-  // glUniformMatrix4fv("model", 1, GL_FALSE, glm::value_ptr(modelMatrix));
-  shader->Set("model", modelMatrix);
-
-  shader->Set("tex1", 0);
-  shader->Set("tex2", 1);
-
+  shader->Set("iChannel0", get<1>(textures[0]));
+  shader->Set("iChannel1", get<1>(textures[1]));
+  shader->Set("iChannel2", get<1>(textures[2]));
+  shader->Set("iChannel3", get<1>(textures[3]));
 }
 
-void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
-  Queengine::Run(VAO, 3, shaderList);
+void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int> > textures) {
+  Queengine::Run(VAO, 3, shaderList, textures);
 }
 
-void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList) {
+void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures) {
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -131,13 +113,18 @@ void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shad
       if(InputManager::GetInstance().KeyPress(get<1>(shaderList[i]))){
         get<0>(shaderList[i]).active = !get<0>(shaderList[i]).active;
       }
+      for(int j = 0; j < textures.size(); j++){
+        get<0>(textures[j]).use();
+        glActiveTexture(get<2>(textures[j]));
+      }
       if(get<0>(shaderList[i]).active){
         get<0>(shaderList[i]).Use();
-        BindUniforms(&get<0>(shaderList[i]));
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
+        BindUniforms(&get<0>(shaderList[i]), textures);
       }
     }
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
 
     SDL_GL_SwapWindow(this->window);
   }

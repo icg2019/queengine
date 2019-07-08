@@ -24,9 +24,15 @@ struct Channel {
 };
 
 uniform Channel iChannel[4];
+uniform sampler2D iChannel0;
+uniform sampler2D iChannel1;
+uniform sampler2D iChannel2;
+uniform sampler2D iChannel3;
 
 in vec2 fragCoord;
 in vec2 texCoord;
 in vec2 v_color;
 
 out vec4 fragColor;
+uniform sampler2D tex1;
+//uniform sampler2D tex2;

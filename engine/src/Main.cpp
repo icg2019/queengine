@@ -93,17 +93,26 @@ int main(int argc, char **argv) {
   shaders.push_back(firstShader);
   shaders.push_back(secondShader);
 
+  vector<tuple<Texture, int, int> > textures;
+
   Texture texture1("engine/assets/textures/laranjo.png");
-  
-  glActiveTexture(GL_TEXTURE0);
-  texture1.use();
+  tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
 
   Texture texture2("engine/assets/textures/lua.png");
-  
-  glActiveTexture(GL_TEXTURE1);
-  texture2.use();
+  tuple<Texture, int, int> secondTexture = make_tuple(texture2, 1, GL_TEXTURE1);
 
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  Texture texture3("engine/assets/textures/chao.jpg");
+  tuple<Texture, int, int> thirdTexture = make_tuple(texture3, 2, GL_TEXTURE2);
+
+  Texture texture4("engine/assets/textures/muro.jpg");
+  tuple<Texture, int, int> forthyTexture = make_tuple(texture4, 3, GL_TEXTURE3);
+
+  textures.push_back(firstTexture);
+  textures.push_back(secondTexture);
+  textures.push_back(thirdTexture);
+  textures.push_back(forthyTexture);
+
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   unsigned int VBO;
   glGenBuffers(1, &VBO);
@@ -135,7 +144,7 @@ int main(int argc, char **argv) {
 
   // -------------------------------------------------------------------------------------------------- //
 
-  engine->Run(VAO, indices_size/sizeof(unsigned int), shaders);
+  engine->Run(VAO, indices_size/sizeof(unsigned int), shaders, textures);
 
   return 0;
 }
