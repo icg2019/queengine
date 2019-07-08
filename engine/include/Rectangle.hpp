@@ -13,6 +13,9 @@ class Rectangle {
 
 	public:
         Rectangle();
+		Rectangle(
+			std::vector<glm::vec3> coordinates
+		);
 
 		float* get_coordinates();
 		void set_coordinates(std::vector<glm::vec3>);
