@@ -114,8 +114,12 @@ void BindUniforms(Shader *shader) {
 }
 
 void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
-    while (not InputManager::GetInstance().QuitRequested()) {
+  Queengine::Run(VAO, 3, shaderList);
+}
 
+void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList) {
+  while (not InputManager::GetInstance().QuitRequested()) {
+    InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
 
@@ -127,7 +131,7 @@ void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {
         get<0>(shaderList[i]).Use();
         BindUniforms(&get<0>(shaderList[i]));
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
       }
     }
 

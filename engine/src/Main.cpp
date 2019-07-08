@@ -10,6 +10,9 @@
 #include "SDL_include.h"
 #include "InputManager.h"
 #include "Queengine.h"
+#include "Triangle.hpp"
+#include "Circle.hpp"
+#include "Rectangle.hpp"
 
 using namespace std;
 
@@ -18,19 +21,56 @@ int main(int argc, char **argv) {
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
-  float object_vertices[] = {
-    -1.0f, -1.0f, 0,
-    -1.0f, 1.0f, 0,
-    1.0f, -1.0f, 0,
-    1.0f, -1.0f, 0,
-    1.0f, 1.0f, 0,
-    -1.0f, 1.0f, 0,
-  };
+//   vector<glm::vec3> my_coordinates = {
+//	 	glm::vec3(-0.5, 0.0, 0.0),
+//	 	glm::vec3(0.0, 0.75, 0.0),
+//	 	glm::vec3(0.5, 0.0, 0.0),
+//	 };
+//
+//   std::vector<glm::vec1> my_indices = {
+//	 	glm::vec1(0.0),
+//	 	glm::vec1(1.0),
+//	 	glm::vec1(2.0),
+//	 };
 
-  unsigned int object_indices[] = {
-    0, 1, 2,
-    3, 4, 5,
-  };
+  vector<glm::vec3> my_coordinates = {
+		glm::vec3(-0.5, 0.5, 0.0),
+		glm::vec3(0.5, 0.5, 0.0),
+		glm::vec3(-0.5, -0.5, 0.0),
+    glm::vec3(0.5, -0.5, 0.0),
+	};
+
+  // Triangle triangle1 = Triangle(my_coordinates, my_indices);
+  // Circle circle1 = Circle();
+  Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 100);
+  // Rectangle rectangle1 = Rectangle(my_coordinates);
+
+  // float vertices[] = {
+  //   -0.5f, 0.0f,
+  //   0.0f, 0.75f,
+  //   0.5f, 0.0f
+  // };
+
+  // float* vertices = triangle1.get_coordinates();
+  float* vertices = circle1.get_coordinates();
+  // float* vertices = rectangle1.get_coordinates();
+
+  // unsigned int indices[] = {
+  //   0, 1, 2
+  // };
+
+  // unsigned int* indices = triangle1.get_indices();
+  unsigned int* indices = circle1.get_indices();
+  // unsigned int* indices = rectangle1.get_indices();
+
+  // int coordinates_size = triangle1.get_coordinates_size();
+  // int indices_size = triangle1.get_indices_size();
+
+  int coordinates_size = circle1.get_coordinates_size();
+  int indices_size = circle1.get_indices_size();
+
+  // int coordinates_size = rectangle1.get_coordinates_size();
+  // int indices_size = rectangle1.get_indices_size();
 
   vector<tuple<Shader, int>> shaders;
 
@@ -39,25 +79,19 @@ int main(int argc, char **argv) {
   base_object_shader.active = true;
   tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
 
-  // Shader first_object_shader("engine/assets/shaders/vertex.glsl",
-  //               "engine/assets/shaders/fragment.glsl");
-  // first_object_shader.active = false;
-  // tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
+  Shader first_object_shader("engine/assets/shaders/vertex.glsl",
+                "engine/assets/shaders/fragment.glsl");
+  first_object_shader.active = false;
+  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
-  Shader second_object_shader("engine/assets/shaders/vertex0.glsl",
+  Shader second_object_shader("engine/assets/shaders/vertex.glsl",
                 "engine/assets/shaders/fragment0.glsl");
   second_object_shader.active = false;
   tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2);
 
-  // Shader third_object_shader("engine/assets/shaders/vertex1.glsl",
-  //               "engine/assets/shaders/fragment0.glsl");
-  // third_object_shader.active = false;
-  // tuple<Shader, int> thirdShader = make_tuple(third_object_shader, SDLK_3);
-
   shaders.push_back(baseShader);
-  // shaders.push_back(firstShader);
+  shaders.push_back(firstShader);
   shaders.push_back(secondShader);
-  // shaders.push_back(thirdShader);
 
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -77,29 +111,21 @@ int main(int argc, char **argv) {
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(
-    GL_ARRAY_BUFFER,
-    sizeof(object_vertices),
-    object_vertices,
-    GL_STATIC_DRAW
-  );
+  glBufferData(GL_ARRAY_BUFFER, coordinates_size, vertices, GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(
-    GL_ELEMENT_ARRAY_BUFFER,
-    sizeof(object_indices),
-    object_indices, GL_STATIC_DRAW
-  );
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_size, indices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 3 * sizeof(float), (void*)0);
-
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, (void*)0);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  engine->Run(VAO, shaders);
+  // -------------------------------------------------------------------------------------------------- //
+
+  engine->Run(VAO, indices_size/sizeof(unsigned int), shaders);
 
   return 0;
 }
