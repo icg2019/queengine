@@ -93,6 +93,16 @@ int main(int argc, char **argv) {
   shaders.push_back(firstShader);
   shaders.push_back(secondShader);
 
+  Texture texture1("engine/assets/textures/laranjo.png");
+  
+  glActiveTexture(GL_TEXTURE0);
+  texture1.use();
+
+  Texture texture2("engine/assets/textures/lua.png");
+  
+  glActiveTexture(GL_TEXTURE1);
+  texture2.use();
+
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
   unsigned int VBO;

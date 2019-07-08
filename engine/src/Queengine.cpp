@@ -111,6 +111,10 @@ void BindUniforms(Shader *shader) {
 
   // glUniformMatrix4fv("model", 1, GL_FALSE, glm::value_ptr(modelMatrix));
   shader->Set("model", modelMatrix);
+
+  shader->Set("tex1", 0);
+  shader->Set("tex2", 1);
+
 }
 
 void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList) {

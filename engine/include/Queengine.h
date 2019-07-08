@@ -4,7 +4,7 @@
 
 #include "SDL_include.h"
 #include "Shader.h"
-#include "ShaderObject.h"
+#include "Texture.h"
 #include <vector>
 
 class Queengine {
