@@ -13,6 +13,8 @@
 #include "Queengine.h"
 #include "texture.hpp"
 #include "Model.hpp"
+#include "vboindexer.hpp"
+
 
 using namespace std;
 
@@ -28,7 +30,7 @@ int main(int argc, char **argv) {
 	
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(
-								glm::vec3(4,3,3), // Camera is at (4,3,-3), in World Space
+								glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
 								glm::vec3(0,0,0), // and looks at the origin
 								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 						   );
@@ -43,7 +45,7 @@ int main(int argc, char **argv) {
   std::vector<glm::vec2> textcoord;
   std::vector<glm::vec3> normal;
 
-  bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
+  bool fileOpened = load3DOBJ("engine/assets/obj/cube.obj", vertices, textcoord, normal);
 
   unsigned int indices[vertices.size()];
 
@@ -68,6 +70,8 @@ int main(int argc, char **argv) {
 
 // Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
+  GLuint ViewMatrixID = glGetUniformLocation(shaderProgram, "V");
+	GLuint ModelMatrixID = glGetUniformLocation(shaderProgram, "M");
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   // Enable depth test
@@ -78,12 +82,15 @@ int main(int argc, char **argv) {
   // Send our transformation to the currently bound shader, 
 		// in the "MVP" uniform
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &Model[0][0]);
+		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &View[0][0]);
 
   // Bind our texture in Texture Unit 0
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, Texture);
   // Set our "myTextureSampler" sampler to use Texture Unit 0
   glUniform1i(TextureID, 0);
+  
 
   unsigned int VAO;
   unsigned int  VBO, EBO, NBO;
@@ -116,21 +123,6 @@ int main(int argc, char **argv) {
     (void*)0
   );
 
-  // 2nd attribute buffer : normals
-  glBindBuffer(GL_ARRAY_BUFFER, NBO);
-  glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
-
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(
-    1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-    3,                                // size
-    GL_FLOAT,                         // type
-    GL_FALSE,                         // normalized?
-    0,                                // stride
-    (void*)0                          // array buffer offset
-  );
-
-
   // 3rd attribute buffer : uvs
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, textcoord.size() * sizeof(glm::vec2), &textcoord[0], GL_STATIC_DRAW);
@@ -146,6 +138,26 @@ int main(int argc, char **argv) {
     (void*)0                          // array buffer offset
   );
   glEnableVertexAttribArray(0);
+
+    // 2nd attribute buffer : normals
+  glBindBuffer(GL_ARRAY_BUFFER, NBO);
+  glBufferData(GL_ARRAY_BUFFER, normal.size() * sizeof(glm::vec3), &normal[0], GL_STATIC_DRAW);
+
+  glEnableVertexAttribArray(2);
+  glVertexAttribPointer(
+    2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+    3,                                // size
+    GL_FLOAT,                         // type
+    GL_FALSE,                         // normalized?
+    0,                                // stride
+    (void*)0                          // array buffer offset
+  );
+
+  glUseProgram(shaderProgram);
+	GLuint LightID = glGetUniformLocation(shaderProgram, "LightPosition_worldspace");
+
+  glm::vec3 lightPos = glm::vec3(4,4,4);
+  glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
   glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
