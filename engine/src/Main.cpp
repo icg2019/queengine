@@ -10,6 +10,7 @@
 #include "Queengine.h"
 #include "Triangle.hpp"
 #include "Circle.hpp"
+#include "Rectangle.hpp"
 
 using namespace std;
 
@@ -20,21 +21,29 @@ int main(int argc, char **argv) {
 
   // This part needs to be extracted later to a scene or whatever
   // -------------------------------------------------------------------------------------------------- //
-  vector<glm::vec3> my_coordinates = {
-		glm::vec3(-0.5, 0.0, 0.0),
-		glm::vec3(0.0, 0.75, 0.0),
-		glm::vec3(0.5, 0.0, 0.0),
-	};
+//   vector<glm::vec3> my_coordinates = {
+//	 	glm::vec3(-0.5, 0.0, 0.0),
+//	 	glm::vec3(0.0, 0.75, 0.0),
+//	 	glm::vec3(0.5, 0.0, 0.0),
+//	 };
+//
+//   std::vector<glm::vec1> my_indices = {
+//	 	glm::vec1(0.0),
+//	 	glm::vec1(1.0),
+//	 	glm::vec1(2.0),
+//	 };
 
-  std::vector<glm::vec1> my_indices = {
-		glm::vec1(0.0),
-		glm::vec1(1.0),
-		glm::vec1(2.0),
+  vector<glm::vec3> my_coordinates = {
+		glm::vec3(-0.5, 0.5, 0.0),
+		glm::vec3(0.5, 0.5, 0.0),
+		glm::vec3(-0.5, -0.5, 0.0),
+    glm::vec3(0.5, -0.5, 0.0),
 	};
 
   // Triangle triangle1 = Triangle(my_coordinates, my_indices);
   // Circle circle1 = Circle();
-  Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 100);
+  // Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 100);
+  Rectangle rectangle1 = Rectangle(my_coordinates);
   
   // float vertices[] = {
   //   -0.5f, 0.0f,
@@ -43,20 +52,25 @@ int main(int argc, char **argv) {
   // };
 
   // float* vertices = triangle1.get_coordinates();
-  float* vertices = circle1.get_coordinates();
+  // float* vertices = circle1.get_coordinates();
+  float* vertices = rectangle1.get_coordinates();
 
   // unsigned int indices[] = {
   //   0, 1, 2
   // };
 
   // unsigned int* indices = triangle1.get_indices();
-  unsigned int* indices = circle1.get_indices();
+  // unsigned int* indices = circle1.get_indices();
+  unsigned int* indices = rectangle1.get_indices();
 
   // int coordinates_size = triangle1.get_coordinates_size();
   // int indices_size = triangle1.get_indices_size();
 
-  int coordinates_size = circle1.get_coordinates_size();
-  int indices_size = circle1.get_indices_size();
+  // int coordinates_size = circle1.get_coordinates_size();
+  // int indices_size = circle1.get_indices_size();
+
+  int coordinates_size = rectangle1.get_coordinates_size();
+  int indices_size = rectangle1.get_indices_size();
 
   unsigned int v_shader = CompileShader("vertex.glsl", false);
   unsigned int f_shader = CompileShader("fragment.glsl", true);
