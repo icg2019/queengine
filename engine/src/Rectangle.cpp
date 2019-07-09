@@ -1,11 +1,11 @@
 #include "../include/Rectangle.hpp"
 #include "../include/Triangle.hpp"
 
-Rectangle::Rectangle(){
+Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(shader){
     // Create two triangles and set the attributes to them
 }
 
-Rectangle::Rectangle(std::vector<glm::vec3> coordinates){
+Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_triangle(shader), lower_triangle(shader){
     if(coordinates.size() != 4){
         throw "Rectangle must contain 4 coordinates";
     }
@@ -30,8 +30,8 @@ Rectangle::Rectangle(std::vector<glm::vec3> coordinates){
         indices_lower_triangle.push_back(glm::vec1(i+3));
     }
 
-    this->upper_triangle = Triangle(coordinates_upper_triangle, indices_upper_triangle);
-    this->lower_triangle = Triangle(coordinates_lower_triangle, indices_lower_triangle);
+    this->upper_triangle = Triangle(shader, coordinates_upper_triangle, indices_upper_triangle);
+    this->lower_triangle = Triangle(shader, coordinates_lower_triangle, indices_lower_triangle);
 }
 
 std::vector<float> Rectangle::get_coordinates(){

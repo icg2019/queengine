@@ -50,7 +50,11 @@ int main(int argc, char **argv) {
     glm::vec3(0.5, -0.5, 0.0),
 	};
 
-  Triangle primitiva = Triangle();
+
+  Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
+                "engine/assets/shaders/fragment_from_buffers.glsl");
+
+  Triangle primitiva = Triangle(first_object_shader);
   std::vector<float> light = {1, 0, 0};
 
   std::vector<float> vertices = primitiva.get_coordinates();
@@ -64,8 +68,6 @@ int main(int argc, char **argv) {
 
   vector<tuple<Shader, int>> shaders;
 
-  Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
-                "engine/assets/shaders/fragment_from_buffers.glsl");
   first_object_shader.active = false;
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
@@ -75,14 +77,18 @@ int main(int argc, char **argv) {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   INFO("Initializing VAO");
-  BufferSet bufferSet = BufferSet(first_object_shader.program_id);
-  
-  bufferSet.add(vertices, "uPosition", 3);
-  bufferSet.add(&indices);
-
-  bufferSet.add(&tex_coords,"tex_coords");
   // -----------------------------------------------------------------------------------------------------//
   // Texture crap because we dont have a bind of textures
+
+  BufferSet bufferSet = primitiva.get_buffer_set();
+
+  // BufferSet bufferSet = BufferSet(first_object_shader.program_id);
+  
+  // bufferSet.add(vertices, "uPosition", 3);
+  
+  // bufferSet.add(&indices);
+
+  // bufferSet.add(&tex_coords,"tex_coords");
 
   glBindVertexArray(bufferSet.getId());
 
@@ -107,13 +113,13 @@ int main(int argc, char **argv) {
 
 
   //---------------------------------------
-  std::vector<float> vertices2 = vertices;
+  // std::vector<float> vertices2 = vertices;
 
-  std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
-               std::bind(std::multiplies<float>(), std::placeholders::_1, 0.5));
+  // std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
+  //              std::bind(std::multiplies<float>(), std::placeholders::_1, 0.5));
 
 
-  bufferSet.resize(&vertices2, "uPosition");
+  // bufferSet.resize(&vertices2, "uPosition");
 //---------------------------------------
   engine->Run(bufferSet.getId(), primitiva.get_indices_size(), shaders, textures);
 

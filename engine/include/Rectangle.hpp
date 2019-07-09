@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>
 #include "Triangle.hpp"
+#include "Shader.h"
 
 class Rectangle {
 	private:
@@ -14,8 +15,9 @@ class Rectangle {
         Triangle lower_triangle;
 
 	public:
-        Rectangle();
+        Rectangle(Shader shader);
 		Rectangle(
+			Shader shader,
 			std::vector<glm::vec3> coordinates
 		);
 

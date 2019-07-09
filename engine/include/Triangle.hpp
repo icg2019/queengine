@@ -8,6 +8,8 @@
 #include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>
+#include "BufferSet.hpp"
+#include "Shader.h"
 
 class Triangle {
 	private:
@@ -15,10 +17,13 @@ class Triangle {
         std::vector<glm::vec2> texture_coordinates;
         std::string texture_path;
         std::vector<glm::vec1> indices;
+        BufferSet bufferSet;
+
 
 	public:
-        Triangle();
+        Triangle(Shader shader);
 		Triangle(
+            Shader shader,
             std::vector<glm::vec3> coordinates,
             std::vector<glm::vec1> indices
         );
@@ -40,6 +45,8 @@ class Triangle {
         unsigned int get_indices_size();
 
         bool is_a_valid_path(std::string &);
+
+        BufferSet get_buffer_set();
 
         // Calcular a normal da face do triangulo
 };
