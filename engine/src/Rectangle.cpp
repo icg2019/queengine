@@ -1,7 +1,7 @@
 #include "../include/Rectangle.hpp"
 #include "../include/Triangle.hpp"
 
-Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(shader){
+Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(shader), bufferSet(shader.program_id){
     // Create two triangles and set the attributes to them
     std::vector<glm::vec2> upper_triangle_texture_coordinates = {
 		glm::vec2(0.0, 0.0),
@@ -17,9 +17,17 @@ Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(sha
 
     // upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
     upper_triangle.set_coordinates(upper_triangle_coordinates);
+
+    std::vector<float> vertices_tmp = this->get_coordinates();
+  	std::vector<unsigned int> indices_temp = this->get_indices();
+  	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
+
+	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+  	this->bufferSet.add(&indices_temp);
+  	this->bufferSet.add(&tex_coords,"tex_coords");
 }
 
-Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_triangle(shader), lower_triangle(shader){
+Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_triangle(shader), lower_triangle(shader), bufferSet(shader.program_id){
     if(coordinates.size() != 4){
         throw "Rectangle must contain 4 coordinates";
     }
@@ -54,6 +62,14 @@ Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_
 	};
 
     upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
+
+    std::vector<float> vertices_tmp = this->get_coordinates();
+  	std::vector<unsigned int> indices_temp = this->get_indices();
+  	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
+
+	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+  	this->bufferSet.add(&indices_temp);
+  	this->bufferSet.add(&tex_coords,"tex_coords");
 }
 
 std::vector<float> Rectangle::get_coordinates(){
@@ -121,4 +137,8 @@ std::vector<glm::vec2> Rectangle::get_texture_coordinates(){
     }
 
     return text_coord;
+}
+
+BufferSet Rectangle::get_buffer_set(){
+    return this->bufferSet;
 }

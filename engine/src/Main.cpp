@@ -81,15 +81,15 @@ int main(int argc, char **argv) {
   // -----------------------------------------------------------------------------------------------------//
   // Texture crap because we dont have a bind of textures
 
-  // BufferSet bufferSet = primitiva.get_buffer_set();
+  BufferSet bufferSet = primitiva.get_buffer_set();
 
-  BufferSet bufferSet = BufferSet(first_object_shader.program_id);
+  // BufferSet bufferSet = BufferSet(first_object_shader.program_id);
   
-  bufferSet.add(vertices, "uPosition", 3);
+  // bufferSet.add(vertices, "uPosition", 3);
   
-  bufferSet.add(&indices);
+  // bufferSet.add(&indices);
 
-  bufferSet.add(&tex_coords,"tex_coords");
+  // bufferSet.add(&tex_coords,"tex_coords");
 
   glBindVertexArray(bufferSet.getId());
 
