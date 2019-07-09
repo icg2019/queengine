@@ -118,12 +118,23 @@ void Circle::set_indices(std::vector<glm::vec1> indices){
 }
 
 std::vector<glm::vec2> Circle::get_texture_coordinates(){
+    float EPS = 1e-4;
     std::vector<glm::vec2> text_coord;
 
     for(auto &coord : this->coordinates){
-        glm::vec2 tmp_coord(coord.x, coord.y);
-        text_coord.push_back(glm::normalize(tmp_coord));
+        glm::vec2 tmp_coord(coord.x + this->radius, coord.y + this->radius);
+        // tmp_coord = glm::normalize(tmp_coord);
+
+        // tmp_coord 
+
+        // fabs(tmp_coord.x) < EPS ? tmp_coord.x = 0 : tmp_coord.x = tmp_coord.x;
+        // fabs(tmp_coord.y) < EPS ? tmp_coord.y = 0 : tmp_coord.y = tmp_coord.x;
+
+        text_coord.push_back(tmp_coord);
+        std::cout << tmp_coord.x << " " << tmp_coord.y << std::endl;
     }
+
+
 
     return text_coord;
 }
