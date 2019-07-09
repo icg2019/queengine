@@ -18,6 +18,9 @@
 
 using namespace std;
 time_t tempo;
+float xAxis;
+float yAxis;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -27,6 +30,14 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        xAxis += 0.1f;
+    if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        xAxis -= 0.1f;
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        yAxis += 0.1f;
+    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        yAxis -= 0.1f;    
 }
 
 int main() {
@@ -161,7 +172,7 @@ int main() {
 
         transform = translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
         transform = rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        glm::vec2 translate = glm::vec2(1.0f, 2.0f);
+        glm::vec2 translate = glm::vec2(xAxis, yAxis);
         transform = camera(1.0f, translate);
         // std::cout <<  << std::endl;
 
