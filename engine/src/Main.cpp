@@ -206,12 +206,12 @@ int main(int argc, char **argv) {
 
   vector<tuple<Shader, int>> shaders;
 
-  Shader base_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
-                            "engine/assets/shaders/base_fragment.glsl");
+  // Shader base_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
+  //                           "engine/assets/shaders/base_fragment.glsl");
 
-  base_object_shader.active = true;
+  // base_object_shader.active = true;
 
-  tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
+  // tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
 
   Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
                 "engine/assets/shaders/fragment_from_buffers.glsl");
@@ -223,7 +223,7 @@ int main(int argc, char **argv) {
   // second_object_shader.active = false;
   // tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2);
 
-  shaders.push_back(baseShader);
+  // shaders.push_back(baseShader);
   shaders.push_back(firstShader);
   // shaders.push_back(secondShader);
 
@@ -231,7 +231,7 @@ int main(int argc, char **argv) {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   INFO("Initializing VAO");
-  BufferSet bufferSet = BufferSet(base_object_shader.program_id);
+  BufferSet bufferSet = BufferSet(first_object_shader.program_id);
   
   bufferSet.add(vertices, "uPosition", 3);
   bufferSet.add(&indices);
@@ -251,7 +251,7 @@ int main(int argc, char **argv) {
 
   vector<tuple<Texture, int, int> > textures;
 
-  Texture texture1("engine/assets/textures/muro.jpg");
+  Texture texture1("../texture.jpg");
   tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
 
   // Texture texture2("engine/assets/textures/lua.png");
@@ -289,13 +289,13 @@ int main(int argc, char **argv) {
   // glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 
-  // std::vector<float> vertices2 = vertices;
+  std::vector<float> vertices2 = vertices;
 
-  // std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
-  //              std::bind(std::multiplies<float>(), std::placeholders::_1, 3));
+  std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
+               std::bind(std::multiplies<float>(), std::placeholders::_1, 0.5));
 
 
-  // bufferSet.resize(&vertices2, "aPos");
+  bufferSet.resize(&vertices2, "uPosition");
 
   engine->Run(bufferSet.getId(), 108, shaders, textures);
   // engine->Run(bufferSet.getId());

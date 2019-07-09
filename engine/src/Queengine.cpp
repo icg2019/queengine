@@ -140,6 +140,7 @@ void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vec
 }
 
 void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures) {
+  glEnable(GL_DEPTH_TEST);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
