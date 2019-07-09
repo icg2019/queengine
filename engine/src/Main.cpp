@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include <functional>
 #include <algorithm>
+#include <functional>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -16,12 +16,13 @@
 #include "InputManager.h"
 #include "Queengine.h"
 #include "BufferSet.hpp"
+#include "Triangle.hpp"
+#include "Rectangle.hpp"
+#include "Circle.hpp"
 
 #include "../include/log.h"
 
 using namespace std;
-
-unsigned int CompileShader(string filename, bool is_fragment);
 
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
@@ -39,7 +40,14 @@ int main(int argc, char **argv) {
       0, 0.9, 0.5, 0,
       0, 0, 0, 1
   };
+  vector<glm::vec3> my_coordinates = {
+		glm::vec3(-0.5, 0.5, 0.0),
+		glm::vec3(0.5, 0.5, 0.0),
+		glm::vec3(-0.5, -0.5, 0.0),
+    glm::vec3(0.5, -0.5, 0.0),
+	};
 
+  Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 100);
   std::vector<float> light = {1, 0, 0};
 
   std::vector<float> vertices = {
@@ -183,6 +191,67 @@ int main(int argc, char **argv) {
   glLinkProgram(shaderProgram);
   glUseProgram(shaderProgram);
 
+  // float* vertices = triangle1.get_coordinates();
+  float* vertices = circle1.get_coordinates();
+  // float* vertices = rectangle1.get_coordinates();
+
+  // unsigned int indices[] = {
+  //   0, 1, 2
+  // };
+
+  // unsigned int* indices = triangle1.get_indices();
+  unsigned int* indices = circle1.get_indices();
+  // unsigned int* indices = rectangle1.get_indices();
+
+  // int coordinates_size = triangle1.get_coordinates_size();
+  // int indices_size = triangle1.get_indices_size();
+
+  int coordinates_size = circle1.get_coordinates_size();
+  int indices_size = circle1.get_indices_size();
+
+  // int coordinates_size = rectangle1.get_coordinates_size();
+  // int indices_size = rectangle1.get_indices_size();
+
+  vector<tuple<Shader, int>> shaders;
+
+  Shader base_object_shader("engine/assets/shaders/vertex.glsl",
+                            "engine/assets/shaders/base_fragment.glsl");
+  base_object_shader.active = true;
+  tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
+
+  Shader first_object_shader("engine/assets/shaders/vertex.glsl",
+                "engine/assets/shaders/fragment.glsl");
+  first_object_shader.active = false;
+  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
+
+  Shader second_object_shader("engine/assets/shaders/vertex.glsl",
+                "engine/assets/shaders/fragment0.glsl");
+  second_object_shader.active = false;
+  tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2);
+
+  shaders.push_back(baseShader);
+  shaders.push_back(firstShader);
+  shaders.push_back(secondShader);
+
+  vector<tuple<Texture, int, int> > textures;
+
+  Texture texture1("engine/assets/textures/laranjo.png");
+  tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
+
+  Texture texture2("engine/assets/textures/lua.png");
+  tuple<Texture, int, int> secondTexture = make_tuple(texture2, 1, GL_TEXTURE1);
+
+  Texture texture3("engine/assets/textures/chao.jpg");
+  tuple<Texture, int, int> thirdTexture = make_tuple(texture3, 2, GL_TEXTURE2);
+
+  Texture texture4("engine/assets/textures/muro.jpg");
+  tuple<Texture, int, int> forthyTexture = make_tuple(texture4, 3, GL_TEXTURE3);
+
+  textures.push_back(firstTexture);
+  textures.push_back(secondTexture);
+  textures.push_back(thirdTexture);
+  textures.push_back(forthyTexture);
+
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   INFO("Initializing VAO");
@@ -244,6 +313,7 @@ int main(int argc, char **argv) {
   glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 
+  engine->Run(VAO, indices_size/sizeof(unsigned int), shaders, textures);
   // std::vector<float> vertices2 = vertices;
 
   // std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
@@ -255,41 +325,4 @@ int main(int argc, char **argv) {
   engine->Run(bufferSet.getId());
 
   return 0;
-}
-
-unsigned int CompileShader(string filename, bool is_fragment) {
-  filename = "engine/assets/shaders/" + filename;
-  ifstream file(filename);
-  string src = "";
-
-  if(file.is_open()) {
-    string line;
-    while(getline(file, line)) src += line + "\n";
-    file.close();
-  } else {
-    cout << "Could not load file [" << filename << "]" << endl;
-    return 0;
-  }
-
-  unsigned int shader;
-  if (is_fragment) {
-    shader = glCreateShader(GL_FRAGMENT_SHADER);
-  } else {
-    shader = glCreateShader(GL_VERTEX_SHADER);
-  }
-
-  const char * src_str = src.c_str();
-  glShaderSource(shader, 1, &src_str, NULL);
-  glCompileShader(shader);
-
-  int success;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    char log[512];
-    glGetShaderInfoLog(shader, 512, NULL, log);
-    cout << "Shader [" << filename << "] compilation failed: " << log << endl;
-    return 0;
-  }
-
-  return shader;
 }
