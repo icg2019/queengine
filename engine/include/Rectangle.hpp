@@ -30,6 +30,8 @@ class Rectangle {
 		void set_indices(std::vector<glm::vec1>);
 
         unsigned int get_indices_size();
+
+		std::vector<glm::vec2> get_texture_coordinates();
 };
 
 #endif

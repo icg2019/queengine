@@ -3,6 +3,20 @@
 
 Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(shader){
     // Create two triangles and set the attributes to them
+    std::vector<glm::vec2> upper_triangle_texture_coordinates = {
+		glm::vec2(0.0, 0.0),
+		glm::vec2(1.0, 0.0),
+		glm::vec2(1.0, 1.0)
+	};
+
+    std::vector<glm::vec3> upper_triangle_coordinates = {
+		glm::vec3(0.0, 0.0, 0.0),
+		glm::vec3(1.0, 0.0, 0.0),
+		glm::vec3(1.0, 1.0, 0.0)
+	};
+
+    // upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
+    upper_triangle.set_coordinates(upper_triangle_coordinates);
 }
 
 Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_triangle(shader), lower_triangle(shader){
@@ -32,6 +46,14 @@ Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_
 
     this->upper_triangle = Triangle(shader, coordinates_upper_triangle, indices_upper_triangle);
     this->lower_triangle = Triangle(shader, coordinates_lower_triangle, indices_lower_triangle);
+
+    std::vector<glm::vec2> upper_triangle_texture_coordinates = {
+		glm::vec2(0.0, 0.0),
+		glm::vec2(1.0, 0.0),
+		glm::vec2(1.0, 1.0),
+	};
+
+    upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
 }
 
 std::vector<float> Rectangle::get_coordinates(){
@@ -85,4 +107,18 @@ void Rectangle::set_indices(std::vector<glm::vec1>){
 unsigned int Rectangle::get_indices_size(){
     // Returns size of the combined index array
     return this->upper_triangle.get_indices_size() + this->lower_triangle.get_indices_size();
+}
+
+std::vector<glm::vec2> Rectangle::get_texture_coordinates(){
+    int number_of_indices = 6; // Each point of both triangles has an indice
+    std::vector<glm::vec2> text_coord = std::vector<glm::vec2>(number_of_indices);
+    std::vector<glm::vec2> text_coords_upper_triangle = this->upper_triangle.get_texture_coordinates();
+    std::vector<glm::vec2> text_coords_lower_triangle = this->lower_triangle.get_texture_coordinates();
+
+    for(size_t i = 0; i < 3; i++){
+        text_coord[i] = text_coords_upper_triangle[i];
+        text_coord[i+3] = text_coords_lower_triangle[i];
+    }
+
+    return text_coord;
 }

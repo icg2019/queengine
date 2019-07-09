@@ -2,15 +2,15 @@
 
 Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
 	std::vector<glm::vec3> coordinates = {
-		glm::vec3(-0.5, 0.0, 0.0),
-		glm::vec3(0.0, 0.75, 0.0),
-		glm::vec3(0.5, 0.0, 0.0),
+		glm::vec3(0.0, 0.0, 0.0),
+		glm::vec3(0.0, 1.0, 0.0),
+		glm::vec3(1.0, 1.0, 0.0),
 	};
 
 	std::vector<glm::vec2> texture_coordinates = {
 		glm::vec2(0.0, 0.0),
+		glm::vec2(0.0, 1.0),
 		glm::vec2(1.0, 1.0),
-		glm::vec2(0.5, 0.5),
 	};
 
 	// Criar metodo para Verificar se o caminho da textura esta certo
