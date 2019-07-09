@@ -9,6 +9,7 @@
 
 #include "InputManager.h"
 #include "SDL_include.h"
+#include "Rect.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "TextureLoader.h"
@@ -21,12 +22,15 @@ class Queengine {
   private:
     SDL_GLContext context;
     SDL_Window *window;
+    Rect glCanvasArea;
     static Queengine *instance;
     Queengine();
 
   public:
+    SDL_DisplayMode currentDisplay;
     ~Queengine();
-    void Run(unsigned int VAO, int indices);
+    void HandleInput();
+    Rect GetGLCanvasArea();
     void Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures);
     void Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures);
     static Queengine *GetInstance();

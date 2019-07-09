@@ -23,7 +23,7 @@ class Triangle {
             std::vector<glm::vec1> indices
         );
 
-		std::vector<float> get_coordinates();
+		std::vector<glm::vec3> get_coordinates();
 		void set_coordinates(std::vector<glm::vec3>);
 
         unsigned int get_coordinates_size();
@@ -40,6 +40,9 @@ class Triangle {
         unsigned int get_indices_size();
 
         bool is_a_valid_path(std::string &);
+
+        glm::vec3* get_vertice(glm::vec3);
+        bool point_is_inside(glm::vec3);
 
         // Calcular a normal da face do triangulo
 };

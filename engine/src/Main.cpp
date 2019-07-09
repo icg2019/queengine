@@ -46,6 +46,12 @@ int main(int argc, char **argv) {
   }
   std::vector<float> light = {1, 0, 0};
 
+  Triangle primitiva = Triangle();
+  std::vector<float> light = {1, 0, 0};
+  std::vector<glm::vec3> vertices = primitiva.get_coordinates();
+  std::vector<unsigned int> indices = primitiva.get_indices();
+  std::vector<glm::vec2> tex_coords = primitiva.get_texture_coordinates();
+
   vector<tuple<Shader, int>> shaders;
 
   Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
