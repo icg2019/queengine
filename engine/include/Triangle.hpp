@@ -41,6 +41,8 @@ class Triangle {
 
         bool is_a_valid_path(std::string &);
 
+        glm::vec3* get_vertice(glm::vec2);
+
         // Calcular a normal da face do triangulo
 };
 
