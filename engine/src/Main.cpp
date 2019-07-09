@@ -52,15 +52,9 @@ int main(int argc, char **argv) {
 
   Triangle primitiva = Triangle();
   std::vector<float> light = {1, 0, 0};
-
   std::vector<glm::vec3> vertices = primitiva.get_coordinates();
-
-
   std::vector<unsigned int> indices = primitiva.get_indices();
-
-
   std::vector<glm::vec2> tex_coords = primitiva.get_texture_coordinates();
-
 
   vector<tuple<Shader, int>> shaders;
 
@@ -71,7 +65,6 @@ int main(int argc, char **argv) {
 
   shaders.push_back(firstShader);
   
-
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   INFO("Initializing VAO");
@@ -102,9 +95,6 @@ int main(int argc, char **argv) {
   textures.push_back(firstTexture);
   
   glBindVertexArray(0);
-  
-
-
 
   //---------------------------------------
   std::vector<glm::vec3> vertices2 = vertices;
@@ -116,6 +106,7 @@ int main(int argc, char **argv) {
   bufferSet.resize(&vertices2, "uPosition");
 //---------------------------------------
   engine->Run(bufferSet.getId(), primitiva.get_indices_size(), shaders, textures);
+  delete engine;
 
 
   return 0;

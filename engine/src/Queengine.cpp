@@ -43,10 +43,10 @@ Queengine::Queengine() {
       std::cout << "Failed to initialize GLAD" << std::endl;
       exit(-1);
     }
-
-    SDL_DisplayMode currentDisplay;
-    SDL_GetCurrentDisplayMode(0, &currentDisplay);
-    glViewport(0, 0, currentDisplay.w, currentDisplay.h);
+    
+    SDL_GetCurrentDisplayMode(0, &(this->currentDisplay));
+    this->glCanvasArea = Rect(0, 0, currentDisplay.w, currentDisplay.h);
+    glViewport(this->glCanvasArea.x, this->glCanvasArea.y, this->glCanvasArea.w, this->glCanvasArea.h);
 }
 
 Queengine::~Queengine() {
@@ -61,6 +61,11 @@ Queengine *Queengine::GetInstance() {
   }
 
   return instance;
+}
+
+void ToggleFullscreen(SDL_Window* window) {
+  bool isFullscreen = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
+  SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
 }
 
 void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
@@ -95,17 +100,6 @@ void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
   // shader->Set("iChannel1", get<1>(textures[1]));
   // shader->Set("iChannel2", get<1>(textures[2]));
   // shader->Set("iChannel3", get<1>(textures[3]));
-
-
-
-
-
-
-
-
-
-
-
 
   glm::mat4 rotation(
       glm::vec4(0.5, 0, -0.9, 0),
@@ -145,6 +139,8 @@ void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shad
     InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
+    
+    this->HandleInput();
 
     glBindVertexArray(VAO);
     
@@ -167,4 +163,23 @@ void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shad
 
     SDL_GL_SwapWindow(this->window);
   }
+}
+
+Rect Queengine::GetGLCanvasArea() {
+  return this->glCanvasArea;
+}
+
+void Queengine::HandleInput() {
+    if (InputManager::GetInstance().KeyPress(F11_KEY)) {
+      ToggleFullscreen(this->window);
+    }
+    if (InputManager::GetInstance().KeyPress(KEY_1)) {
+        // Create Triangle
+    }
+    if (InputManager::GetInstance().KeyPress(KEY_2)) {
+        // Create Square
+    }
+    if (InputManager::GetInstance().KeyPress(KEY_3)) {
+        // Create Circle
+    }
 }
