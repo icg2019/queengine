@@ -29,19 +29,19 @@ using namespace std;
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
-  std::vector<float> rotation = {
-      0.5, 0, -0.9, 0,
-      0, 1.0, 0, 0,
-      0.9, 0, 0.5, 0,
-      0, 0, 0, 1
-  };
+  // std::vector<float> rotation = {
+  //     0.5, 0, -0.9, 0,
+  //     0, 1.0, 0, 0,
+  //     0.9, 0, 0.5, 0,
+  //     0, 0, 0, 1
+  // };
 
-  std::vector<float> rotation2 = {
-      1, 0, 0, 0,
-      0, 0.5, -0.9, 0,
-      0, 0.9, 0.5, 0,
-      0, 0, 0, 1
-  };
+  // std::vector<float> rotation2 = {
+  //     1, 0, 0, 0,
+  //     0, 0.5, -0.9, 0,
+  //     0, 0.9, 0.5, 0,
+  //     0, 0, 0, 1
+  // };
   vector<glm::vec3> my_coordinates = {
 		glm::vec3(-0.5, 0.5, 0.0),
 		glm::vec3(0.5, 0.5, 0.0),
@@ -270,20 +270,20 @@ int main(int argc, char **argv) {
 
   glBindVertexArray(0);
   // -----------------------------------------------------------------------------------------------------//
-  bufferSet.add_uniform(&rotation, "rotation");
-  bufferSet.add_uniform(&rotation2, "rotation2");
+  // bufferSet.add_uniform(&rotation, "rotation");
+  // bufferSet.add_uniform(&rotation2, "rotation2");
       
   // Material
-  bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.ambient");
-  bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.diffuse");
-  bufferSet.add_uniform(new glm::vec3({0.5f,0.5f,0.5f}),"material.specular");
-  bufferSet.add_uniform(new glm::vec1({32.0f}),"material.shininess");
+  // bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.ambient");
+  // bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.diffuse");
+  // bufferSet.add_uniform(new glm::vec3({0.5f,0.5f,0.5f}),"material.specular");
+  // bufferSet.add_uniform(new glm::vec1({32.0f}),"material.shininess");
 
   // Light
-  bufferSet.add_uniform(new glm::vec3({1.2f, 1.0f, 2.0f}), "light.position");
-  bufferSet.add_uniform(new glm::vec3({0.2f, 0.2f, 0.2f}), "light.ambient");
-  bufferSet.add_uniform(new glm::vec3({0.5f, 0.5f, 0.5f}), "light.diffuse");
-  bufferSet.add_uniform(new glm::vec3({1.0f, 1.0f, 1.0f}), "light.specular");
+  // bufferSet.add_uniform(new glm::vec3({1.2f, 1.0f, 2.0f}), "light.position");
+  // bufferSet.add_uniform(new glm::vec3({0.2f, 0.2f, 0.2f}), "light.ambient");
+  // bufferSet.add_uniform(new glm::vec3({0.5f, 0.5f, 0.5f}), "light.diffuse");
+  // bufferSet.add_uniform(new glm::vec3({1.0f, 1.0f, 1.0f}), "light.specular");
 
   // glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //

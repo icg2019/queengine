@@ -95,6 +95,44 @@ void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
   // shader->Set("iChannel1", get<1>(textures[1]));
   // shader->Set("iChannel2", get<1>(textures[2]));
   // shader->Set("iChannel3", get<1>(textures[3]));
+
+
+
+
+
+
+
+
+
+
+
+
+  glm::mat4 rotation(
+      glm::vec4(0.5, 0, -0.9, 0),
+      glm::vec4(0, 1.0, 0, 0),
+      glm::vec4(0.9, 0, 0.5, 0),
+      glm::vec4(0, 0, 0, 1)
+  );
+
+  glm::mat4 rotation2(
+      glm::vec4(1, 0, 0, 0),
+      glm::vec4(0, 0.5, -0.9, 0),
+      glm::vec4(0, 0.9, 0.5, 0),
+      glm::vec4(0, 0, 0, 1)
+  );
+
+  shader->Set("rotation", rotation);
+  shader->Set("rotation2", rotation2);
+  shader->Set("material.ambient", 1.0f, 0.5f, 0.31f);
+  shader->Set("material.diffuse", 1.0f, 0.5f, 0.31f);
+  shader->Set("material.specular", 0.5f, 0.5f, 0.5f);
+  shader->Set("material.shininess", 32.0f);
+  
+  shader->Set("light.position", 1.2f, 1.0f, 1.0f);
+  shader->Set("light.ambient", 0.2f, 0.2f, 0.2f);
+  shader->Set("light.diffuse", 0.5f, 0.5f, 0.5f);
+  shader->Set("light.specular", 1.0f, 1.0f, 1.0f);
+  
 }
 
 void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int> > textures) {
