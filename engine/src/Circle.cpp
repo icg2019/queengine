@@ -63,8 +63,8 @@ Circle::Circle(){
     };
 }
 
-float* Circle::get_coordinates(){
-    float* float_array = (float*) malloc(sizeof(float) * this->coordinates.size() * 3);
+std::vector<float> Circle::get_coordinates(){
+    std::vector<float> float_array = std::vector<float>(this->coordinates.size() * 3);
 
 	for(int i = 0, array_index = 0; i < this->coordinates.size(); i++, array_index += 3){
 		float_array[array_index] = this->coordinates[i].x;
@@ -83,8 +83,8 @@ void Circle::set_coordinates(std::vector<glm::vec3> coordinates){
 	this->coordinates = coordinates;
 }
 
-unsigned int* Circle::get_indices(){
-	unsigned int* indices_array = (unsigned int*) malloc(sizeof(unsigned int) * this->indices.size());
+std::vector<unsigned int> Circle::get_indices(){
+	std::vector<unsigned int> indices_array = std::vector<unsigned int>(this->indices.size());
 
 	for(int i = 0; i < this->indices.size(); i++){
 		indices_array[i] = this->indices[i].x;
