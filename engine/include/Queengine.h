@@ -14,10 +14,11 @@ class Queengine {
     Queengine();
 
   public:
+    static Queengine *GetInstance();
     SDL_DisplayMode currentDisplay;
     ~Queengine();
     void Run(unsigned int VAO);
-    static Queengine *GetInstance();
+    void HandleInput();
     Rect GetGLCanvasArea();
 };
 

@@ -43,12 +43,7 @@ Queengine::Queengine() {
     }
     
     SDL_GetCurrentDisplayMode(0, &(this->currentDisplay));
-    int glWidth = this->currentDisplay.w / 2;
-    int glHeight = this->currentDisplay.h; 
-    int glXPosition = (this->currentDisplay.w - glWidth) / 2;
-    int glYPosition = 0;
-    // glViewport(this->currentDisplay.w/4, 0, this->currentDisplay.w/2.0, this->currentDisplay.h);
-    this->glCanvasArea = Rect(glXPosition, glYPosition, glWidth, glHeight);
+    this->glCanvasArea = Rect(0, 0, currentDisplay.w, currentDisplay.h);
     glViewport(this->glCanvasArea.x, this->glCanvasArea.y, this->glCanvasArea.w, this->glCanvasArea.h);
 }
 
@@ -66,9 +61,16 @@ Queengine *Queengine::GetInstance() {
   return instance;
 }
 
+void ToggleFullscreen(SDL_Window* window) {
+    bool isFullscreen = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
+    SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+}
+
 void Queengine::Run(unsigned int VAO) {
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
+
+    this->HandleInput();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -80,4 +82,19 @@ void Queengine::Run(unsigned int VAO) {
 
 Rect Queengine::GetGLCanvasArea() {
   return this->glCanvasArea;
+}
+
+void Queengine::HandleInput() {
+    if (InputManager::GetInstance().KeyPress(F11_KEY)) {
+      ToggleFullscreen(this->window);
+    }
+    if (InputManager::GetInstance().KeyPress(KEY_1)) {
+        // Create Triangle
+    }
+    if (InputManager::GetInstance().KeyPress(KEY_2)) {
+        // Create Square
+    }
+    if (InputManager::GetInstance().KeyPress(KEY_3)) {
+        // Create Circle
+    }
 }
