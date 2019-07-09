@@ -11,6 +11,7 @@
 #include "SDL_include.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "TextureLoader.h"
 #include <vector>
 #include <tuple>
 
