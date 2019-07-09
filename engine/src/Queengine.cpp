@@ -1,10 +1,12 @@
 #include "Queengine.h"
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <fstream>
 #include <cmath>
-
-#include "InputManager.h"
+#include <unistd.h>
+#include <vector>
 
 Queengine *Queengine::instance = nullptr;
 
@@ -62,20 +64,103 @@ Queengine *Queengine::GetInstance() {
 }
 
 void ToggleFullscreen(SDL_Window* window) {
-    bool isFullscreen = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
-    SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+  bool isFullscreen = SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN;
+  SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
 }
 
-void Queengine::Run(unsigned int VAO) {
+void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
+  glm::vec2 _ifFragCoordOffsetXY(0.0f, 0.0f);
+  float _ifFragCoordScale = 1.0f;
+
+  int width, height;
+  SDL_DisplayMode currentDisplay;
+  SDL_GetCurrentDisplayMode(0, &currentDisplay);
+  width = currentDisplay.w;
+  height = currentDisplay.h;
+
+  glm::vec3 _resolution(1.0f, 1.0f, 0.5f);
+  int mouseX = InputManager::GetInstance().GetMouseX();
+  int mouseY = InputManager::GetInstance().GetMouseY();
+  int _frame = 0;
+
+  shader->Set("ifFragCoordOffsetUniform", 1, &_ifFragCoordOffsetXY.x);
+  shader->Set("iResolution", 1, &_resolution.x);
+  shader->Set("iTime", (float) (SDL_GetTicks()/1000.0));
+  shader->Set("iGlobalTime", (float) (SDL_GetTicks()/1000.0));
+  shader->Set(
+    "iMouse",
+    mouseX * _resolution[0],
+    mouseY * _resolution[0],
+    mouseX * _resolution[0],
+    mouseY * _resolution[0]
+  );
+  shader->Set("iFrame", &_frame);
+
+  shader->Set("iChannel0", get<1>(textures[0]));
+  // shader->Set("iChannel1", get<1>(textures[1]));
+  // shader->Set("iChannel2", get<1>(textures[2]));
+  // shader->Set("iChannel3", get<1>(textures[3]));
+
+  glm::mat4 rotation(
+      glm::vec4(0.5, 0, -0.9, 0),
+      glm::vec4(0, 1.0, 0, 0),
+      glm::vec4(0.9, 0, 0.5, 0),
+      glm::vec4(0, 0, 0, 1)
+  );
+
+  glm::mat4 rotation2(
+      glm::vec4(1, 0, 0, 0),
+      glm::vec4(0, 0.5, -0.9, 0),
+      glm::vec4(0, 0.9, 0.5, 0),
+      glm::vec4(0, 0, 0, 1)
+  );
+
+  shader->Set("rotation", rotation);
+  shader->Set("rotation2", rotation2);
+  // shader->Set("material.ambient", 1.0f, 0.5f, 0.31f);
+  // shader->Set("material.diffuse", 1.0f, 0.5f, 0.31f);
+  // shader->Set("material.specular", 0.5f, 0.5f, 0.5f);
+  // shader->Set("material.shininess", 32.0f);
+  
+  // shader->Set("light.position", 1.2f, 1.0f, 1.0f);
+  // shader->Set("light.ambient", 0.2f, 0.2f, 0.2f);
+  // shader->Set("light.diffuse", 0.5f, 0.5f, 0.5f);
+  // shader->Set("light.specular", 1.0f, 1.0f, 1.0f);
+  
+}
+
+void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int> > textures) {
+  Queengine::Run(VAO, 3, shaderList, textures);
+}
+
+void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures) {
+  glEnable(GL_DEPTH_TEST);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
-
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    InputManager::GetInstance().Update();
+    
     this->HandleInput();
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    
+    for(int i = 0; i < shaderList.size(); i++){
+      if(InputManager::GetInstance().KeyPress(get<1>(shaderList[i]))){
+        get<0>(shaderList[i]).active = !get<0>(shaderList[i]).active;
+      }
+
+      for(int j = 0; j < textures.size(); j++){
+        get<0>(textures[j]).use();
+        glActiveTexture(get<2>(textures[j]));
+      }
+      if(get<0>(shaderList[i]).active){
+        get<0>(shaderList[i]).Use();
+        BindUniforms(&get<0>(shaderList[i]), textures);
+      }
+    }
+
+    glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
+
     SDL_GL_SwapWindow(this->window);
   }
 }

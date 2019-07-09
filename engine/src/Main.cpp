@@ -1,105 +1,113 @@
 #include <iostream>
-#include <glad/glad.h>
 #include <fstream>
 #include <cmath>
+#include <algorithm>
+#include <functional>
+
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
+// #define STB_IMAGE_IMPLEMENTATION
+// #include <stb_image.h>
 
 #define INCLUDE_SDL
 
 #include "SDL_include.h"
 #include "InputManager.h"
+#include "Texture.h"
 #include "Queengine.h"
+#include "BufferSet.hpp"
+#include "Triangle.hpp"
+#include "Rectangle.hpp"
+#include "Circle.hpp"
+#include "Shader.h"
+
+#include "../include/log.h"
 
 using namespace std;
-
-unsigned int CompileShader(string filename, bool is_fragment);
 
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
-  // This part needs to be extracted later to a scene or whatever
-  // -------------------------------------------------------------------------------------------------- //
-  float vertices[] = {
-    -0.5f, 0.0f,
-    0.0f, 0.75f,
-    0.5f, 0.0f
-  };
+  // std::vector<float> rotation = {
+  //     0.5, 0, -0.9, 0,
+  //     0, 1.0, 0, 0,
+  //     0.9, 0, 0.5, 0,
+  //     0, 0, 0, 1
+  // };
 
-  unsigned int indices[] = {
-    0, 1, 2
-  };
+  // std::vector<float> rotation2 = {
+  //     1, 0, 0, 0,
+  //     0, 0.5, -0.9, 0,
+  //     0, 0.9, 0.5, 0,
+  //     0, 0, 0, 1
+  // };
+  
+  vector<glm::vec3> my_coordinates = {
+		glm::vec3(-0.5, 0.5, 0.0),
+		glm::vec3(0.5, 0.5, 0.0),
+		glm::vec3(-0.5, -0.5, 0.0),
+    glm::vec3(0.5, -0.5, 0.0),
+	};
 
-  unsigned int v_shader = CompileShader("vertex.glsl", false);
-  unsigned int f_shader = CompileShader("fragment.glsl", true);
+  Triangle primitiva = Triangle();
+  std::vector<float> light = {1, 0, 0};
+  std::vector<glm::vec3> vertices = primitiva.get_coordinates();
+  std::vector<unsigned int> indices = primitiva.get_indices();
+  std::vector<glm::vec2> tex_coords = primitiva.get_texture_coordinates();
 
-  unsigned int  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram,v_shader);
-  glAttachShader(shaderProgram,f_shader);
-  glLinkProgram(shaderProgram);
-  glUseProgram(shaderProgram);
+  vector<tuple<Shader, int>> shaders;
 
-  unsigned int VAO;
-  unsigned int  VBO, EBO;
-  glGenBuffers(1,&VBO);
-  glGenBuffers(1,&EBO);
-  glGenVertexArrays(1, &VAO);
+  Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
+                "engine/assets/shaders/fragment_from_buffers.glsl");
+  first_object_shader.active = false;
+  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
-  glBindVertexArray(VAO);
+  shaders.push_back(firstShader);
+  
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof vertices , vertices, GL_STATIC_DRAW);
+  INFO("Initializing VAO");
+  BufferSet bufferSet = BufferSet(first_object_shader.program_id);
+  
+  bufferSet.add(&vertices, "uPosition");
+  bufferSet.add(&indices);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
+  bufferSet.add(&tex_coords,"tex_coords");
+  // -----------------------------------------------------------------------------------------------------//
+  // Texture crap because we dont have a bind of textures
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_TRUE, 0, (void*)0);
-  glEnableVertexAttribArray(0);
+  glBindVertexArray(bufferSet.getId());
 
+  for(Buffer b : bufferSet.buffers)
+  {
+      GLint location = glGetAttribLocation(bufferSet.program, b.shader_var.c_str());
+      glEnableVertexAttribArray(location);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
+
+  vector<tuple<Texture, int, int> > textures;
+
+  Texture texture1("../texture.jpg");
+  tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
+
+  
+  textures.push_back(firstTexture);
+  
   glBindVertexArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  glUseProgram(shaderProgram);
-  // -------------------------------------------------------------------------------------------------- //
+  //---------------------------------------
+  std::vector<glm::vec3> vertices2 = vertices;
 
-  engine->Run(VAO);
+  //std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
+   //            std::bind(std::multiplies<float>(), std::placeholders::_1, 0.5));
+
+
+  bufferSet.resize(&vertices2, "uPosition");
+//---------------------------------------
+  engine->Run(bufferSet.getId(), primitiva.get_indices_size(), shaders, textures);
   delete engine;
 
+
   return 0;
-}
-
-unsigned int CompileShader(string filename, bool is_fragment) {
-  filename = "engine/assets/shaders/" + filename;
-  ifstream file(filename);
-  string src = "";
-
-  if(file.is_open()) {
-    string line;
-    while(getline(file, line)) src += line + "\n";
-    file.close();
-  } else {
-    cout << "Could not load file [" << filename << "]" << endl;
-    return 0;
-  }
-
-  unsigned int shader;
-  if (is_fragment) {
-    shader = glCreateShader(GL_FRAGMENT_SHADER);
-  } else {
-    shader = glCreateShader(GL_VERTEX_SHADER);
-  }
-
-  const char * src_str = src.c_str();
-  glShaderSource(shader, 1, &src_str, NULL);
-  glCompileShader(shader);
-
-  int success;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    char log[512];
-    glGetShaderInfoLog(shader, 512, NULL, log);
-    cout << "Shader [" << filename << "] compilation failed: " << log << endl;
-    return 0;
-  }
-
-  return shader;
 }
