@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 	
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(
-								glm::vec3(2,2,3), // Camera is at (4,3,-3), in World Space
+								glm::vec3(1,1.5,3), // Camera is at (4,3,-3), in World Space
 								glm::vec3(0,0,0), // and looks at the origin
 								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 						   );
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
   std::vector<glm::vec2> textcoord;
   std::vector<glm::vec3> normal;
 
-  bool fileOpened = load3DOBJ("engine/assets/obj/cube.obj", vertices, textcoord, normal);
+  bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
 
   unsigned int indices[vertices.size()];
 
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
   glUseProgram(shaderProgram);
 
    // Load the texture using any two methods
-	GLuint Texture = loadBMP_custom("engine/assets/uvtemplate.bmp");
+	GLuint Texture = loadBMP_custom("engine/assets/pixes.bmp");
 	
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(shaderProgram, "myTextureSampler");
