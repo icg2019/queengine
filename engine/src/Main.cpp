@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
   Triangle primitiva = Triangle();
   std::vector<float> light = {1, 0, 0};
 
-  std::vector<float> vertices = primitiva.get_coordinates();
+  std::vector<glm::vec3> vertices = primitiva.get_coordinates();
 
 
   std::vector<unsigned int> indices = primitiva.get_indices();
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
   INFO("Initializing VAO");
   BufferSet bufferSet = BufferSet(first_object_shader.program_id);
   
-  bufferSet.add(vertices, "uPosition", 3);
+  bufferSet.add(&vertices, "uPosition");
   bufferSet.add(&indices);
 
   bufferSet.add(&tex_coords,"tex_coords");
@@ -107,10 +107,10 @@ int main(int argc, char **argv) {
 
 
   //---------------------------------------
-  std::vector<float> vertices2 = vertices;
+  std::vector<glm::vec3> vertices2 = vertices;
 
-  std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
-               std::bind(std::multiplies<float>(), std::placeholders::_1, 0.5));
+  //std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
+   //            std::bind(std::multiplies<float>(), std::placeholders::_1, 0.5));
 
 
   bufferSet.resize(&vertices2, "uPosition");

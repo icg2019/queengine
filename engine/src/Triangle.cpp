@@ -60,6 +60,16 @@ std::vector<glm::vec2> Triangle::get_texture_coordinates(){
 	return this->texture_coordinates;
 }
 
+glm::vec3* Triangle::get_vertice(glm::vec2 mouse_position){
+    const double radius = 0.1;
+    for(int i = 0; i < this->coordinates.size(); i++){
+
+        double dist = hypot(this->coordinates[i].x - mouse_position.x, this->coordinates[i].y - mouse_position.y);
+        if(dist < radius) return &this->coordinates[i];
+    }
+    return NULL;
+}
+
 void Triangle::set_texture_coordinates(std::vector<glm::vec2> texture_coordinates){
 	this->texture_coordinates = texture_coordinates;
 }
