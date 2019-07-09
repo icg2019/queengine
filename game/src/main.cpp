@@ -14,6 +14,9 @@
 //#include <assimp/postprocess.h>
 #include "shader.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 time_t tempo;
@@ -142,7 +145,7 @@ int main() {
 
     glEnable(GL_DEPTH_TEST);
 
-   
+    shader.use();
 
     while(!glfwWindowShouldClose(window))
     {
@@ -152,12 +155,26 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader.use();
+        // shader.use();
       //  glBindTexture(GL_TEXTURE_2D, TEX);
+        // create transformations
+         // make sure to initialize matrix to identity matrix first
+        glm::mat4 transform = glm::mat4(1.0f);
+
+        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        // std::cout <<  << std::endl;
+
+        // get matrix's uniform location and set matrix
+        unsigned int transformLoc = glGetUniformLocation(shader.program_id, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+
+        // render container
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
 
+        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

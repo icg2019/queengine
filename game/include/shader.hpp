@@ -5,11 +5,9 @@
 #include <unordered_map>
 #include <functional>
 
-
 class Shader {
 public:
     Shader(const std::string & vertex_file, const std::string & fragment_file);
-
     void use();
 
     void set(const std::string & name, bool value);
@@ -22,9 +20,9 @@ public:
 
 
     void setTime(const std::string & name, std::function<float()> time, float frequency=1.0f);
+    unsigned int program_id;
 
 private:
-    unsigned int program_id;
     std::unordered_map<std::string, unsigned int> locations;
 
     unsigned int location(const std::string & name);
