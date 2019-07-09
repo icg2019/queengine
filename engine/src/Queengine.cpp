@@ -117,16 +117,22 @@ void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
 
   shader->Set("rotation", rotation);
   shader->Set("rotation2", rotation2);
-  // shader->Set("material.ambient", 1.0f, 0.5f, 0.31f);
-  // shader->Set("material.diffuse", 1.0f, 0.5f, 0.31f);
-  // shader->Set("material.specular", 0.5f, 0.5f, 0.5f);
-  // shader->Set("material.shininess", 32.0f);
   
-  // shader->Set("light.position", 1.2f, 1.0f, 1.0f);
-  // shader->Set("light.ambient", 0.2f, 0.2f, 0.2f);
-  // shader->Set("light.diffuse", 0.5f, 0.5f, 0.5f);
-  // shader->Set("light.specular", 1.0f, 1.0f, 1.0f);
+  glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
   
+  shader->Set("Projection", Projection);
+
+  glm::mat4 View = glm::lookAt(
+								glm::vec3(1,1.5,3), // Camera is at (4,3,-3), in World Space
+								glm::vec3(0,0,0), // and looks at the origin
+								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+						   );
+  
+  shader->Set("View", View);
+  
+  glm::mat4 Model = glm::mat4(1.0f);
+  
+  shader->Set("Model", Model);
 }
 
 void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int> > textures) {
