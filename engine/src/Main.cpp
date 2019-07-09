@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
   std::vector<glm::vec2> textcoord;
   std::vector<glm::vec3> normal;
 
-  bool fileOpened = load3DOBJ("engine/assets/obj/cube.obj", vertices, textcoord, normal);
+  bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, textcoord, normal);
 
   unsigned int indices[vertices.size()];
 

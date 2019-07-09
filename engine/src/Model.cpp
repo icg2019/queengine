@@ -20,6 +20,9 @@ bool load3DOBJ(
 	std::vector<glm::vec2> temp_uvs;           // Texture Coord
 	std::vector<glm::vec3> temp_normals;       // Suface normals
 
+    float bigger[3] = {-999, -999, -999};
+    float lower[3] = {999, 999, 999};
+
     FILE *file = fopen(path, "r");
     if (file == NULL) {
         printf("Impossible to open the file!\n");
@@ -37,6 +40,16 @@ bool load3DOBJ(
             if ( strcmp( lineHeader, "v" ) == 0 ){
                 glm::vec3 vertex;
                 fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+                
+                if (vertex.x > bigger[0]) bigger[0] = vertex.x;
+                if (vertex.x < lower[0])  lower[0]  = vertex.x;
+
+                if (vertex.y > bigger[1]) bigger[1] = vertex.y;
+                if (vertex.y < lower[1])  lower[1]  = vertex.y;
+
+                if (vertex.z > bigger[2]) bigger[2] = vertex.z;
+                if (vertex.z < lower[2])  lower[2]  = vertex.z;
+                
                 temp_vertices.push_back(vertex);
             } else if ( strcmp( lineHeader, "vt" ) == 0 ){
                 glm::vec2 uv;
@@ -71,9 +84,22 @@ bool load3DOBJ(
         }
     }
 
+    float temp[3] = {
+        bigger[0] - lower[0],
+        bigger[1] - lower[1],
+        bigger[2] - lower[2]
+    };
+
+    //Normalizing ([0..1]) temp_vectors
+    for( unsigned int i=0; i<temp_vertices.size(); i++){
+        temp_vertices[i].x = (temp_vertices[i].x - lower[0]) / temp[0];
+        temp_vertices[i].y = (temp_vertices[i].y - lower[1]) / temp[1];
+        temp_vertices[i].z = (temp_vertices[i].z - lower[2]) / temp[2];
+    }
+
     // For each vertex of each triangle
     for( unsigned int i=0; i<vertexIndices.size(); i++ ){
-        unsigned int vertexIndex = vertexIndices[i];
+        unsigned int vertexIndex = (vertexIndices[i]);
         unsigned int uvIndex = uvIndices[i];
 		unsigned int normalIndex = normalIndices[i];
 
