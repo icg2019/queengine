@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <functional>
+#include <algorithm>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -241,6 +243,14 @@ int main(int argc, char **argv) {
 
   glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
+
+  // std::vector<float> vertices2 = vertices;
+
+  // std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
+  //              std::bind(std::multiplies<float>(), std::placeholders::_1, 3));
+
+
+  // bufferSet.resize(&vertices2, "aPos");
 
   engine->Run(bufferSet.getId());
 
