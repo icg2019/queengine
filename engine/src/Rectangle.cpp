@@ -34,14 +34,14 @@ Rectangle::Rectangle(std::vector<glm::vec3> coordinates){
     this->lower_triangle = Triangle(coordinates_lower_triangle, indices_lower_triangle);
 }
 
-float* Rectangle::get_coordinates(){
+std::vector<float> Rectangle::get_coordinates(){
     int number_of_values = 18; // for each triangle there are 9 float values. So 9 * 2 (triangles) = 18
-    float* float_array = (float*) malloc(sizeof(float) * number_of_values);
-    float* array_upper_triangle = this->upper_triangle.get_coordinates();
-    float* array_lower_triangle = this->lower_triangle.get_coordinates();
+    std::vector<float> float_array = std::vector<float>(number_of_values);
+    std::vector<float> array_upper_triangle = this->upper_triangle.get_coordinates();
+    std::vector<float> array_lower_triangle = this->lower_triangle.get_coordinates();
 
     // memcpy(float_array, array_upper_triangle, sizeof(float) * 9);
-    // memcpy(float_array + (sizeof(float) * 9), array_lower_triangle, sizeof(float) * 9);
+    // memcpy(float_array + (sizeof(float) * 9), array_low(unsigned int*) malloc(sizeof(unsigned int) * number_of_indices);er_triangle, sizeof(float) * 9);
 
     for(size_t i = 0; i < 9; i++){
         float_array[i] = array_upper_triangle[i];
@@ -60,12 +60,12 @@ unsigned int Rectangle::get_coordinates_size(){
     return this->upper_triangle.get_coordinates_size() + this->lower_triangle.get_coordinates_size();
 }
 
-unsigned int* Rectangle::get_indices(){
+std::vector<unsigned int> Rectangle::get_indices(){
     // Combines the two indeces arrays from the two triangles and return them as one
     int number_of_indices = 6; // Each point of both triangles has an indice
-    unsigned int* indices_array = (unsigned int*) malloc(sizeof(unsigned int) * number_of_indices);
-    unsigned int* indices_upper_triangle = this->upper_triangle.get_indices();
-    unsigned int* indices_lower_triangle = this->lower_triangle.get_indices();
+    std::vector<unsigned int> indices_array = std::vector<unsigned int>(number_of_indices);
+    std::vector<unsigned int> indices_upper_triangle = this->upper_triangle.get_indices();
+    std::vector<unsigned int> indices_lower_triangle = this->lower_triangle.get_indices();
 
     // memcpy(indices_array, indices_upper_triangle, sizeof(unsigned int) * 3);
     // memcpy(indices_array + (sizeof(unsigned int) * 3), indices_lower_triangle, sizeof(unsigned int) * 3);
