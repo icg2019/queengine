@@ -14,9 +14,7 @@
 //#include <assimp/postprocess.h>
 #include "shader.hpp"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "transformation.hpp"
 
 using namespace std;
 time_t tempo;
@@ -161,8 +159,10 @@ int main() {
          // make sure to initialize matrix to identity matrix first
         glm::mat4 transform = glm::mat4(1.0f);
 
-        transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        transform = translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+        transform = rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::vec2 translate = glm::vec2(1.0f, 2.0f);
+        transform = camera(1.0f, translate);
         // std::cout <<  << std::endl;
 
         // get matrix's uniform location and set matrix
