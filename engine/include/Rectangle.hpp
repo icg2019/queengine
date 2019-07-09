@@ -19,7 +19,7 @@ class Rectangle {
 			std::vector<glm::vec3> coordinates
 		);
 
-		std::vector<float> get_coordinates();
+		std::vector<glm::vec3> get_coordinates();
 		void set_coordinates(std::vector<glm::vec3>);
 
         unsigned int get_coordinates_size();

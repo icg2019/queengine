@@ -44,16 +44,8 @@ Triangle::Triangle(std::vector<glm::vec3> coordinates,
 	this->texture_coordinates[2] = glm::vec2(1.0, 1.0);
 }
 
-std::vector<float> Triangle::get_coordinates(){
-	std::vector<float> float_array = std::vector<float>(this->coordinates.size() * 3);
-
-	for(int i = 0, array_index = 0; i < this->coordinates.size(); i++, array_index += 3){
-		float_array[array_index] = this->coordinates[i].x;
-		float_array[array_index+1] = this->coordinates[i].y;
-		float_array[array_index+2] = this->coordinates[i].z;
-	}
-	
-	return float_array;
+std::vector<glm::vec3> Triangle::get_coordinates(){
+	return this->coordinates;
 }
 
 unsigned int Triangle::get_coordinates_size(){
