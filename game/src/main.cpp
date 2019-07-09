@@ -20,6 +20,8 @@ using namespace std;
 time_t tempo;
 float xAxis;
 float yAxis;
+float xScale = 1.0f;
+float yScale = 1.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -30,14 +32,34 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        xAxis += 0.1f;
-    if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        xAxis -= 0.1f;
-    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        yAxis += 0.1f;
-    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        yAxis -= 0.1f;    
+    
+    if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
+        if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
+            glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+            xScale+=0.1f;
+
+        if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
+            glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+            xScale-=0.1f;
+
+        if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
+            glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            yScale+=0.1f;
+
+        if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS &&
+            glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            yScale-=0.1f;
+    } else {
+        if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+            xAxis += 0.1f;
+        if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+            xAxis -= 0.1f;
+        if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            yAxis += 0.1f;
+        if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            yAxis -= 0.1f;    
+    }
+
 }
 
 int main() {
@@ -170,10 +192,12 @@ int main() {
          // make sure to initialize matrix to identity matrix first
         glm::mat4 transform = glm::mat4(1.0f);
 
-        transform = translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+        glm::vec2 cameraMove = glm::vec2(xAxis, yAxis);
+        transform = camera(1.0f, cameraMove);
+
+        // transform = translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
         transform = rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        glm::vec2 translate = glm::vec2(xAxis, yAxis);
-        transform = camera(1.0f, translate);
+        transform = scale(transform, glm::vec3(xScale,yScale,1.0f));
         // std::cout <<  << std::endl;
 
         // get matrix's uniform location and set matrix
