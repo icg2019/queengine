@@ -55,7 +55,8 @@ int main(int argc, char **argv) {
                 "engine/assets/shaders/fragment_from_buffers.glsl");
 
   // Triangle primitiva = Triangle(first_object_shader);
-  Rectangle primitiva = Rectangle(first_object_shader, my_coordinates);
+  // Rectangle primitiva = Rectangle(first_object_shader, my_coordinates);
+  Circle primitiva = Circle(first_object_shader, {0.0, 0.0, 0.0}, 0.5, 100);
   std::vector<float> light = {1, 0, 0};
 
   std::vector<float> vertices = primitiva.get_coordinates();

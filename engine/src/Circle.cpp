@@ -5,7 +5,7 @@
 #include <string>
 
 
-Circle::Circle(glm::vec3 center, float radius, float definition) : center(center), radius(radius) {
+Circle::Circle(Shader shader, glm::vec3 center, float radius, float definition) : center(center), radius(radius), bufferSet(shader.program_id) {
     if(definition < 3) definition = 3;
 
     definition = ceil(definition);
@@ -41,9 +41,17 @@ Circle::Circle(glm::vec3 center, float radius, float definition) : center(center
         this->indices.push_back(glm::vec1(this->coordinates.size()-1));
     }
 
+    std::vector<float> vertices_tmp = this->get_coordinates();
+  	std::vector<unsigned int> indices_temp = this->get_indices();
+  	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
+
+	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+  	this->bufferSet.add(&indices_temp);
+  	this->bufferSet.add(&tex_coords,"tex_coords");
+
 }
 
-Circle::Circle(){
+Circle::Circle(Shader shader) : bufferSet(shader.program_id){
     this->coordinates = {
         {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}, {0.707107, 0.707107, 0.0},
         {0.0, 1.0, 0.0}, {-0.707107, 0.707107, 0.0}, {-1.0, 0.0, 0.0},
@@ -61,6 +69,14 @@ Circle::Circle(){
         glm::vec1(0), glm::vec1(7), glm::vec1(8),
         glm::vec1(0), glm::vec1(8), glm::vec1(9),
     };
+
+    std::vector<float> vertices_tmp = this->get_coordinates();
+  	std::vector<unsigned int> indices_temp = this->get_indices();
+  	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
+
+	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+  	this->bufferSet.add(&indices_temp);
+  	this->bufferSet.add(&tex_coords,"tex_coords");
 }
 
 std::vector<float> Circle::get_coordinates(){
@@ -99,6 +115,21 @@ unsigned int Circle::get_indices_size(){
 
 void Circle::set_indices(std::vector<glm::vec1> indices){
 	this->indices = indices;
+}
+
+std::vector<glm::vec2> Circle::get_texture_coordinates(){
+    std::vector<glm::vec2> text_coord;
+
+    for(auto &coord : this->coordinates){
+        glm::vec2 tmp_coord(coord.x, coord.y);
+        text_coord.push_back(glm::normalize(tmp_coord));
+    }
+
+    return text_coord;
+}
+
+BufferSet Circle::get_buffer_set(){
+    return this->bufferSet;
 }
 
 
