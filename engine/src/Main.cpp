@@ -14,6 +14,7 @@
 #include "texture.hpp"
 #include "Model.hpp"
 #include "vboindexer.hpp"
+#include "TextureLoader.h"
 
 
 using namespace std;
@@ -63,7 +64,7 @@ int main(int argc, char **argv) {
   glUseProgram(shaderProgram);
 
    // Load the texture using any two methods
-	GLuint Texture = loadBMP_custom("engine/assets/pixes.bmp");
+  TextureLoader texture("engine/assets/pixes.bmp", 0, 1);
 	
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(shaderProgram, "myTextureSampler");
@@ -86,8 +87,8 @@ int main(int argc, char **argv) {
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &View[0][0]);
 
   // Bind our texture in Texture Unit 0
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, Texture);
+
+  texture.Bind(0);
   // Set our "myTextureSampler" sampler to use Texture Unit 0
   glUniform1i(TextureID, 0);
   
