@@ -1,7 +1,9 @@
 #ifndef RECTANGLE_HPP 
 #define RECTANGLE_HPP
 
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <string>
+#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>
 #include "Triangle.hpp"

@@ -11,12 +11,12 @@ using namespace std;
 
 class Shader {
     private:
-        unsigned int program_id;
         unordered_map<string, unsigned int> locations;
 
         unsigned int Location(const string & name);
 
     public:
+        unsigned int program_id;
         Shader(const string & vertex_file, const string & fragment_file);
 
         void Use();

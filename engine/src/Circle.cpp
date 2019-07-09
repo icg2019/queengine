@@ -1,6 +1,9 @@
 #include "../include/Circle.hpp"
 #include "../include/point_utils.hpp"
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <vector>
+#include <string>
+
 
 Circle::Circle(glm::vec3 center, float radius, float definition) : center(center), radius(radius) {
     if(definition < 3) definition = 3;

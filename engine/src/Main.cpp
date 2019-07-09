@@ -7,18 +7,20 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+// #define STB_IMAGE_IMPLEMENTATION
+// #include <stb_image.h>
 
 #define INCLUDE_SDL
 
 #include "SDL_include.h"
 #include "InputManager.h"
+#include "Texture.h"
 #include "Queengine.h"
 #include "BufferSet.hpp"
 #include "Triangle.hpp"
 #include "Rectangle.hpp"
 #include "Circle.hpp"
+#include "Shader.h"
 
 #include "../include/log.h"
 
@@ -47,7 +49,7 @@ int main(int argc, char **argv) {
     glm::vec3(0.5, -0.5, 0.0),
 	};
 
-  Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 100);
+  // Circle circle1 = Circle({0.0, 0.0, 0.0}, 0.5, 100);
   std::vector<float> light = {1, 0, 0};
 
   std::vector<float> vertices = {
@@ -180,19 +182,8 @@ int main(int argc, char **argv) {
 
 
 
-  // This part needs to be extracted later to a scene or whatever
-  // -------------------------------------------------------------------------------------------------- //
-  GLuint v_shader = CompileShader("vertex.glsl", false);
-  GLuint f_shader = CompileShader("fragment.glsl", true);
-
-  GLuint shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram,v_shader);
-  glAttachShader(shaderProgram,f_shader);
-  glLinkProgram(shaderProgram);
-  glUseProgram(shaderProgram);
-
   // float* vertices = triangle1.get_coordinates();
-  float* vertices = circle1.get_coordinates();
+  // float* vertices = circle1.get_coordinates();
   // float* vertices = rectangle1.get_coordinates();
 
   // unsigned int indices[] = {
@@ -200,62 +191,46 @@ int main(int argc, char **argv) {
   // };
 
   // unsigned int* indices = triangle1.get_indices();
-  unsigned int* indices = circle1.get_indices();
+  // unsigned int* indices = circle1.get_indices();
   // unsigned int* indices = rectangle1.get_indices();
 
   // int coordinates_size = triangle1.get_coordinates_size();
   // int indices_size = triangle1.get_indices_size();
 
-  int coordinates_size = circle1.get_coordinates_size();
-  int indices_size = circle1.get_indices_size();
+  // int coordinates_size = circle1.get_coordinates_size();
+  // int indices_size = circle1.get_indices_size();
 
   // int coordinates_size = rectangle1.get_coordinates_size();
   // int indices_size = rectangle1.get_indices_size();
 
   vector<tuple<Shader, int>> shaders;
 
-  Shader base_object_shader("engine/assets/shaders/vertex.glsl",
-                            "engine/assets/shaders/base_fragment.glsl");
-  base_object_shader.active = true;
-  tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
+  // Shader base_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
+  //                           "engine/assets/shaders/fragment_from_buffers.glsl");
+
+  // base_object_shader.active = true;
+
+  // tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
 
   Shader first_object_shader("engine/assets/shaders/vertex.glsl",
                 "engine/assets/shaders/fragment.glsl");
   first_object_shader.active = false;
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
-  Shader second_object_shader("engine/assets/shaders/vertex.glsl",
-                "engine/assets/shaders/fragment0.glsl");
-  second_object_shader.active = false;
-  tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2);
+  // Shader second_object_shader("engine/assets/shaders/vertex.glsl",
+  //               "engine/assets/shaders/fragment0.glsl");
+  // second_object_shader.active = false;
+  // tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2);
 
-  shaders.push_back(baseShader);
+  // shaders.push_back(baseShader);
   shaders.push_back(firstShader);
-  shaders.push_back(secondShader);
+  // shaders.push_back(secondShader);
 
-  vector<tuple<Texture, int, int> > textures;
-
-  Texture texture1("engine/assets/textures/laranjo.png");
-  tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
-
-  Texture texture2("engine/assets/textures/lua.png");
-  tuple<Texture, int, int> secondTexture = make_tuple(texture2, 1, GL_TEXTURE1);
-
-  Texture texture3("engine/assets/textures/chao.jpg");
-  tuple<Texture, int, int> thirdTexture = make_tuple(texture3, 2, GL_TEXTURE2);
-
-  Texture texture4("engine/assets/textures/muro.jpg");
-  tuple<Texture, int, int> forthyTexture = make_tuple(texture4, 3, GL_TEXTURE3);
-
-  textures.push_back(firstTexture);
-  textures.push_back(secondTexture);
-  textures.push_back(thirdTexture);
-  textures.push_back(forthyTexture);
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   INFO("Initializing VAO");
-  BufferSet bufferSet = BufferSet(shaderProgram);
+  BufferSet bufferSet = BufferSet(first_object_shader.program_id);
   
   bufferSet.add(vertices, "aPos", 3);
   bufferSet.add(&indices);
@@ -273,25 +248,25 @@ int main(int argc, char **argv) {
       glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
-  unsigned int TEX;
-  glGenTextures(1, &TEX);
+  vector<tuple<Texture, int, int> > textures;
 
-  stbi_set_flip_vertically_on_load(true); 
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load("../texture.jpg", &width, &height, &nrChannels, 0); 
-  if (data)
-  {
-          glBindTexture(GL_TEXTURE_2D, TEX);
-          glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-          glGenerateMipmap(GL_TEXTURE_2D);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT ); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat 
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  }else{
-      std::cout << "Failed to load texture" << std::endl;
-  }   
-  stbi_image_free(data);
+  Texture texture1("../texture.jpg");
+  tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
+
+  // Texture texture2("engine/assets/textures/lua.png");
+  // tuple<Texture, int, int> secondTexture = make_tuple(texture2, 1, GL_TEXTURE1);
+
+  // Texture texture3("engine/assets/textures/chao.jpg");
+  // tuple<Texture, int, int> thirdTexture = make_tuple(texture3, 2, GL_TEXTURE2);
+
+  // Texture texture4("engine/assets/textures/muro.jpg");
+  // tuple<Texture, int, int> forthyTexture = make_tuple(texture4, 3, GL_TEXTURE3);
+
+  textures.push_back(firstTexture);
+  // textures.push_back(secondTexture);
+  // textures.push_back(thirdTexture);
+  // textures.push_back(forthyTexture);
+
 
   glBindVertexArray(0);
   // -----------------------------------------------------------------------------------------------------//
@@ -310,10 +285,9 @@ int main(int argc, char **argv) {
   bufferSet.add_uniform(new glm::vec3({0.5f, 0.5f, 0.5f}), "light.diffuse");
   bufferSet.add_uniform(new glm::vec3({1.0f, 1.0f, 1.0f}), "light.specular");
 
-  glUseProgram(shaderProgram);
+  // glUseProgram(shaderProgram);
   // -------------------------------------------------------------------------------------------------- //
 
-  engine->Run(VAO, indices_size/sizeof(unsigned int), shaders, textures);
   // std::vector<float> vertices2 = vertices;
 
   // std::transform(vertices2.begin(), vertices2.end(), vertices2.begin(),
@@ -322,7 +296,8 @@ int main(int argc, char **argv) {
 
   // bufferSet.resize(&vertices2, "aPos");
 
-  engine->Run(bufferSet.getId());
+  engine->Run(bufferSet.getId(), 108, shaders, textures);
+  // engine->Run(bufferSet.getId());
 
   return 0;
 }

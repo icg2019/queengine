@@ -1,7 +1,11 @@
 #ifndef TRIANGLE_HPP 
 #define TRIANGLE_HPP
 
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>
 

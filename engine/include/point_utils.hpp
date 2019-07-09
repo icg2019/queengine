@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <vector>
+#include <string>
+
 
 std::pair<float, float> rotate_point(std::pair<float, float> pivot, float angle, std::pair<float, float> point){
     double EPS = 1e-4;

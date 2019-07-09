@@ -92,9 +92,9 @@ void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
   shader->Set("iFrame", &_frame);
 
   shader->Set("iChannel0", get<1>(textures[0]));
-  shader->Set("iChannel1", get<1>(textures[1]));
-  shader->Set("iChannel2", get<1>(textures[2]));
-  shader->Set("iChannel3", get<1>(textures[3]));
+  // shader->Set("iChannel1", get<1>(textures[1]));
+  // shader->Set("iChannel2", get<1>(textures[2]));
+  // shader->Set("iChannel3", get<1>(textures[3]));
 }
 
 void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int> > textures) {
@@ -107,10 +107,13 @@ void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shad
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
 
+    glBindVertexArray(VAO);
+    
     for(int i = 0; i < shaderList.size(); i++){
       if(InputManager::GetInstance().KeyPress(get<1>(shaderList[i]))){
         get<0>(shaderList[i]).active = !get<0>(shaderList[i]).active;
       }
+
       for(int j = 0; j < textures.size(); j++){
         get<0>(textures[j]).use();
         glActiveTexture(get<2>(textures[j]));
@@ -121,7 +124,6 @@ void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shad
       }
     }
 
-    glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
 
     SDL_GL_SwapWindow(this->window);

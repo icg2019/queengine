@@ -1,7 +1,10 @@
 #ifndef CIRCLE_HPP 
 #define CIRCLE_HPP
 
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <vector>
+#include <string>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>
 
