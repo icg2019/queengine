@@ -123,15 +123,15 @@ void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
 
   shader->Set("rotation", rotation);
   shader->Set("rotation2", rotation2);
-  shader->Set("material.ambient", 1.0f, 0.5f, 0.31f);
-  shader->Set("material.diffuse", 1.0f, 0.5f, 0.31f);
-  shader->Set("material.specular", 0.5f, 0.5f, 0.5f);
-  shader->Set("material.shininess", 32.0f);
+  // shader->Set("material.ambient", 1.0f, 0.5f, 0.31f);
+  // shader->Set("material.diffuse", 1.0f, 0.5f, 0.31f);
+  // shader->Set("material.specular", 0.5f, 0.5f, 0.5f);
+  // shader->Set("material.shininess", 32.0f);
   
-  shader->Set("light.position", 1.2f, 1.0f, 1.0f);
-  shader->Set("light.ambient", 0.2f, 0.2f, 0.2f);
-  shader->Set("light.diffuse", 0.5f, 0.5f, 0.5f);
-  shader->Set("light.specular", 1.0f, 1.0f, 1.0f);
+  // shader->Set("light.position", 1.2f, 1.0f, 1.0f);
+  // shader->Set("light.ambient", 0.2f, 0.2f, 0.2f);
+  // shader->Set("light.diffuse", 0.5f, 0.5f, 0.5f);
+  // shader->Set("light.specular", 1.0f, 1.0f, 1.0f);
   
 }
 

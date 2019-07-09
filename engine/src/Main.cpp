@@ -29,19 +29,20 @@ using namespace std;
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
-  // std::vector<float> rotation = {
-  //     0.5, 0, -0.9, 0,
-  //     0, 1.0, 0, 0,
-  //     0.9, 0, 0.5, 0,
-  //     0, 0, 0, 1
-  // };
+  std::vector<float> rotation = {
+      0.5, 0, -0.9, 0,
+      0, 1.0, 0, 0,
+      0.9, 0, 0.5, 0,
+      0, 0, 0, 1
+  };
 
-  // std::vector<float> rotation2 = {
-  //     1, 0, 0, 0,
-  //     0, 0.5, -0.9, 0,
-  //     0, 0.9, 0.5, 0,
-  //     0, 0, 0, 1
-  // };
+  std::vector<float> rotation2 = {
+      1, 0, 0, 0,
+      0, 0.5, -0.9, 0,
+      0, 0.9, 0.5, 0,
+      0, 0, 0, 1
+  };
+  
   vector<glm::vec3> my_coordinates = {
 		glm::vec3(-0.5, 0.5, 0.0),
 		glm::vec3(0.5, 0.5, 0.0),
@@ -205,15 +206,15 @@ int main(int argc, char **argv) {
 
   vector<tuple<Shader, int>> shaders;
 
-  // Shader base_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
-  //                           "engine/assets/shaders/fragment_from_buffers.glsl");
+  Shader base_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
+                            "engine/assets/shaders/base_fragment.glsl");
 
-  // base_object_shader.active = true;
+  base_object_shader.active = true;
 
-  // tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
+  tuple<Shader, int> baseShader = make_tuple(base_object_shader, NULL);
 
-  Shader first_object_shader("engine/assets/shaders/vertex.glsl",
-                "engine/assets/shaders/fragment.glsl");
+  Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
+                "engine/assets/shaders/fragment_from_buffers.glsl");
   first_object_shader.active = false;
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
@@ -222,7 +223,7 @@ int main(int argc, char **argv) {
   // second_object_shader.active = false;
   // tuple<Shader, int> secondShader = make_tuple(second_object_shader, SDLK_2);
 
-  // shaders.push_back(baseShader);
+  shaders.push_back(baseShader);
   shaders.push_back(firstShader);
   // shaders.push_back(secondShader);
 
@@ -230,9 +231,9 @@ int main(int argc, char **argv) {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   INFO("Initializing VAO");
-  BufferSet bufferSet = BufferSet(first_object_shader.program_id);
+  BufferSet bufferSet = BufferSet(base_object_shader.program_id);
   
-  bufferSet.add(vertices, "aPos", 3);
+  bufferSet.add(vertices, "uPosition", 3);
   bufferSet.add(&indices);
 
   bufferSet.add(tex_coords,"tex_coords", 2);
@@ -250,7 +251,7 @@ int main(int argc, char **argv) {
 
   vector<tuple<Texture, int, int> > textures;
 
-  Texture texture1("../texture.jpg");
+  Texture texture1("engine/assets/textures/muro.jpg");
   tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
 
   // Texture texture2("engine/assets/textures/lua.png");
@@ -273,13 +274,13 @@ int main(int argc, char **argv) {
   // bufferSet.add_uniform(&rotation, "rotation");
   // bufferSet.add_uniform(&rotation2, "rotation2");
       
-  // Material
+  // // Material
   // bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.ambient");
   // bufferSet.add_uniform(new glm::vec3({1.0f,0.5f,0.31f}),"material.diffuse");
   // bufferSet.add_uniform(new glm::vec3({0.5f,0.5f,0.5f}),"material.specular");
   // bufferSet.add_uniform(new glm::vec1({32.0f}),"material.shininess");
 
-  // Light
+  // // Light
   // bufferSet.add_uniform(new glm::vec3({1.2f, 1.0f, 2.0f}), "light.position");
   // bufferSet.add_uniform(new glm::vec3({0.2f, 0.2f, 0.2f}), "light.ambient");
   // bufferSet.add_uniform(new glm::vec3({0.5f, 0.5f, 0.5f}), "light.diffuse");

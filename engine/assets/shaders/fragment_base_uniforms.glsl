@@ -32,6 +32,7 @@ uniform sampler2D iChannel3;
 in vec2 fragCoord;
 in vec2 texCoord;
 in vec2 v_color;
+in vec3 frag_loc;
 
 out vec4 fragColor;
 uniform sampler2D tex1;

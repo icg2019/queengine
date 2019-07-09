@@ -41,7 +41,7 @@ Texture::Texture(std::string image_path)
         printf("Failed to load texture");
     }
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+    // glBindTexture(GL_TEXTURE_2D, 0);
     stbi_image_free(data);
 }
 
