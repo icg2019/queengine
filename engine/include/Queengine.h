@@ -11,7 +11,7 @@
 #include "SDL_include.h"
 #include "Rect.h"
 #include "Shader.h"
-#include "Texture.h"
+// #include "Texture.h"
 #include "TextureLoader.h"
 #include <vector>
 #include <tuple>
@@ -31,8 +31,8 @@ class Queengine {
     ~Queengine();
     void HandleInput();
     Rect GetGLCanvasArea();
-    void Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures);
-    void Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures);
+    void Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int>> textures);
+    void Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int>> textures);
     static Queengine *GetInstance();
     void Run(GLuint VAO);
 };
