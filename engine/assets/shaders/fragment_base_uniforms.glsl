@@ -35,5 +35,8 @@ in vec2 v_color;
 in vec3 frag_loc;
 
 out vec4 fragColor;
-uniform sampler2D tex1;
+// uniform sampler2D tex1;
 //uniform sampler2D tex2;
+
+
+

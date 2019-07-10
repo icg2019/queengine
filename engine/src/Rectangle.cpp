@@ -1,5 +1,6 @@
 #include "../include/Rectangle.hpp"
 #include "../include/Triangle.hpp"
+#include <set>
 
 Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(shader), bufferSet(shader.program_id){
     // Create two triangles and set the attributes to them
@@ -72,21 +73,11 @@ Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_
   	this->bufferSet.add(&tex_coords,"tex_coords");
 }
 
-std::vector<float> Rectangle::get_coordinates(){
-    int number_of_values = 18; // for each triangle there are 9 float values. So 9 * 2 (triangles) = 18
-    std::vector<float> float_array = std::vector<float>(number_of_values);
-    std::vector<float> array_upper_triangle = this->upper_triangle.get_coordinates();
-    std::vector<float> array_lower_triangle = this->lower_triangle.get_coordinates();
+std::vector<glm::vec3> Rectangle::get_coordinates(){
+    std::vector<glm::vec3> rec(this->upper_triangle.get_coordinates().begin(), this->upper_triangle.get_coordinates().end());
+    rec.push_back(this->lower_triangle.get_coordinates()[2]);
 
-    // memcpy(float_array, array_upper_triangle, sizeof(float) * 9);
-    // memcpy(float_array + (sizeof(float) * 9), array_low(unsigned int*) malloc(sizeof(unsigned int) * number_of_indices);er_triangle, sizeof(float) * 9);
-
-    for(size_t i = 0; i < 9; i++){
-        float_array[i] = array_upper_triangle[i];
-        float_array[i+9] = array_lower_triangle[i];
-    }
-
-    return float_array;
+    return rec;
 }
 
 void Rectangle::set_coordinates(std::vector<glm::vec3>){
