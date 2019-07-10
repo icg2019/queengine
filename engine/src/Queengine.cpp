@@ -136,35 +136,20 @@ void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> texture
   shader->Set("Model", Model);
 }
 
-void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int> > textures) {
+void Queengine::Run(unsigned int VAO, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int> > textures) {
   Queengine::Run(VAO, 3, shaderList, textures);
 }
 
-void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
+void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
   glEnable(GL_DEPTH_TEST);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
 
-    this->HandleInput();
+    this->HandleInput(shaderList, textures);
 
     glBindVertexArray(VAO);
-
-    for(int i = 0; i < shaderList.size(); i++){
-      if(InputManager::GetInstance().KeyPress(get<1>(shaderList[i]))){
-        get<0>(shaderList[i]).active = !get<0>(shaderList[i]).active;
-      }
-
-      for(int j = 0; j < textures.size(); j++){
-        get<0>(textures[j]).Bind();
-        glActiveTexture(get<2>(textures[j]));
-      }
-      if(get<0>(shaderList[i]).active){
-        get<0>(shaderList[i]).Use();
-        BindUniforms(&get<0>(shaderList[i]), textures);
-      }
-    }
 
     glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
 
@@ -176,7 +161,7 @@ Rect Queengine::GetGLCanvasArea() {
   return this->glCanvasArea;
 }
 
-void Queengine::HandleInput() {
+void Queengine::HandleInput(vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
     if (InputManager::GetInstance().KeyPress(F11_KEY)) {
       ToggleFullscreen(this->window);
     }
@@ -189,4 +174,22 @@ void Queengine::HandleInput() {
     if (InputManager::GetInstance().KeyPress(KEY_3)) {
         // Create Circle
     }
+    if (InputManager::GetInstance().KeyPress(SDLK_0)) {
+        //for(int i = 0; i < shaderList.size(); i++){
+          if(InputManager::GetInstance().KeyPress(shaderList[0].option_command)){
+            shaderList[0].active = !shaderList[0].active;
+          }
+
+          for(int j = 0; j < textures.size(); j++){
+            get<0>(textures[j]).Bind();
+            glActiveTexture(get<2>(textures[j]));
+          }
+
+          if(shaderList[0].active){
+            shaderList[0].Use();
+            BindUniforms(&shaderList[0], textures);
+          }
+        //}
+    }
+
 }

@@ -9,9 +9,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>
 #include "BufferSet.hpp"
+#include "GameObject.hpp"
 #include "Shader.h"
 
-class Triangle {
+class Triangle : public GameObject {
 	private:
         std::vector<glm::vec3> coordinates;
         std::vector<glm::vec2> texture_coordinates;

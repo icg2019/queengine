@@ -32,54 +32,56 @@ using namespace std;
 int main(int argc, char **argv) {
   Queengine *engine = Queengine::GetInstance();
 
-  std::vector<glm::vec3> vertices;
-  std::vector<glm::vec2> tex_coords;
-  std::vector<glm::vec3> normal;
-  std::vector<unsigned int> indices;
-  std::vector<float> light = {1, 0, 0};
+  //std::vector<glm::vec3> vertices;
+  //std::vector<glm::vec2> tex_coords;
+  //std::vector<glm::vec3> normal;
+  //std::vector<unsigned int> indices;
+  //std::vector<float> light = {1, 0, 0};
 
-  bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, tex_coords, normal);
+  //bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, tex_coords, normal);
 
-  for(int i = 0; i < vertices.size();i++) {
-    indices.push_back(i);
-  }
-
-  // Triangle primitiva = Triangle();
+  //for(int i = 0; i < vertices.size();i++) {
+  //  indices.push_back(i);
+  //}
   
   // std::vector<glm::vec3> vertices = primitiva.get_coordinates();
   // std::vector<unsigned int> indices = primitiva.get_indices();
   // std::vector<glm::vec2> tex_coords = primitiva.get_texture_coordinates();
 
-  vector<tuple<Shader, int>> shaders;
+  vector<Shader> shaders;
 
   Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
                 "engine/assets/shaders/fragment_from_texture.glsl");
+
+  first_object_shader.option_command = SDLK_0;
+
   first_object_shader.active = false;
-  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
-  shaders.push_back(firstShader);
+  shaders.push_back(first_object_shader);
 
+  Triangle primitiva = Triangle(first_object_shader);
+  Circle c = Circle(first_object_shader, {0.0,0.0,0.0}, 0.5, 30);
 
   glClearColor(0.5f, 0.7f, 0.2f, 1.0f);
 
-  BufferSet bufferSet = BufferSet(first_object_shader.program_id);
+  //BufferSet bufferSet = BufferSet(first_object_shader.program_id);
 
-  bufferSet.add(&vertices, "uPosition");
-  bufferSet.add(&indices);
-  bufferSet.add(&tex_coords, "tex_coords");
-  bufferSet.add(&normal, "normal");
+  //bufferSet.add(&vertices, "uPosition");
+  //bufferSet.add(&indices);
+  //bufferSet.add(&tex_coords, "tex_coords");
+  //bufferSet.add(&normal, "normal");
 
   // -----------------------------------------------------------------------------------------------------//
   // Texture crap because we dont have a bind of textures
 
-  glBindVertexArray(bufferSet.getId());
+  //glBindVertexArray(bufferSet.getId());
 
-  for(Buffer b : bufferSet.buffers)
-  {
-      GLint location = glGetAttribLocation(bufferSet.program, b.shader_var.c_str());
-      glEnableVertexAttribArray(location);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-  }
+  //for(Buffer b : bufferSet.buffers)
+  //{
+  //    GLint location = glGetAttribLocation(bufferSet.program, b.shader_var.c_str());
+  //    glEnableVertexAttribArray(location);
+  //    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //}
 
   vector<tuple<TextureLoader, int, int> > textures;
 
@@ -123,7 +125,10 @@ int main(int argc, char **argv) {
 
 //   bufferSet.resize(&vertices2, "uPosition");
 // //---------------------------------------
-  engine->Run(bufferSet.getId(), indices.size(), shaders, textures);
+//
+  //engine->Run(primitiva.get_buffer_set().getId(), primitiva.get_indices_size(), shaders, textures);
+  engine->Run(c.get_buffer_set().getId(), c.get_indices_size(), shaders, textures);
+
 
   return 0;
 }

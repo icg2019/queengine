@@ -17,6 +17,7 @@
 #include <tuple>
 
 #include "log.h"
+#include "GameObject.hpp"
 
 class Queengine {
   private:
@@ -29,12 +30,14 @@ class Queengine {
   public:
     SDL_DisplayMode currentDisplay;
     ~Queengine();
-    void HandleInput();
+    void HandleInput(vector<Shader> , vector<tuple<TextureLoader, int, int>>);
     Rect GetGLCanvasArea();
-    void Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int>> textures);
-    void Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int>> textures);
+    void Run(unsigned int VAO, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
+    void Run(unsigned int VAO, int number_of_triangles, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
     static Queengine *GetInstance();
     void Run(GLuint VAO);
+    
+    vector<GameObject> primitives;
 };
 
 #endif

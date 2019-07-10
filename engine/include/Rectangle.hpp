@@ -9,8 +9,9 @@
 #include "Triangle.hpp"
 #include "Shader.h"
 #include "BufferSet.hpp"
+#include "GameObject.hpp"
 
-class Rectangle {
+class Rectangle : public GameObject {
 	private:
         Triangle upper_triangle;
         Triangle lower_triangle;

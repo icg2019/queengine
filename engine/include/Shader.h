@@ -17,6 +17,9 @@ class Shader {
 
     public:
         unsigned int program_id;
+        int option_command; 
+
+
         Shader(const string & vertex_file, const string & fragment_file);
 
         void Use();

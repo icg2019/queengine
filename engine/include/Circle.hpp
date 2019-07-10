@@ -10,8 +10,9 @@
 
 #include "Shader.h"
 #include "BufferSet.hpp"
+#include "GameObject.hpp"
 
-class Circle {
+class Circle : public GameObject {
 	private:
         glm::vec3 center;
         std::vector<glm::vec3> coordinates;
