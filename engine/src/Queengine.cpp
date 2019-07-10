@@ -7,6 +7,7 @@
 #include <cmath>
 #include <unistd.h>
 #include <vector>
+using namespace std;
 
 Queengine *Queengine::instance = nullptr;
 
@@ -43,7 +44,7 @@ Queengine::Queengine() {
       std::cout << "Failed to initialize GLAD" << std::endl;
       exit(-1);
     }
-    
+
     SDL_GetCurrentDisplayMode(0, &(this->currentDisplay));
     this->glCanvasArea = Rect(0, 0, currentDisplay.w, currentDisplay.h);
     glViewport(this->glCanvasArea.x, this->glCanvasArea.y, this->glCanvasArea.w, this->glCanvasArea.h);
@@ -68,7 +69,7 @@ void ToggleFullscreen(SDL_Window* window) {
   SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
 }
 
-void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
+void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> textures) {
   glm::vec2 _ifFragCoordOffsetXY(0.0f, 0.0f);
   float _ifFragCoordScale = 1.0f;
 
@@ -117,9 +118,9 @@ void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
 
   shader->Set("rotation", rotation);
   shader->Set("rotation2", rotation2);
-  
+
   glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-  
+
   shader->Set("Projection", Projection);
 
   glm::mat4 View = glm::lookAt(
@@ -127,36 +128,36 @@ void BindUniforms(Shader *shader, vector<tuple<Texture, int, int>> textures) {
 								glm::vec3(0,0,0), // and looks at the origin
 								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 						   );
-  
+
   shader->Set("View", View);
-  
+
   glm::mat4 Model = glm::mat4(1.0f);
-  
+
   shader->Set("Model", Model);
 }
 
-void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int> > textures) {
+void Queengine::Run(unsigned int VAO, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int> > textures) {
   Queengine::Run(VAO, 3, shaderList, textures);
 }
 
-void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<Texture, int, int>> textures) {
+void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<tuple<Shader, int>> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
   glEnable(GL_DEPTH_TEST);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
-    
+
     this->HandleInput();
 
     glBindVertexArray(VAO);
-    
+
     for(int i = 0; i < shaderList.size(); i++){
       if(InputManager::GetInstance().KeyPress(get<1>(shaderList[i]))){
         get<0>(shaderList[i]).active = !get<0>(shaderList[i]).active;
       }
 
       for(int j = 0; j < textures.size(); j++){
-        get<0>(textures[j]).use();
+        get<0>(textures[j]).Bind();
         glActiveTexture(get<2>(textures[j]));
       }
       if(get<0>(shaderList[i]).active){

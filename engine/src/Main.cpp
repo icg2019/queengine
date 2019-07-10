@@ -45,6 +45,7 @@ int main(int argc, char **argv) {
   }
 
   // Triangle primitiva = Triangle();
+  
   // std::vector<glm::vec3> vertices = primitiva.get_coordinates();
   // std::vector<unsigned int> indices = primitiva.get_indices();
   // std::vector<glm::vec2> tex_coords = primitiva.get_texture_coordinates();
@@ -57,13 +58,12 @@ int main(int argc, char **argv) {
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
   shaders.push_back(firstShader);
-  
+
 
   glClearColor(0.5f, 0.7f, 0.2f, 1.0f);
-  
 
   BufferSet bufferSet = BufferSet(first_object_shader.program_id);
-  
+
   bufferSet.add(&vertices, "uPosition");
   bufferSet.add(&indices);
   bufferSet.add(&tex_coords, "tex_coords");
@@ -80,19 +80,20 @@ int main(int argc, char **argv) {
       glEnableVertexAttribArray(location);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
-  
-  vector<tuple<Texture, int, int> > textures;
 
-  Texture texture1("engine/assets/pixes.bmp");
-  tuple<Texture, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
+  vector<tuple<TextureLoader, int, int> > textures;
+
+  TextureLoader texture1("engine/assets/pixes.bmp");
+  tuple<TextureLoader, int, int> firstTexture = make_tuple(texture1, 0, GL_TEXTURE0);
+
 
   textures.push_back(firstTexture);
-  
+
   glBindVertexArray(0);
 
   // // Load the texture using any two methods
   // TextureLoader texture("../texture.jpg", 0, 0);
-	
+
 	// // Get a handle for our "myTextureSampler" uniform
 	// GLuint TextureID  = glGetUniformLocation(first_object_shader.program_id, "iChannel0");
 
