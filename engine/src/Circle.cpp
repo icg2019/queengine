@@ -41,11 +41,11 @@ Circle::Circle(Shader shader, glm::vec3 center, float radius, float definition) 
         this->indices.push_back(glm::vec1(this->coordinates.size()-1));
     }
 
-    std::vector<float> vertices_tmp = this->get_coordinates();
+    std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
   	std::vector<unsigned int> indices_temp = this->get_indices();
   	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
 
-	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+	this->bufferSet.add(&vertices_tmp, "uPosition");
   	this->bufferSet.add(&indices_temp);
   	this->bufferSet.add(&tex_coords,"tex_coords");
 
@@ -70,25 +70,17 @@ Circle::Circle(Shader shader) : bufferSet(shader.program_id){
         glm::vec1(0), glm::vec1(8), glm::vec1(9),
     };
 
-    std::vector<float> vertices_tmp = this->get_coordinates();
+    std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
   	std::vector<unsigned int> indices_temp = this->get_indices();
   	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
 
-	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+	this->bufferSet.add(&vertices_tmp, "uPosition");
   	this->bufferSet.add(&indices_temp);
   	this->bufferSet.add(&tex_coords,"tex_coords");
 }
 
-std::vector<float> Circle::get_coordinates(){
-    std::vector<float> float_array = std::vector<float>(this->coordinates.size() * 3);
-
-	for(int i = 0, array_index = 0; i < this->coordinates.size(); i++, array_index += 3){
-		float_array[array_index] = this->coordinates[i].x;
-		float_array[array_index+1] = this->coordinates[i].y;
-		float_array[array_index+2] = this->coordinates[i].z;
-	}
-	
-	return float_array;
+std::vector<glm::vec3> Circle::get_coordinates(){
+    return this->coordinates;
 }
 
 unsigned int Circle::get_coordinates_size(){

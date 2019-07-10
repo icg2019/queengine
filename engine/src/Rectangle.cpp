@@ -19,11 +19,11 @@ Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(sha
     // upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
     upper_triangle.set_coordinates(upper_triangle_coordinates);
 
-    std::vector<float> vertices_tmp = this->get_coordinates();
+    std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
   	std::vector<unsigned int> indices_temp = this->get_indices();
   	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
 
-	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+	this->bufferSet.add(&vertices_tmp, "uPosition");
   	this->bufferSet.add(&indices_temp);
   	this->bufferSet.add(&tex_coords,"tex_coords");
 }
@@ -64,11 +64,11 @@ Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_
 
     upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
 
-    std::vector<float> vertices_tmp = this->get_coordinates();
+    std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
   	std::vector<unsigned int> indices_temp = this->get_indices();
   	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
 
-	this->bufferSet.add(vertices_tmp, "uPosition", 3);
+	this->bufferSet.add(&vertices_tmp, "uPosition");
   	this->bufferSet.add(&indices_temp);
   	this->bufferSet.add(&tex_coords,"tex_coords");
 }
