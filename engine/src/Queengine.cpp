@@ -136,11 +136,11 @@ void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> texture
   shader->Set("Model", Model);
 }
 
-void Queengine::Run(unsigned int VAO, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int> > textures) {
-  Queengine::Run(VAO, 3, shaderList, textures);
-}
+//void Queengine::Run(unsigned int VAO, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int> > textures) {
+//  Queengine::Run(VAO, 3, shaderList, textures);
+//}
 
-void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
+void Queengine::Run(vector<Circle>& primitivas, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
   glEnable(GL_DEPTH_TEST);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
@@ -149,9 +149,10 @@ void Queengine::Run(unsigned int VAO, int number_of_triangles, vector<Shader> sh
 
     this->HandleInput(shaderList, textures);
 
-    glBindVertexArray(VAO);
-
-    glDrawElements(GL_TRIANGLES, number_of_triangles, GL_UNSIGNED_INT, 0);
+    cout << primitivas.size() << endl;
+    cout << primitivas[0].get_buffer_set().getId() << endl;
+    //glBindVertexArray(primitivas[0].get_buffer_set().getId());
+    //glDrawElements(GL_TRIANGLES, primitivas[0].get_indices_size(), GL_UNSIGNED_INT, 0);
 
     SDL_GL_SwapWindow(this->window);
   }

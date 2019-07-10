@@ -18,6 +18,7 @@
 
 #include "log.h"
 #include "GameObject.hpp"
+#include "Circle.hpp"
 
 class Queengine {
   private:
@@ -33,11 +34,9 @@ class Queengine {
     void HandleInput(vector<Shader> , vector<tuple<TextureLoader, int, int>>);
     Rect GetGLCanvasArea();
     void Run(unsigned int VAO, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
-    void Run(unsigned int VAO, int number_of_triangles, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
+    void Run(vector<Circle> &, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
     static Queengine *GetInstance();
     void Run(GLuint VAO);
-    
-    vector<GameObject> primitives;
 };
 
 #endif
