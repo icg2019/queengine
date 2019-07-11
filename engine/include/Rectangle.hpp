@@ -7,15 +7,19 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/vec1.hpp>
 #include "Triangle.hpp"
+#include "Shader.h"
+#include "BufferSet.hpp"
 
 class Rectangle {
 	private:
         Triangle upper_triangle;
         Triangle lower_triangle;
+		BufferSet bufferSet;
 
 	public:
-        Rectangle();
+        Rectangle(Shader shader);
 		Rectangle(
+			Shader shader,
 			std::vector<glm::vec3> coordinates
 		);
 
@@ -28,6 +32,10 @@ class Rectangle {
 		void set_indices(std::vector<glm::vec1>);
 
         unsigned int get_indices_size();
+
+		std::vector<glm::vec2> get_texture_coordinates();
+
+		BufferSet get_buffer_set();
 };
 
 #endif

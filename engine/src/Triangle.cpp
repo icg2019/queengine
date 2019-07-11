@@ -1,51 +1,65 @@
 #include "../include/Triangle.hpp"
 
-Triangle::Triangle() {
-    std::vector<glm::vec3> coordinates = {
-        glm::vec3(-0.5, 0.0, 0.0),
-        glm::vec3(0.0, 0.75, 0.0),
-        glm::vec3(0.5, 0.0, 0.0),
-    };
+Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
+	std::vector<glm::vec3> coordinates = {
+		glm::vec3(0.0, 0.0, 0.0),
+		glm::vec3(0.0, 1.0, 0.0),
+		glm::vec3(1.0, 1.0, 0.0),
+	};
 
-    std::vector<glm::vec2> texture_coordinates = {
-        glm::vec2(0.0, 0.0),
-        glm::vec2(1.0, 1.0),
-        glm::vec2(0.5, 0.5),
-    };
+	std::vector<glm::vec2> texture_coordinates = {
+		glm::vec2(0.0, 0.0),
+		glm::vec2(0.0, 1.0),
+		glm::vec2(1.0, 1.0),
+	};
 
-    // Criar metodo para Verificar se o caminho da textura esta certo
-    std::string texture_path = "./texture.png";
+	// Criar metodo para Verificar se o caminho da textura esta certo
+	std::string texture_path = "./texture.png";
 
-    // Verificar o que é
-    std::vector<glm::vec1> indices = {
-        glm::vec1(0.0),
-        glm::vec1(1.0),
-        glm::vec1(2.0),
-    };
+	// Verificar o que é
+	std::vector<glm::vec1> indices = {
+		glm::vec1(0.0),
+		glm::vec1(1.0),
+		glm::vec1(2.0),
+	};
 
     this->coordinates = coordinates;
     this->texture_coordinates = texture_coordinates;
     this->texture_path = texture_path;
     this->indices = indices;
 
-    this->texture_coordinates = std::vector<glm::vec2>(3);
-    this->texture_coordinates[0] = glm::vec2(0.0, 0.0);
-    this->texture_coordinates[1] = glm::vec2(0.0, 1.0);
-    this->texture_coordinates[2] = glm::vec2(1.0, 1.0);
+	this->texture_coordinates = std::vector<glm::vec2>(3);
+	this->texture_coordinates[0] = glm::vec2(0.0, 0.0);
+	this->texture_coordinates[1] = glm::vec2(0.0, 1.0);
+	this->texture_coordinates[2] = glm::vec2(1.0, 1.0);
+
+	std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
+  	std::vector<unsigned int> indices_temp = this->get_indices();
+  	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
+
+	this->bufferSet.add(&vertices_tmp, "uPosition");
+  	this->bufferSet.add(&indices_temp);
+  	this->bufferSet.add(&tex_coords,"tex_coords");
 }
 
-Triangle::Triangle(std::vector<glm::vec3> coordinates,
-        std::vector<glm::vec1> indices) :
-    coordinates(coordinates),
-    indices (indices) {
-        this->texture_coordinates = std::vector<glm::vec2>(3);
-        this->texture_coordinates[0] = glm::vec2(0.0, 0.0);
-        this->texture_coordinates[1] = glm::vec2(0.0, 1.0);
-        this->texture_coordinates[2] = glm::vec2(1.0, 1.0);
-    }
+Triangle::Triangle(Shader shader,
+		std::vector<glm::vec3> coordinates,
+		std::vector<glm::vec1> indices) :
+	bufferSet(shader.program_id),
+	coordinates(coordinates),
+	indices (indices) {
+	this->texture_coordinates = std::vector<glm::vec2>(3);
+	this->texture_coordinates[0] = glm::vec2(0.0, 0.0);
+	this->texture_coordinates[1] = glm::vec2(0.0, 1.0);
+	this->texture_coordinates[2] = glm::vec2(1.0, 1.0);
+
+	this->bufferSet.add(&this->coordinates, "uPosition");
+  	this->bufferSet.add(&this->indices);
+  	this->bufferSet.add(&this->texture_coordinates,"tex_coords");
+}
 
 std::vector<glm::vec3> Triangle::get_coordinates(){
-    return this->coordinates;
+	return this->coordinates;
 }
 
 unsigned int Triangle::get_coordinates_size(){
@@ -124,4 +138,8 @@ bool Triangle::is_a_valid_path(std::string &path){
         return false;
     }
     return true;
+}
+
+BufferSet Triangle::get_buffer_set(){
+	return this->bufferSet;
 }
