@@ -88,7 +88,7 @@ bool load3DOBJ(
                 normalIndices.push_back(normalIndex[1]);
                 normalIndices.push_back(normalIndex[2]);
             } else if ( strcmp( lineHeader, "mtlib") == 0){
-                fscanf(file, "%s", &material_file_name);
+                //fscanf(file, "%s", material_file_name.c_str());
             }
         }
     }

@@ -65,14 +65,14 @@ int main(int argc, char **argv) {
   {
     first_object_shader.Use();
     first_object_shader.Set("obj_ambient", material->obj_ambient);
-    first_object_shader.Set("obj_specular", material->obj_specular);
     first_object_shader.Set("obj_diffuse", material->obj_diffuse);
+    first_object_shader.Set("obj_specular", material->obj_specular);
   }
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
 
 
-  shaders.push_back(firstShader);
+  shaders.push_back(first_object_shader);
 
   Triangle triangle = Triangle(first_object_shader);
   Circle circle = Circle(first_object_shader, {0.0,0.0,0.0}, 0.5, 30);

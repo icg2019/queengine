@@ -20,7 +20,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
 	vec3 LightPosition_worldspace = vec3(4.0f, 4.0f, 4.0f);
 
 	// Material properties
-	vec3 MaterialDiffuseColor = texture(iChannel0, fragCoord ).rgb;
+	vec3 MaterialDiffuseColor = texture(iChannel0, fragCoord ).rgb * obj_diffuse;
 	vec3 MaterialAmbientColor = obj_ambient * MaterialDiffuseColor;
 	vec3 MaterialSpecularColor = obj_specular;
 
