@@ -40,6 +40,8 @@ int main(int argc, char **argv) {
 
   //bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, tex_coords, normal);
 
+  Material * material = (Material*)malloc(sizeof(Material));
+  bool mtl = loadMtl(material, "engine/assets/obj/suzanne.mtl");
   //for(int i = 0; i < vertices.size();i++) {
   //  indices.push_back(i);
   //}
@@ -57,7 +59,19 @@ int main(int argc, char **argv) {
 
   first_object_shader.active = false;
 
-  shaders.push_back(first_object_shader);
+  // applies de mtl properties to the object shader
+  if(mtl)
+  {
+    first_object_shader.Use();
+    first_object_shader.Set("obj_ambient", material->obj_ambient);
+    first_object_shader.Set("obj_specular", material->obj_specular);
+    first_object_shader.Set("obj_diffuse", material->obj_diffuse);
+  }
+  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
+
+
+
+  shaders.push_back(firstShader);
 
   Triangle triangle = Triangle(first_object_shader);
   Circle circle = Circle(first_object_shader, {0.0,0.0,0.0}, 0.5, 30);

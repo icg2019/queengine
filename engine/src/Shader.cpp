@@ -252,6 +252,12 @@ void Shader::Set(const string & name, const glm::mat4 & value)
     glUniformMatrix4fv(Location(name), 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void Shader::Set(const string & name, const glm::vec3 & value)
+{
+    glUniform3fv(Location(name), 1, glm::value_ptr(value));
+  }
+
+
 void Shader::SetTime(const string & name, function<float()> time, float frequency)
 {
     Set(name, sin(frequency * time())/2.0f + 0.5f);

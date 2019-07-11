@@ -29,8 +29,8 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
     // ambient
     vec3 ambient = light.ambient * material.ambient;
-    
-  
+
+
     // diffuse
     vec3 norm = texture(iChannel0, texCoord).rgb;
     norm = normalize( norm* 2.0 - 1.0);
@@ -39,7 +39,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = light.diffuse * (diff*material.diffuse);
 
-  
+
     // specular
     // vec3 viewVector = normalize(vec3(0.0,0.0,0.0) - frag_loc);
     vec3 viewVector = normalize(vec3(0.0,0.0,0.0) - frag_loc);

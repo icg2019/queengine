@@ -43,6 +43,8 @@ class Shader {
         void Set(const string & name, int res, unsigned int * value);
         void Set(const string & name, const glm::mat4 & value);
 
+        void Set(const string & name, const glm::vec3 & value);
+
         void SetTime(const string & name, std::function<float()> time, float frequency=1.0f);
 };
 
