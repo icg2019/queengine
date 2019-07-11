@@ -140,7 +140,7 @@ void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> texture
 //  Queengine::Run(VAO, 3, shaderList, textures);
 //}
 
-void Queengine::Run(vector<Circle>& primitivas, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
+void Queengine::Run(vector<GameObject*> primitivas, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
   glEnable(GL_DEPTH_TEST);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
@@ -149,10 +149,10 @@ void Queengine::Run(vector<Circle>& primitivas, vector<Shader> shaderList, vecto
 
     this->HandleInput(shaderList, textures);
 
-    cout << primitivas.size() << endl;
-    cout << primitivas[0].get_buffer_set().getId() << endl;
-    //glBindVertexArray(primitivas[0].get_buffer_set().getId());
-    //glDrawElements(GL_TRIANGLES, primitivas[0].get_indices_size(), GL_UNSIGNED_INT, 0);
+    for(int i = 0; i < primitivas.size(); i++){
+    glBindVertexArray(((GameObject*) primitivas[i])->get_buffer_set().getId());
+    glDrawElements(GL_TRIANGLES, ((GameObject*) primitivas[i])->get_indices_size(), GL_UNSIGNED_INT, 0);
+    }
 
     SDL_GL_SwapWindow(this->window);
   }

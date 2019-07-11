@@ -127,8 +127,9 @@ int main(int argc, char **argv) {
 // //---------------------------------------
 //
   //engine->Run(primitiva.get_buffer_set().getId(), primitiva.get_indices_size(), shaders, textures);
-  vector<Circle> primitivas;
-  primitivas.push_back(circle);
+  vector<GameObject*> primitivas;
+  primitivas.push_back(&circle);
+  primitivas.push_back(&triangle);
   engine->Run(primitivas, shaders, textures);
 
 
