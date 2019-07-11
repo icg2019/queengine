@@ -93,17 +93,21 @@ bool load3DOBJ(
         }
     }
 
-    float temp[3] = {
-        bigger[0] - lower[0],
-        bigger[1] - lower[1],
-        bigger[2] - lower[2]
-    };
+    // float temp[3] = {
+    //     bigger[0] - lower[0],
+    //     bigger[1] - lower[1],
+    //     bigger[2] - lower[2]
+    // };
+
+    float max_diff = bigger[0] - lower[0];
+    if (max_diff < bigger[1] - lower[1]) max_diff = bigger[1] - lower[1];
+    if (max_diff < bigger[2] - lower[2]) max_diff = bigger[2] - lower[2];
 
     //Normalizing ([0..1]) temp_vectors
     for( unsigned int i=0; i<temp_vertices.size(); i++){
-        temp_vertices[i].x = (temp_vertices[i].x - lower[0]) / temp[0];
-        temp_vertices[i].y = (temp_vertices[i].y - lower[1]) / temp[1];
-        temp_vertices[i].z = (temp_vertices[i].z - lower[2]) / temp[2];
+        temp_vertices[i].x = (temp_vertices[i].x - lower[0]) / max_diff;
+        temp_vertices[i].y = (temp_vertices[i].y - lower[1]) / max_diff;
+        temp_vertices[i].z = (temp_vertices[i].z - lower[2]) / max_diff;
     }
 
     // For each vertex of each triangle
