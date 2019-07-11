@@ -36,8 +36,6 @@ int main(int argc, char **argv) {
   std::vector<glm::vec3> vertices;
   std::vector<glm::vec2> tex_coords;
   std::vector<glm::vec3> normal;
-  std::vector<unsigned int> indices;
-  std::vector<float> light = {1, 0, 0};
 
   bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, tex_coords, normal);
 
