@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
   }
 
   // Triangle primitiva = Triangle();
-  
+
   // std::vector<glm::vec3> vertices = primitiva.get_coordinates();
   // std::vector<unsigned int> indices = primitiva.get_indices();
   // std::vector<glm::vec2> tex_coords = primitiva.get_texture_coordinates();
@@ -56,6 +56,20 @@ int main(int argc, char **argv) {
                 "engine/assets/shaders/fragment_from_texture.glsl");
   first_object_shader.active = false;
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
+
+  //trying to load obj materials
+  Material * material;
+  bool mtl = loadMtl(material, "engine/assets/obj/suzanne.mtl");
+  if(mtl){
+    // first_object_shader.Set("obj_diffuse", material->obj_diffuse.x, material->obj_diffuse.y, material->obj_diffuse.z);
+    // first_object_shader.Set("obj_ambient", material->obj_ambient.x, material->obj_ambient.y, material->obj_ambient.z);
+    // first_object_shader.Set("obj_specular", material->obj_specular.x, material->obj_specular.y, material->obj_specular.z);
+    first_object_shader.Set("obj_diffuse", float(0.0));
+    first_object_shader.Set("obj_ambient", float(0.0),float(0.0), float(0.0));
+    first_object_shader.Set("obj_specular", float(0.0),float(0.0), float(0.0));
+
+  }
+
 
   shaders.push_back(firstShader);
 
