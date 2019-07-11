@@ -12,6 +12,7 @@
 #define KEY_1 SDLK_1
 #define KEY_2 SDLK_2
 #define KEY_3 SDLK_3
+#define KEY_4 SDLK_4
 #define A_KEY SDLK_a
 #define F11_KEY SDLK_F11
 
