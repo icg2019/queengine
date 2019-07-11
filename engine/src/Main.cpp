@@ -24,6 +24,7 @@
 #include "Shader.h"
 // #include "TextureLoader.h"
 #include "Model.hpp"
+#include "vboindexer.hpp"
 
 #include "../include/log.h"
 
@@ -35,17 +36,20 @@ int main(int argc, char **argv) {
   std::vector<glm::vec3> vertices;
   std::vector<glm::vec2> tex_coords;
   std::vector<glm::vec3> normal;
-  std::vector<unsigned int> indices;
-  std::vector<float> light = {1, 0, 0};
 
   bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, tex_coords, normal);
 
-  for(int i = 0; i < vertices.size();i++) {
-    indices.push_back(i);
-  }
+  std::vector<unsigned int> indices;
+	std::vector<glm::vec3> indexed_vertices;
+	std::vector<glm::vec2> indexed_tex_coords;
+	std::vector<glm::vec3> indexed_normals;
+	indexVBO(vertices, tex_coords, normal, indices, indexed_vertices, indexed_tex_coords, indexed_normals);
+
+  std::vector<float> light = {1, 0, 0};
 
   // Triangle primitiva = Triangle();
-  
+  // std::vector<float> light = {1, 0, 0};
+
   // std::vector<glm::vec3> vertices = primitiva.get_coordinates();
   // std::vector<unsigned int> indices = primitiva.get_indices();
   // std::vector<glm::vec2> tex_coords = primitiva.get_texture_coordinates();
@@ -58,16 +62,15 @@ int main(int argc, char **argv) {
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
   shaders.push_back(firstShader);
-
-
+  
   glClearColor(0.5f, 0.7f, 0.2f, 1.0f);
 
   BufferSet bufferSet = BufferSet(first_object_shader.program_id);
-
-  bufferSet.add(&vertices, "uPosition");
+  
+  bufferSet.add(&indexed_vertices, "uPosition");
   bufferSet.add(&indices);
-  bufferSet.add(&tex_coords, "tex_coords");
-  bufferSet.add(&normal, "normal");
+  bufferSet.add(&indexed_tex_coords, "tex_coords");
+  bufferSet.add(&indexed_normals, "normal");
 
   // -----------------------------------------------------------------------------------------------------//
   // Texture crap because we dont have a bind of textures
