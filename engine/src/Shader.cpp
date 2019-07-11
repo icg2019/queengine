@@ -254,10 +254,8 @@ void Shader::Set(const string & name, const glm::mat4 & value)
 
 void Shader::Set(const string & name, const glm::vec3 & value)
 {
-    printf("Aqui");
-    glUniform3fv(Location(name), 1, &value[0]);
-    printf("%f %f %f\n", value.x, value.y, value.z);
-}
+    glUniform3fv(Location(name), 1, glm::value_ptr(value));
+  }
 
 
 void Shader::SetTime(const string & name, function<float()> time, float frequency)

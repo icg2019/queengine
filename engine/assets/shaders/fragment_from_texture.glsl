@@ -7,10 +7,9 @@ in vec3 LightDirection_cameraspace;
 
 //obj materials
 
-//uniform vec3 obj_ambient;
-//uniform vec3 obj_specular;
-//uniform vec3 obj_diffuse;
-
+uniform vec3 obj_ambient;
+uniform vec3 obj_specular;
+uniform vec3 obj_diffuse;
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord){
 
@@ -22,8 +21,8 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
 
 	// Material properties
 	vec3 MaterialDiffuseColor = texture(iChannel0, fragCoord ).rgb;
-	vec3 MaterialAmbientColor = vec3(0.1f, 0.1f, 0.1f) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.5f, 0.3f, 0.5f);
+	vec3 MaterialAmbientColor = obj_ambient * MaterialDiffuseColor;
+	vec3 MaterialSpecularColor = obj_specular;
 
 	// Distance to the light
 	float distance = length( LightPosition_worldspace - Position_worldspace );
