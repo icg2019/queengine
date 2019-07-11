@@ -150,8 +150,8 @@ void Queengine::Run(vector<GameObject*> primitivas, vector<Shader> shaderList, v
     this->HandleInput(shaderList, textures);
 
     for(int i = 0; i < primitivas.size(); i++){
-    glBindVertexArray(((GameObject*) primitivas[i])->get_buffer_set().getId());
-    glDrawElements(GL_TRIANGLES, ((GameObject*) primitivas[i])->get_indices_size(), GL_UNSIGNED_INT, 0);
+      glBindVertexArray(((GameObject*) primitivas[i])->get_buffer_set().getId());
+      glDrawElements(GL_TRIANGLES, ((GameObject*) primitivas[i])->get_indices_size(), GL_UNSIGNED_INT, 0);
     }
 
     SDL_GL_SwapWindow(this->window);

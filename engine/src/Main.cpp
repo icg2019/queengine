@@ -22,6 +22,7 @@
 #include "Rectangle.hpp"
 #include "Circle.hpp"
 #include "Shader.h"
+#include "Object3D.hpp"
 // #include "TextureLoader.h"
 #include "Model.hpp"
 #include "vboindexer.hpp"
@@ -76,6 +77,12 @@ int main(int argc, char **argv) {
 
   Triangle triangle = Triangle(first_object_shader);
   Circle circle = Circle(first_object_shader, {0.0,0.0,0.0}, 0.5, 30);
+  Object3D obj = Object3D(
+    first_object_shader,
+    "engine/assets/obj/suzanne.obj",
+    "engine/assets/obj/suzanne.mtl",
+    "engine/assets/texture/laranjo.png"
+  );
 
   glClearColor(0.5f, 0.7f, 0.2f, 1.0f);
 
@@ -145,6 +152,7 @@ int main(int argc, char **argv) {
   vector<GameObject*> primitivas;
   primitivas.push_back(&circle);
   primitivas.push_back(&triangle);
+  primitivas.push_back(&obj);
   engine->Run(primitivas, shaders, textures);
 
 
