@@ -14,7 +14,7 @@ bool load3DOBJ(
 	std::vector<glm::vec3> & out_normals
 ){
 	printf("Loading OBJ file %s...\n", path);
-  std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+    std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
 	std::vector<glm::vec3> temp_vertices;      // Obj Vertices
 	std::vector<glm::vec2> temp_uvs;           // Texture Coord
 	std::vector<glm::vec3> temp_normals;       // Suface normals
@@ -106,33 +106,6 @@ bool load3DOBJ(
         temp_vertices[i].z = (temp_vertices[i].z - lower[2]) / temp[2];
     }
 
-    // Reading Material
-    FILE *material_file = fopen(path, "r");
-    if (material_file == NULL) {
-        printf("Impossible to find material!\n");
-    } else {
-        while (1) {
-            char lineHeader[128];
-            int res = fscanf(material_file, "%s", lineHeader);
-            if (res == EOF) {
-                break;
-            } else if ( strcmp(lineHeader, "illum") == 0) {
-                fscanf(material_file, "%d", &illumination);
-            } else if ( strcmp(lineHeader, "Kd") == 0) {
-                fscanf(material_file, "%f %f %f\n",
-                    &difuse_light[0], &difuse_light.y, &difuse_light.z);
-            } else if ( strcmp(lineHeader, "Ka") == 0) {
-                fscanf(material_file, "%f %f %f\n",
-                    &environment_light.x, &environment_light.y, &environment_light.z);
-            } else if ( strcmp(lineHeader, "Tf") == 0) {
-                fscanf(material_file, "%f %f %f\n",
-                    &transformation_filter.x, &transformation_filter.y, &transformation_filter.z);
-            } else if ( strcmp(lineHeader, "Ni") == 0) {
-                fscanf(material_file, "%f\n", &optic_density);
-            }
-        }
-    }
-
     // For each vertex of each triangle
     for( unsigned int i=0; i<vertexIndices.size(); i++ ){
         unsigned int vertexIndex = (vertexIndices[i]);
@@ -157,8 +130,8 @@ bool loadMtl(
 ){
 	FILE *file = fopen(path, "r");
 	if (file == NULL) {
-			printf("Impossible to open the file!\n");
-			return false;
+		printf("Impossible to open the file!\n");
+		return false;
 	}
 
 	// Material material;
@@ -166,24 +139,23 @@ bool loadMtl(
 		char lineHeader[128];
 		int res = fscanf(file, "%s", lineHeader);
 		if (res == EOF) {
-				break; // EOF = End Of File. Quit the loop.
+			break; // EOF = End Of File. Quit the loop.
 		} else {
-				// parse lineHeader
-				if (strcmp(lineHeader, "Ns") == 0 ){
-					fscanf(file, "%f\n", &material->obj_shininess);
-				}else if (strcmp(lineHeader, "Ka") == 0 ){
-					fscanf(file, "%f %f %f\n", &material->obj_ambient.x, &material->obj_ambient.y, &material->obj_ambient.z);
-				}else if (strcmp(lineHeader, "Kd") == 0 ){
-					fscanf(file, "%f %f %f\n", &material->obj_diffuse.x, &material->obj_diffuse.y, &material->obj_diffuse.z);
-				}else if (strcmp(lineHeader, "Ks") == 0 ){
-					fscanf(file, "%f %f %f\n", &material->obj_specular.x, &material->obj_specular.y, &material->obj_specular.z);
-				}else if (strcmp(lineHeader, "illum") == 0 ){
-					fscanf(file, "%d\n", &material->obj_illum);
-				}
+			// parse lineHeader
+			if (strcmp(lineHeader, "Ns") == 0 ){
+				fscanf(file, "%f\n", &material->obj_shininess);
+			}else if (strcmp(lineHeader, "Ka") == 0 ){
+				fscanf(file, "%f %f %f\n", &material->obj_ambient.x, &material->obj_ambient.y, &material->obj_ambient.z);
+			}else if (strcmp(lineHeader, "Kd") == 0 ){
+				fscanf(file, "%f %f %f\n", &material->obj_diffuse.x, &material->obj_diffuse.y, &material->obj_diffuse.z);
+			}else if (strcmp(lineHeader, "Ks") == 0 ){
+				fscanf(file, "%f %f %f\n", &material->obj_specular.x, &material->obj_specular.y, &material->obj_specular.z);
+			}else if (strcmp(lineHeader, "illum") == 0 ){
+				fscanf(file, "%d\n", &material->obj_illum);
+			}
 		}
 	}
 	fclose(file);
-	// *material = material;
 
 	return true;
-	}
+}
