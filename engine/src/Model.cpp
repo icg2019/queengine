@@ -124,7 +124,7 @@ bool loadMtl(
 			return false;
 	}
 
-	Material temp_material;
+	// Material material;
 	while(1){
 		char lineHeader[128];
 		int res = fscanf(file, "%s", lineHeader);
@@ -133,26 +133,20 @@ bool loadMtl(
 		} else {
 				// parse lineHeader
 				if (strcmp(lineHeader, "Ns") == 0 ){
-					fscanf(file, "%f\n", &temp_material.obj_shininess);
-					printf("shininess: %f\n", temp_material.obj_shininess);
+					fscanf(file, "%f\n", &material->obj_shininess);
 				}else if (strcmp(lineHeader, "Ka") == 0 ){
-					fscanf(file, "%f %f %f\n", &temp_material.obj_ambient.x, &temp_material.obj_ambient.y, &temp_material.obj_ambient.z);
-					printf("ambient: %f %f %f\n", temp_material.obj_ambient.x, temp_material.obj_ambient.y, temp_material.obj_ambient.z);
+					fscanf(file, "%f %f %f\n", &material->obj_ambient.x, &material->obj_ambient.y, &material->obj_ambient.z);
 				}else if (strcmp(lineHeader, "Kd") == 0 ){
-					fscanf(file, "%f %f %f\n", &temp_material.obj_diffuse.x, &temp_material.obj_diffuse.y, &temp_material.obj_diffuse.z);
-					printf("diffuse: %f %f %f\n", temp_material.obj_diffuse.x, temp_material.obj_diffuse.y, temp_material.obj_diffuse.z);
+					fscanf(file, "%f %f %f\n", &material->obj_diffuse.x, &material->obj_diffuse.y, &material->obj_diffuse.z);
 				}else if (strcmp(lineHeader, "Ks") == 0 ){
-					fscanf(file, "%f %f %f\n", &temp_material.obj_specular.x, &temp_material.obj_specular.y, &temp_material.obj_specular.z);
-					printf("specular: %f %f %f\n", temp_material.obj_specular.x, temp_material.obj_specular.y, temp_material.obj_specular.z);
+					fscanf(file, "%f %f %f\n", &material->obj_specular.x, &material->obj_specular.y, &material->obj_specular.z);
 				}else if (strcmp(lineHeader, "illum") == 0 ){
-					fscanf(file, "%d\n", &temp_material.obj_illum);
-					printf("illum: %d\n", temp_material.obj_illum);
+					fscanf(file, "%d\n", &material->obj_illum);
 				}
 		}
 	}
 	fclose(file);
-	*material = temp_material;
-	printf("mat: %f %f %f", material->obj_diffuse.x, material->obj_diffuse.y, material->obj_diffuse.z);
+	// *material = material;
 
 	return true;
 	}

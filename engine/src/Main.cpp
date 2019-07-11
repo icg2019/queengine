@@ -40,7 +40,8 @@ int main(int argc, char **argv) {
 
   bool fileOpened = load3DOBJ("engine/assets/obj/suzanne.obj", vertices, tex_coords, normal);
   //trying to load obj materials
-  Material * material;
+
+  Material * material = (Material*)malloc(sizeof(Material));
   bool mtl = loadMtl(material, "engine/assets/obj/suzanne.mtl");
 
   for(int i = 0; i < vertices.size();i++) {
@@ -58,17 +59,15 @@ int main(int argc, char **argv) {
   Shader first_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
                 "engine/assets/shaders/fragment_from_texture.glsl");
   first_object_shader.active = false;
-  //   // first_object_shader.Set("obj_diffuse", material->obj_diffuse.x, material->obj_diffuse.y, material->obj_diffuse.z);
-  //   // first_object_shader.Set("obj_ambient", material->obj_ambient.x, material->obj_ambient.y, material->obj_ambient.z);
-  //   // first_object_shader.Set("obj_specular", material->obj_specular.x, material->obj_specular.y, material->obj_specular.z);
-  //   // first_object_shader.Set("obj_diffuse", float(0.0));
-  //   // first_object_shader.Set("obj_ambient", float(0.0),float(0.0), float(0.0));
-  //   // first_object_shader.Set("obj_specular", float(0.0),float(0.0), float(0.0));
-  //   printf("Aqui2");
-  // first_object_shader.Set("obj_diffuse", &material->obj_diffuse);
-  // first_object_shader.Set("obj_ambient", &material->obj_ambient);
-  // first_object_shader.Set("obj_specular", &material->obj_specular);
 
+  // applies de mtl properties to the object shader
+  if(mtl)
+  {
+    first_object_shader.Use();
+    first_object_shader.Set("obj_ambient", material->obj_ambient);
+    first_object_shader.Set("obj_specular", material->obj_specular);
+    first_object_shader.Set("obj_diffuse", material->obj_diffuse);
+  }
   tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
 
