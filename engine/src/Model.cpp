@@ -19,6 +19,14 @@ bool load3DOBJ(
 	std::vector<glm::vec2> temp_uvs;           // Texture Coord
 	std::vector<glm::vec3> temp_normals;       // Suface normals
 
+    glm::vec3 difuse_light;
+    glm::vec3 environment_light;
+    glm::vec3 transformation_filter;
+    unsigned int illumination;
+    unsigned int optic_density;
+
+    std::string material_file_name;            // Material
+
     float bigger[3] = {-999, -999, -999};
     float lower[3] = {999, 999, 999};
 
@@ -79,6 +87,8 @@ bool load3DOBJ(
                 normalIndices.push_back(normalIndex[0]);
                 normalIndices.push_back(normalIndex[1]);
                 normalIndices.push_back(normalIndex[2]);
+            } else if ( strcmp( lineHeader, "mtlib") == 0){
+                fscanf(file, "%s", &material_file_name);
             }
         }
     }
@@ -94,6 +104,33 @@ bool load3DOBJ(
         temp_vertices[i].x = (temp_vertices[i].x - lower[0]) / temp[0];
         temp_vertices[i].y = (temp_vertices[i].y - lower[1]) / temp[1];
         temp_vertices[i].z = (temp_vertices[i].z - lower[2]) / temp[2];
+    }
+
+    // Reading Material
+    FILE *material_file = fopen(path, "r");
+    if (material_file == NULL) {
+        printf("Impossible to find material!\n");
+    } else {
+        while (1) {
+            char lineHeader[128];
+            int res = fscanf(material_file, "%s", lineHeader);
+            if (res == EOF) {
+                break;
+            } else if ( strcmp(lineHeader, "illum") == 0) {
+                fscanf(material_file, "%d", &illumination);
+            } else if ( strcmp(lineHeader, "Kd") == 0) {
+                fscanf(material_file, "%f %f %f\n",
+                    &difuse_light[0], &difuse_light.y, &difuse_light.z);
+            } else if ( strcmp(lineHeader, "Ka") == 0) {
+                fscanf(material_file, "%f %f %f\n",
+                    &environment_light.x, &environment_light.y, &environment_light.z);
+            } else if ( strcmp(lineHeader, "Tf") == 0) {
+                fscanf(material_file, "%f %f %f\n",
+                    &transformation_filter.x, &transformation_filter.y, &transformation_filter.z);
+            } else if ( strcmp(lineHeader, "Ni") == 0) {
+                fscanf(material_file, "%f\n", &optic_density);
+            }
+        }
     }
 
     // For each vertex of each triangle
