@@ -4,10 +4,10 @@
 #include "BufferSet.hpp"
 
 class GameObject {
-	public:
+        public:
         GameObject();
-        BufferSet get_buffer_set();
-        unsigned int get_indices_size();
+        virtual BufferSet get_buffer_set();
+        virtual unsigned int get_indices_size();
 };
 
 #endif
