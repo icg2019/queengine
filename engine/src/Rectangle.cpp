@@ -16,16 +16,18 @@ Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(sha
 		glm::vec3(1.0, 1.0, 0.0)
 	};
 
-    // upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
-    upper_triangle.set_coordinates(upper_triangle_coordinates);
+    this->upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
+    this->upper_triangle.set_coordinates(upper_triangle_coordinates);
+
 
     std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
   	std::vector<unsigned int> indices_temp = this->get_indices();
   	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
 
+
 	this->bufferSet.add(&vertices_tmp, "uPosition");
   	this->bufferSet.add(&indices_temp);
-  	this->bufferSet.add(&tex_coords,"tex_coords");
+  	this->bufferSet.add(&tex_coords, "tex_coords");
 }
 
 Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_triangle(shader), lower_triangle(shader), bufferSet(shader.program_id){
@@ -74,14 +76,17 @@ Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_
 }
 
 std::vector<glm::vec3> Rectangle::get_coordinates(){
-    std::vector<glm::vec3> rec(this->upper_triangle.get_coordinates().begin(), this->upper_triangle.get_coordinates().end());
-    rec.push_back(this->lower_triangle.get_coordinates()[2]);
-
-    return rec;
+    std::vector<glm::vec3> coords, upper(this->upper_triangle.get_coordinates());
+    std::vector<glm::vec3> lower(this->lower_triangle.get_coordinates());
+    
+    coords.insert( coords.end(), upper.begin(), upper.end() );
+    coords.insert( coords.end(), lower.begin(), lower.end() );
+    
+    return coords;
 }
 
-void Rectangle::set_coordinates(std::vector<glm::vec3>){
-    // TODO
+void Rectangle::set_coordinates(std::vector<glm::vec3> coordinates){
+    //TODO
 }
 
 unsigned int Rectangle::get_coordinates_size(){

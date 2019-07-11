@@ -1,4 +1,8 @@
 #include "Queengine.h"
+#include "Circle.hpp"
+#include "Triangle.hpp"
+#include "Rectangle.hpp"
+#include "Queengine.h"
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -11,7 +15,7 @@ using namespace std;
 
 Queengine *Queengine::instance = nullptr;
 
-Queengine::Queengine() {
+Queengine::Queengine() : primitives(0,0) {
     if(SDL_Init(SDL_INIT_VIDEO)) {
       std::cout << "SDL_Init failed: %s\n" << SDL_GetError();
       exit(-1);
@@ -140,18 +144,18 @@ void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> texture
 //  Queengine::Run(VAO, 3, shaderList, textures);
 //}
 
-void Queengine::Run(vector<GameObject*> primitivas, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
+void Queengine::Run(vector<Shader> shaders, vector<tuple<TextureLoader, int, int>> textures) {
   glEnable(GL_DEPTH_TEST);
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
 
-    this->HandleInput(shaderList, textures);
+    this->HandleInput(shaders, textures);
 
-    for(int i = 0; i < primitivas.size(); i++){
-    glBindVertexArray(((GameObject*) primitivas[i])->get_buffer_set().getId());
-    glDrawElements(GL_TRIANGLES, ((GameObject*) primitivas[i])->get_indices_size(), GL_UNSIGNED_INT, 0);
+    for(int i = 0; i < this->primitives.size(); i++){
+        glBindVertexArray(((GameObject*) this->primitives[i])->get_buffer_set().getId());
+        glDrawElements(GL_TRIANGLES, (((GameObject*) this->primitives[i])->get_indices_size()) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
     }
 
     SDL_GL_SwapWindow(this->window);
@@ -162,23 +166,32 @@ Rect Queengine::GetGLCanvasArea() {
   return this->glCanvasArea;
 }
 
-void Queengine::HandleInput(vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures) {
+void Queengine::HandleInput(vector<Shader> shaders, vector<tuple<TextureLoader, int, int>> textures) {
     if (InputManager::GetInstance().KeyPress(F11_KEY)) {
       ToggleFullscreen(this->window);
     }
     if (InputManager::GetInstance().KeyPress(KEY_1)) {
-        // Create Triangle
+      Triangle* triangle = new Triangle(shaders[0]);
+      this->primitives.push_back(triangle);
     }
     if (InputManager::GetInstance().KeyPress(KEY_2)) {
-        // Create Square
+      Circle* circle = new Circle(shaders[0], {0.0,0.0,0.0}, 0.5, 30);
+      this->primitives.push_back(circle);
     }
     if (InputManager::GetInstance().KeyPress(KEY_3)) {
-        // Create Circle
+      vector<glm::vec3> my_coordinates = {
+          glm::vec3(-0.5, 0.5, 0.0),
+          glm::vec3(0.5, 0.5, 0.0),
+          glm::vec3(-0.5, -0.5, 0.0),
+          glm::vec3(0.5, -0.5, 0.0),
+        };
+      Rectangle* rectangle = new Rectangle(shaders[0], my_coordinates);
+      this->primitives.push_back(rectangle);
     }
     if (InputManager::GetInstance().KeyPress(SDLK_0)) {
         //for(int i = 0; i < shaderList.size(); i++){
-          if(InputManager::GetInstance().KeyPress(shaderList[0].option_command)){
-            shaderList[0].active = !shaderList[0].active;
+          if(InputManager::GetInstance().KeyPress(shaders[0].option_command)){
+            shaders[0].active = !shaders[0].active;
           }
 
           for(int j = 0; j < textures.size(); j++){
@@ -186,11 +199,10 @@ void Queengine::HandleInput(vector<Shader> shaderList, vector<tuple<TextureLoade
             glActiveTexture(get<2>(textures[j]));
           }
 
-          if(shaderList[0].active){
-            shaderList[0].Use();
-            BindUniforms(&shaderList[0], textures);
+          if(shaders[0].active){
+            shaders[0].Use();
+            BindUniforms(&shaders[0], textures);
           }
         //}
     }
-
 }

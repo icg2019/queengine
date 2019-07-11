@@ -74,9 +74,6 @@ int main(int argc, char **argv) {
 
   shaders.push_back(first_object_shader);
 
-  Triangle triangle = Triangle(first_object_shader);
-  Circle circle = Circle(first_object_shader, {0.0,0.0,0.0}, 0.5, 30);
-
   glClearColor(0.5f, 0.7f, 0.2f, 1.0f);
 
   //BufferSet bufferSet = BufferSet(first_object_shader.program_id);
@@ -142,10 +139,9 @@ int main(int argc, char **argv) {
 // //---------------------------------------
 //
   //engine->Run(primitiva.get_buffer_set().getId(), primitiva.get_indices_size(), shaders, textures);
-  vector<GameObject*> primitivas;
-  primitivas.push_back(&circle);
-  primitivas.push_back(&triangle);
-  engine->Run(primitivas, shaders, textures);
+  //
+  //vector<GameObject*> primitivas;
+  engine->Run(shaders, textures);
 
 
   return 0;

@@ -34,9 +34,10 @@ class Queengine {
     void HandleInput(vector<Shader> , vector<tuple<TextureLoader, int, int>>);
     Rect GetGLCanvasArea();
     void Run(unsigned int VAO, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
-    void Run(vector<GameObject*>, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
+    void Run(vector<Shader> shaderList, vector<tuple<TextureLoader, int, int>> textures);
     static Queengine *GetInstance();
     void Run(GLuint VAO);
+    vector<GameObject*> primitives;
 };
 
 #endif
