@@ -24,6 +24,7 @@
 #include "Shader.h"
 // #include "TextureLoader.h"
 #include "Model.hpp"
+#include "vboindexer.hpp"
 
 #include "../include/log.h"
 
