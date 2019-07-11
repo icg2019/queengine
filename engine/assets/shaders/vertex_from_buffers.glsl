@@ -15,16 +15,17 @@ out vec3 LightDirection_cameraspace;
 uniform mat4 Projection;
 uniform mat4 View;
 uniform mat4 Model;
+uniform mat4 transform;
 
 uniform vec3 LightPosition_worldspace;
 
 void main(){
 	// Our ModelViewProjection : multiplication of our 3 matrices
-	mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
+	//mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
     // This part needs to be extracted later to a scene or whatever
 
 	// Output position of the vertex, in clip space : MVP * position
-	gl_Position =  MVP * vec4(uPosition,1);
+	gl_Position = transform * vec4(uPosition,1);
 	
 	// Position of the vertex, in worldspace : M * position
 	Position_worldspace = (Model * vec4(uPosition,1)).xyz;

@@ -3,6 +3,7 @@
 #include "Triangle.hpp"
 #include "Rectangle.hpp"
 #include "Queengine.h"
+#include "transformation.hpp"
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -73,7 +74,7 @@ void ToggleFullscreen(SDL_Window* window) {
   SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
 }
 
-void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> textures) {
+void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> textures, float &xAxis, float &yAxis, float &xScale, float &yScale) {
   glm::vec2 _ifFragCoordOffsetXY(0.0f, 0.0f);
   float _ifFragCoordScale = 1.0f;
 
@@ -135,9 +136,25 @@ void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> texture
 
   shader->Set("View", View);
 
+
+
   glm::mat4 Model = glm::mat4(1.0f);
 
+
   shader->Set("Model", Model);
+    if (InputManager::GetInstance().KeyPress(SDLK_LEFT)) {
+        xAxis += 0.1f;
+    }
+
+    glm::mat4 transform = glm::mat4(1.0f);
+
+    glm::vec2 cameraMove = glm::vec2(xAxis, yAxis);
+    transform = camera(1.0f, cameraMove);
+
+    //transform = rotate(transform, (float) (SDL_GetTicks()/1000.0), glm::vec3(0.0f, 0.0f, 1.0f));
+    transform = scale(transform, glm::vec3(xScale,yScale,1.0f));
+
+  shader->Set("transform", transform);
 }
 
 //void Queengine::Run(unsigned int VAO, vector<Shader> shaderList, vector<tuple<TextureLoader, int, int> > textures) {
@@ -146,12 +163,31 @@ void BindUniforms(Shader *shader, vector<tuple<TextureLoader, int, int>> texture
 
 void Queengine::Run(vector<Shader> shaders, vector<tuple<TextureLoader, int, int>> textures) {
   glEnable(GL_DEPTH_TEST);
+  float xAxis = 0;
+    float yAxis = 0;
+    float xScale = 1.0f;
+    float yScale = 1.0f;
+
+
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     InputManager::GetInstance().Update();
 
     this->HandleInput(shaders, textures);
+  if(InputManager::GetInstance().KeyPress(shaders[0].option_command)){
+    shaders[0].active = !shaders[0].active;
+  }
+
+  for(int j = 0; j < textures.size(); j++){
+    get<0>(textures[j]).Bind();
+    glActiveTexture(get<2>(textures[j]));
+  }
+
+  if(shaders[0].active){
+    shaders[0].Use();
+    BindUniforms(&shaders[0], textures, xAxis, yAxis, xScale, yScale);
+  }
 
     for(int i = 0; i < this->primitives.size(); i++){
         glBindVertexArray(((GameObject*) this->primitives[i])->get_buffer_set().getId());
@@ -188,21 +224,8 @@ void Queengine::HandleInput(vector<Shader> shaders, vector<tuple<TextureLoader, 
       Rectangle* rectangle = new Rectangle(shaders[0], my_coordinates);
       this->primitives.push_back(rectangle);
     }
-    if (InputManager::GetInstance().KeyPress(SDLK_0)) {
+    //if (InputManager::GetInstance().KeyPress(SDLK_0)) {
         //for(int i = 0; i < shaderList.size(); i++){
-          if(InputManager::GetInstance().KeyPress(shaders[0].option_command)){
-            shaders[0].active = !shaders[0].active;
-          }
-
-          for(int j = 0; j < textures.size(); j++){
-            get<0>(textures[j]).Bind();
-            glActiveTexture(get<2>(textures[j]));
-          }
-
-          if(shaders[0].active){
-            shaders[0].Use();
-            BindUniforms(&shaders[0], textures);
-          }
         //}
-    }
+    //}
 }
