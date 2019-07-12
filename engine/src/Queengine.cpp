@@ -70,7 +70,7 @@ void ToggleFullscreen(SDL_Window *window) {
   SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
 }
 
-void BindUniforms(GameObject *primitive, Shader *shader,
+void BindUniforms(int &vertice, GameObject *primitive, Shader *shader,
                   vector<tuple<TextureLoader, int, int>> textures, float &xAxis,
                   float &yAxis, float &xScale, float &yScale) {
   glm::vec2 _ifFragCoordOffsetXY(0.0f, 0.0f);
@@ -126,7 +126,12 @@ void BindUniforms(GameObject *primitive, Shader *shader,
 
   vector<glm::vec3> f = primitive->get_coordinates();
   shader->Set("Model", Model);
-  if (InputManager::GetInstance().KeyPress(SDLK_LEFT)) {
+  if (InputManager::GetInstance().MouseRelease(SDL_BUTTON_LEFT) and
+      (vertice != -1)) {
+    f[vertice] =
+        glm::vec3(InputManager::GetInstance().GetMouseXCanvasCoord(),
+                  InputManager::GetInstance().GetMouseYCanvasCoord(), 0);
+  } else if (InputManager::GetInstance().KeyPress(SDLK_LEFT)) {
     xAxis += 0.1f;
   } else if (InputManager::GetInstance().KeyPress(SDLK_RIGHT)) {
     xAxis -= 0.1f;
@@ -139,14 +144,17 @@ void BindUniforms(GameObject *primitive, Shader *shader,
   } else if (InputManager::GetInstance().KeyPress(SDLK_s)) {
     yScale -= 0.1f;
   } else if (InputManager::GetInstance().MousePress(SDL_BUTTON_LEFT)) {
-    xAxis -= 0.1f;
-    f[0].x += xAxis;
-    f[0].y += xAxis;
-    f[0].z += xAxis;
+    // f[0].x -= 0.1f;
+    // f[0].y -= 0.1f;
+
+    vertice = primitive->get_vertice(
+        glm::vec3(InputManager::GetInstance().GetMouseXCanvasCoord(),
+                  InputManager::GetInstance().GetMouseYCanvasCoord(), 0));
+    std::cout << "Entrou aqui " << vertice << std::endl;
   }
   glm::mat4 transform = glm::mat4(1.0f);
 
-  glm::vec2 cameraMove = glm::vec2(xAxis, yAxis);
+  // glm::vec2 cameraMove = glm::vec2(xAxis, yAxis);
 
   primitive->set_coordinates(f);
 
@@ -172,6 +180,7 @@ void Queengine::Run(vector<Shader> &shaders,
   float yAxis = 0;
   float xScale = 1.0f;
   float yScale = 1.0f;
+  int vertice = -1;
 
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
@@ -186,10 +195,12 @@ void Queengine::Run(vector<Shader> &shaders,
         get<0>(textures[j]).Bind();
         glActiveTexture(get<2>(textures[j]));
       }
-      BindUniforms((GameObject *)this->primitives[i], &shaders[i], textures,
-                   xAxis, yAxis, xScale, yScale);
+      BindUniforms(vertice, (GameObject *)this->primitives[i], &shaders[i],
+                   textures, xAxis, yAxis, xScale, yScale);
+
       glBindVertexArray(
           ((GameObject *)this->primitives[i])->get_buffer_set().getId());
+
       glDrawElements(GL_TRIANGLES,
                      (((GameObject *)this->primitives[i])->get_indices_size()) /
                          sizeof(unsigned int),

@@ -10,6 +10,7 @@ public:
   virtual unsigned int get_indices_size();
   virtual std::vector<glm::vec3> get_coordinates();
   virtual void set_coordinates(std::vector<glm::vec3>);
+  virtual int get_vertice(glm::vec3);
 };
 
 #endif

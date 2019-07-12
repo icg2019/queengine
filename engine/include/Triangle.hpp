@@ -44,7 +44,7 @@ public:
   bool is_a_valid_path(std::string &);
 
   BufferSet get_buffer_set();
-  glm::vec3 *get_vertice(glm::vec3);
+  int get_vertice(glm::vec3);
   bool point_is_inside(glm::vec3);
 
   // Calcular a normal da face do triangulo

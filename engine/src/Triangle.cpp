@@ -6,10 +6,6 @@ Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
       glm::vec3(1.0, 1.0, 0.0),
   };
 
-  std::vector<glm::vec2> texture_coordinates = {
-      glm::vec2(0.0, 0.0), glm::vec2(0.0, 1.0), glm::vec2(1.0, 1.0),
-  };
-
   // Criar metodo para Verificar se o caminho da textura esta certo
   std::string texture_path = "../assets/pixes.bmp";
 
@@ -19,7 +15,6 @@ Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
   };
 
   this->coordinates = coordinates;
-  this->texture_coordinates = texture_coordinates;
   this->texture_path = texture_path;
   this->indices = indices;
 
@@ -65,15 +60,15 @@ std::vector<glm::vec2> Triangle::get_texture_coordinates() {
   return this->texture_coordinates;
 }
 
-glm::vec3 *Triangle::get_vertice(glm::vec3 mouse_position) {
+int Triangle::get_vertice(glm::vec3 mouse_position) {
   const double radius = 0.1;
   for (int i = 0; i < this->coordinates.size(); i++) {
     double dist = hypot(this->coordinates[i].x - mouse_position.x,
                         this->coordinates[i].y - mouse_position.y);
     if (dist < radius)
-      return &this->coordinates[i];
+      return i;
   }
-  return NULL;
+  return -1;
 }
 
 double area(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3) {
