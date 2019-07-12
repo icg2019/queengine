@@ -70,8 +70,9 @@ void ToggleFullscreen(SDL_Window *window) {
   SDL_SetWindowFullscreen(window, isFullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
 }
 
-void BindUniforms(glm::vec2 &last_mouse_position, bool &press_primitive,
-                  int &vertice, GameObject *primitive, Shader *shader,
+void BindUniforms(int &selected_primitive, glm::vec2 &last_mouse_position,
+                  bool &press_primitive, int &vertice, GameObject *primitive,
+                  Shader *shader,
                   vector<tuple<TextureLoader, int, int>> textures, float &xAxis,
                   float &yAxis, float &xScale, float &yScale) {
   glm::vec2 _ifFragCoordOffsetXY(0.0f, 0.0f);
@@ -132,7 +133,15 @@ void BindUniforms(glm::vec2 &last_mouse_position, bool &press_primitive,
                 InputManager::GetInstance().GetMouseYCanvasCoord(), 0);
   shader->Set("Model", Model);
 
-  if (InputManager::GetInstance().IsMouseDown(SDL_BUTTON_LEFT)) {
+  if (InputManager::GetInstance().KeyPress(SDLK_1)) {
+    selected_primitive = 0;
+  } else if (InputManager::GetInstance().KeyPress(SDLK_2)) {
+    selected_primitive = 1;
+  } else if (InputManager::GetInstance().KeyPress(SDLK_3)) {
+    selected_primitive = 2;
+  } else if (InputManager::GetInstance().KeyPress(SDLK_4)) {
+    selected_primitive = 3;
+  } else if (InputManager::GetInstance().IsMouseDown(SDL_BUTTON_LEFT)) {
     vertice = primitive->get_vertice(mouse_position);
     if (vertice != -1) {
       f[vertice] =
@@ -140,13 +149,15 @@ void BindUniforms(glm::vec2 &last_mouse_position, bool &press_primitive,
                     InputManager::GetInstance().GetMouseYCanvasCoord(), 0);
     }
   } else if (InputManager::GetInstance().MousePress(SDL_BUTTON_RIGHT)) {
-    if (primitive->point_is_inside(mouse_position)) {
+    press_primitive = primitive->point_is_inside(mouse_position);
+    if (press_primitive == true) {
       last_mouse_position =
           glm::vec2(InputManager::GetInstance().GetMouseXCanvasCoord(),
                     InputManager::GetInstance().GetMouseYCanvasCoord());
     }
 
-  } else if (InputManager::GetInstance().IsMouseDown(SDL_BUTTON_RIGHT)) {
+  } else if (InputManager::GetInstance().IsMouseDown(SDL_BUTTON_RIGHT) &&
+             press_primitive) {
     f = primitive->get_coordinates();
     glm::vec2 new_mouse_position(
         InputManager::GetInstance().GetMouseXCanvasCoord(),
@@ -187,6 +198,7 @@ void Queengine::Run(vector<Shader> &shaders,
   int vertice = -1;
   bool press_primitive = false;
   glm::vec2 last_mouse_position(0.0f, 0.0f);
+  int selected_primitive = 0;
 
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
@@ -201,9 +213,10 @@ void Queengine::Run(vector<Shader> &shaders,
         get<0>(textures[j]).Bind();
         glActiveTexture(get<2>(textures[j]));
       }
-      BindUniforms(last_mouse_position, press_primitive, vertice,
-                   (GameObject *)this->primitives[i], &shaders[i], textures,
-                   xAxis, yAxis, xScale, yScale);
+      std::cout << selected_primitive << std::endl;
+      BindUniforms(selected_primitive, last_mouse_position, press_primitive,
+                   vertice, (GameObject *)this->primitives[selected_primitive],
+                   &shaders[i], textures, xAxis, yAxis, xScale, yScale);
 
       glBindVertexArray(
           ((GameObject *)this->primitives[i])->get_buffer_set().getId());
@@ -238,11 +251,7 @@ void Queengine::HandleInput(vector<Shader> &shaders,
   }
 
   if (InputManager::GetInstance().KeyPress(SDLK_r)) {
-    vector<glm::vec3> my_coordinates = {
-        glm::vec3(-0.5, 0.5, 0.0), glm::vec3(0.5, 0.5, 0.0),
-        glm::vec3(-0.5, -0.5, 0.0), glm::vec3(0.5, -0.5, 0.0),
-    };
-    Rectangle *rectangle = new Rectangle(shaders[2], my_coordinates);
+    Rectangle *rectangle = new Rectangle(shaders[2]);
     this->primitives.push_back(rectangle);
   }
   // if (InputManager::GetInstance().KeyPress(SDLK_0)) {

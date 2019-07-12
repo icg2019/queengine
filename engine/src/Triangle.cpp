@@ -9,7 +9,6 @@ Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
   // Criar metodo para Verificar se o caminho da textura esta certo
   std::string texture_path = "../assets/pixes.bmp";
 
-  // Verificar o que é
   std::vector<glm::vec1> indices = {
       glm::vec1(0.0), glm::vec1(1.0), glm::vec1(2.0),
   };

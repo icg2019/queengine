@@ -1,140 +1,119 @@
 #include "../include/Rectangle.hpp"
-#include "../include/Triangle.hpp"
 #include <set>
 
-Rectangle::Rectangle(Shader shader) : upper_triangle(shader), lower_triangle(shader), bufferSet(shader.program_id){
-    // Create two triangles and set the attributes to them
-    std::vector<glm::vec2> upper_triangle_texture_coordinates = {
-		glm::vec2(0.0, 0.0),
-		glm::vec2(1.0, 0.0),
-		glm::vec2(1.0, 1.0)
-	};
+Rectangle::Rectangle(Shader shader) : bufferSet(shader.program_id) {
 
-    std::vector<glm::vec3> upper_triangle_coordinates = {
-		glm::vec3(0.0, 0.0, 0.0),
-		glm::vec3(1.0, 0.0, 0.0),
-		glm::vec3(1.0, 1.0, 0.0)
-	};
+  vector<glm::vec3> coordinates = {
+      glm::vec3(-0.5, 0.5, 0.0), glm::vec3(0.5, 0.5, 0.0),
+      glm::vec3(0.5, -0.5, 0.0), glm::vec3(-0.5, -0.5, 0.0),
+  };
 
-    this->upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
-    this->upper_triangle.set_coordinates(upper_triangle_coordinates);
+  // Criar metodo para Verificar se o caminho da textura esta certo
+  std::string texture_path = "../assets/pixes.bmp";
 
+  std::vector<glm::vec1> indices = {glm::vec1(0.0), glm::vec1(1.0),
+                                    glm::vec1(2.0), glm::vec1(0.0),
+                                    glm::vec1(2.0), glm::vec1(3.0)};
 
-    std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
-  	std::vector<unsigned int> indices_temp = this->get_indices();
-  	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
+  this->coordinates = coordinates;
+  this->texture_path = texture_path;
+  this->indices = indices;
 
+  this->texture_coordinates = std::vector<glm::vec2>(4);
+  this->texture_coordinates[0] = glm::vec2(-0.5, 0.5);
+  this->texture_coordinates[2] = glm::vec2(0.5, 0.5);
+  this->texture_coordinates[1] = glm::vec2(0.5, -0.5);
+  this->texture_coordinates[3] = glm::vec2(-0.5, -0.5);
 
-	this->bufferSet.add(&vertices_tmp, "uPosition");
-  	this->bufferSet.add(&indices_temp);
-  	this->bufferSet.add(&tex_coords, "tex_coords");
+  std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
+  std::vector<unsigned int> indices_temp = this->get_indices();
+  std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
+
+  this->bufferSet.add(&vertices_tmp, "uPosition");
+  this->bufferSet.add(&indices_temp);
+  this->bufferSet.add(&tex_coords, "tex_coords");
 }
 
-Rectangle::Rectangle(Shader shader, std::vector<glm::vec3> coordinates) : upper_triangle(shader), lower_triangle(shader), bufferSet(shader.program_id){
-    if(coordinates.size() != 4){
-        throw "Rectangle must contain 4 coordinates";
-    }
-
-    std::vector<glm::vec3> coordinates_upper_triangle = {};
-    std::vector<glm::vec1> indices_upper_triangle = {};
-
-    std::vector<glm::vec3> coordinates_lower_triangle = {};
-    std::vector<glm::vec1> indices_lower_triangle = {};
-
-    for(int i = 0; i < coordinates.size(); i++){
-        if(i < 3) { // coordinates for upper triangle
-            coordinates_upper_triangle.push_back(coordinates[i]);
-        }
-        if(i > 0) { // coordinates for lower triangle
-            coordinates_lower_triangle.push_back(coordinates[i]);
-        }
-	}
-
-    for(int i = 0; i < 3; i++){
-        indices_upper_triangle.push_back(glm::vec1(i));
-        indices_lower_triangle.push_back(glm::vec1(i+3));
-    }
-
-    this->upper_triangle = Triangle(shader, coordinates_upper_triangle, indices_upper_triangle);
-    this->lower_triangle = Triangle(shader, coordinates_lower_triangle, indices_lower_triangle);
-
-    std::vector<glm::vec2> upper_triangle_texture_coordinates = {
-		glm::vec2(0.0, 0.0),
-		glm::vec2(1.0, 0.0),
-		glm::vec2(1.0, 1.0),
-	};
-
-    upper_triangle.set_texture_coordinates(upper_triangle_texture_coordinates);
-
-    std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
-  	std::vector<unsigned int> indices_temp = this->get_indices();
-  	std::vector<glm::vec2> tex_coords = this->get_texture_coordinates();
-
-	this->bufferSet.add(&vertices_tmp, "uPosition");
-  	this->bufferSet.add(&indices_temp);
-  	this->bufferSet.add(&tex_coords,"tex_coords");
+std::vector<glm::vec3> Rectangle::get_coordinates() {
+  return this->coordinates;
 }
 
-std::vector<glm::vec3> Rectangle::get_coordinates(){
-    std::vector<glm::vec3> coords, upper(this->upper_triangle.get_coordinates());
-    std::vector<glm::vec3> lower(this->lower_triangle.get_coordinates());
-    
-    coords.insert( coords.end(), upper.begin(), upper.end() );
-    coords.insert( coords.end(), lower.begin(), lower.end() );
-    
-    return coords;
+unsigned int Rectangle::get_coordinates_size() {
+  return this->coordinates.size() * 3 * sizeof(float);
 }
 
-void Rectangle::set_coordinates(std::vector<glm::vec3> coordinates){
-    //TODO
+void Rectangle::set_coordinates(std::vector<glm::vec3> coordinates) {
+  this->coordinates = coordinates;
+  this->bufferSet.add(&this->coordinates, "uPosition");
 }
 
-unsigned int Rectangle::get_coordinates_size(){
-    // Return size of the combined array
-    return this->upper_triangle.get_coordinates_size() + this->lower_triangle.get_coordinates_size();
+std::vector<glm::vec2> Rectangle::get_texture_coordinates() {
+  return this->texture_coordinates;
 }
 
-std::vector<unsigned int> Rectangle::get_indices(){
-    // Combines the two indeces arrays from the two triangles and return them as one
-    int number_of_indices = 6; // Each point of both triangles has an indice
-    std::vector<unsigned int> indices_array = std::vector<unsigned int>(number_of_indices);
-    std::vector<unsigned int> indices_upper_triangle = this->upper_triangle.get_indices();
-    std::vector<unsigned int> indices_lower_triangle = this->lower_triangle.get_indices();
-
-    // memcpy(indices_array, indices_upper_triangle, sizeof(unsigned int) * 3);
-    // memcpy(indices_array + (sizeof(unsigned int) * 3), indices_lower_triangle, sizeof(unsigned int) * 3);
-
-    for(size_t i = 0; i < 3; i++){
-        indices_array[i] = indices_upper_triangle[i];
-        indices_array[i+3] = indices_lower_triangle[i];
-    }
-
-    return indices_array;
+int Rectangle::get_vertice(glm::vec3 mouse_position) {
+  const double radius = 0.1;
+  for (int i = 0; i < this->coordinates.size(); i++) {
+    double dist = hypot(this->coordinates[i].x - mouse_position.x,
+                        this->coordinates[i].y - mouse_position.y);
+    if (dist < radius)
+      return i;
+  }
+  return -1;
 }
 
-void Rectangle::set_indices(std::vector<glm::vec1>){
-    // TODO
+double area_rec(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3) {
+  return abs(
+      (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) /
+      2.0);
 }
 
-unsigned int Rectangle::get_indices_size(){
-    // Returns size of the combined index array
-    return this->upper_triangle.get_indices_size() + this->lower_triangle.get_indices_size();
+bool Rectangle::point_is_inside(glm::vec3 mouse_position) {
+  double a = area_rec(this->coordinates[0], this->coordinates[1],
+                      this->coordinates[2]) +
+             area_rec(this->coordinates[0], this->coordinates[3],
+                      this->coordinates[2]);
+
+  double a1 =
+      area_rec(mouse_position, this->coordinates[0], this->coordinates[1]);
+  double a2 =
+      area_rec(mouse_position, this->coordinates[1], this->coordinates[2]);
+  double a3 =
+      area_rec(mouse_position, this->coordinates[2], this->coordinates[3]);
+  double a4 =
+      area_rec(mouse_position, this->coordinates[0], this->coordinates[3]);
+
+  return (a == a1 + a2 + a3 + a4);
 }
 
-std::vector<glm::vec2> Rectangle::get_texture_coordinates(){
-    int number_of_indices = 6; // Each point of both triangles has an indice
-    std::vector<glm::vec2> text_coord = std::vector<glm::vec2>(number_of_indices);
-    std::vector<glm::vec2> text_coords_upper_triangle = this->upper_triangle.get_texture_coordinates();
-    std::vector<glm::vec2> text_coords_lower_triangle = this->lower_triangle.get_texture_coordinates();
-
-    for(size_t i = 0; i < 3; i++){
-        text_coord[i] = text_coords_upper_triangle[i];
-        text_coord[i+3] = text_coords_lower_triangle[i];
-    }
-
-    return text_coord;
+void Rectangle::set_texture_coordinates(
+    std::vector<glm::vec2> texture_coordinates) {
+  this->texture_coordinates = texture_coordinates;
 }
 
-BufferSet Rectangle::get_buffer_set(){
-    return this->bufferSet;
+std::string Rectangle::get_texture_path() { return this->texture_path; }
+
+void Rectangle::set_texture_path(const std::string &texture_path) {
+  this->texture_path = texture_path;
 }
+
+std::vector<unsigned int> Rectangle::get_indices() {
+  std::vector<unsigned int> indices_array =
+      std::vector<unsigned int>(this->indices.size());
+
+  for (int i = 0; i < this->indices.size(); i++) {
+    indices_array[i] = this->indices[i].x;
+  }
+
+  return indices_array;
+}
+
+unsigned int Rectangle::get_indices_size() {
+  return this->indices.size() * sizeof(unsigned int);
+}
+
+void Rectangle::set_indices(std::vector<glm::vec1> indices) {
+  this->indices = indices;
+}
+
+BufferSet Rectangle::get_buffer_set() { return this->bufferSet; }
