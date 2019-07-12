@@ -11,6 +11,7 @@ public:
   virtual std::vector<glm::vec3> get_coordinates();
   virtual void set_coordinates(std::vector<glm::vec3>);
   virtual int get_vertice(glm::vec3);
+  virtual bool point_is_inside(glm::vec3 mouse_position);
 };
 
 #endif
