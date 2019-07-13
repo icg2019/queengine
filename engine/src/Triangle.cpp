@@ -36,8 +36,8 @@ Triangle::Triangle(Shader shader, std::vector<glm::vec3> coordinates,
     : bufferSet(shader.program_id), coordinates(coordinates), indices(indices) {
   this->texture_coordinates = std::vector<glm::vec2>(3);
   this->texture_coordinates[0] = glm::vec2(0.0, 0.0);
-  this->texture_coordinates[1] = glm::vec2(0.0, 1.0);
-  this->texture_coordinates[2] = glm::vec2(1.0, 1.0);
+  this->texture_coordinates[1] = glm::vec2(1.0, 0.0);
+  this->texture_coordinates[2] = glm::vec2(0.0, 1.0);
 
   this->bufferSet.add(&this->coordinates, "uPosition");
   this->bufferSet.add(&this->indices);
