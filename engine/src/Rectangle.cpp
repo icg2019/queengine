@@ -4,15 +4,15 @@
 Rectangle::Rectangle(Shader shader) : bufferSet(shader.program_id) {
 
   vector<glm::vec3> coordinates = {
+      glm::vec3(-0.5, -0.5, 0.0), glm::vec3(0.5, -0.5, 0.0),
       glm::vec3(-0.5, 0.5, 0.0), glm::vec3(0.5, 0.5, 0.0),
-      glm::vec3(0.5, -0.5, 0.0), glm::vec3(-0.5, -0.5, 0.0),
   };
 
   // Criar metodo para Verificar se o caminho da textura esta certo
   std::string texture_path = "../assets/pixes.bmp";
 
   std::vector<glm::vec1> indices = {glm::vec1(0.0), glm::vec1(1.0),
-                                    glm::vec1(2.0), glm::vec1(0.0),
+                                    glm::vec1(2.0), glm::vec1(1.0),
                                     glm::vec1(2.0), glm::vec1(3.0)};
 
   this->coordinates = coordinates;
@@ -20,10 +20,10 @@ Rectangle::Rectangle(Shader shader) : bufferSet(shader.program_id) {
   this->indices = indices;
 
   this->texture_coordinates = std::vector<glm::vec2>(4);
-  this->texture_coordinates[0] = glm::vec2(-0.5, 0.5);
-  this->texture_coordinates[2] = glm::vec2(0.5, 0.5);
+  this->texture_coordinates[0] = glm::vec2(-0.5, -0.5);
   this->texture_coordinates[1] = glm::vec2(0.5, -0.5);
-  this->texture_coordinates[3] = glm::vec2(-0.5, -0.5);
+  this->texture_coordinates[2] = glm::vec2(-0.5, 0.5);
+  this->texture_coordinates[3] = glm::vec2(0.5, 0.5);
 
   std::vector<glm::vec3> vertices_tmp = this->get_coordinates();
   std::vector<unsigned int> indices_temp = this->get_indices();
