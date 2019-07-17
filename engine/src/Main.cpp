@@ -53,6 +53,11 @@ int main(int argc, char **argv) {
 
   vector<Shader> shaders;
 
+  Shader base_object_shader(
+      "engine/assets/shaders/vertex_from_buffers.glsl",
+      "engine/assets/shaders/base_fragment.glsl"
+  );
+
   Shader first_object_shader(
       "engine/assets/shaders/vertex_from_buffers.glsl",
       "engine/assets/shaders/fragment_from_texture.glsl");
@@ -60,14 +65,15 @@ int main(int argc, char **argv) {
   Shader second_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
                               "engine/assets/shaders/fragment.glsl");
 
-  Shader third_object_shader("engine/assets/shaders/vertex_from_buffers.glsl",
+  Shader third_object_shader("engine/assets/shaders/vertex.glsl",
                              "engine/assets/shaders/fragment0.glsl");
 
   first_object_shader.option_command = SDLK_0;
 
-  first_object_shader.active = true;
-  second_object_shader.active = true;
-  third_object_shader.active = true;
+  base_object_shader.active = true;
+  first_object_shader.active = false;
+  second_object_shader.active = false;
+  third_object_shader.active = false;
 
   // applies de mtl properties to the object shader
   if (mtl) {
@@ -76,13 +82,15 @@ int main(int argc, char **argv) {
     first_object_shader.Set("obj_diffuse", material->obj_diffuse);
     first_object_shader.Set("obj_specular", material->obj_specular);
   }
-  tuple<Shader, int> firstShader = make_tuple(first_object_shader, SDLK_1);
 
+  base_object_shader.Use();
+
+  shaders.push_back(base_object_shader);
   shaders.push_back(first_object_shader);
   shaders.push_back(second_object_shader);
   shaders.push_back(third_object_shader);
 
-  glClearColor(0.5f, 0.7f, 0.2f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   // BufferSet bufferSet = BufferSet(first_object_shader.program_id);
 

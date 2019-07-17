@@ -90,6 +90,8 @@ unsigned int CreateShaderProgram(string vertex, string fragment)
 
 }
 
+Shader::Shader(){}
+
 Shader::Shader(const string & vertex_file, const string & fragment_file)
 {
     program_id = CreateShaderProgram(vertex_file, fragment_file);

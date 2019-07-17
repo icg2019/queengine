@@ -199,6 +199,7 @@ void Queengine::Run(vector<Shader> &shaders,
   bool press_primitive = false;
   glm::vec2 last_mouse_position(0.0f, 0.0f);
   int selected_primitive = 0;
+  Shader shader_used = shaders[0];
 
   while (not InputManager::GetInstance().QuitRequested()) {
     InputManager::GetInstance().Update();
@@ -208,15 +209,29 @@ void Queengine::Run(vector<Shader> &shaders,
     this->HandleInput(shaders, textures);
 
     for (int i = 0; i < this->primitives.size(); i++) {
-      shaders[i].Use();
+      if (InputManager::GetInstance().KeyPress(SDLK_KP_1)) {
+        shaders[1].active = !shaders[1].active;
+      } else if (InputManager::GetInstance().KeyPress(SDLK_KP_2)) {
+        shaders[2].active = !shaders[2].active;
+      } else if (InputManager::GetInstance().KeyPress(SDLK_KP_3)) {
+        shaders[3].active = !shaders[3].active;
+      }
+
+      for(int i = 1; i < shaders.size(); i++){
+        shader_used = shaders[i].active ? shaders[i] : shader_used;
+      }
+
+      shader_used.Use();
+
       for (int j = 0; j < textures.size(); j++) {
         get<0>(textures[j]).Bind();
         glActiveTexture(get<2>(textures[j]));
       }
+
       std::cout << selected_primitive << std::endl;
       BindUniforms(selected_primitive, last_mouse_position, press_primitive,
                    vertice, (GameObject *)this->primitives[selected_primitive],
-                   &shaders[i], textures, xAxis, yAxis, xScale, yScale);
+                   &shader_used, textures, xAxis, yAxis, xScale, yScale);
 
       glBindVertexArray(
           ((GameObject *)this->primitives[i])->get_buffer_set().getId());
@@ -225,6 +240,8 @@ void Queengine::Run(vector<Shader> &shaders,
                      (((GameObject *)this->primitives[i])->get_indices_size()) /
                          sizeof(unsigned int),
                      GL_UNSIGNED_INT, 0);
+
+
     }
 
     SDL_GL_SwapWindow(this->window);
@@ -241,7 +258,7 @@ void Queengine::HandleInput(vector<Shader> &shaders,
   }
 
   if (InputManager::GetInstance().KeyPress(SDLK_t)) {
-    Triangle *triangle = new Triangle(shaders[0]);
+    Triangle *triangle = new Triangle(shaders[0], &shaders);
     this->primitives.push_back(triangle);
   }
 
@@ -258,4 +275,9 @@ void Queengine::HandleInput(vector<Shader> &shaders,
   // for(int i = 0; i < shaderList.size(); i++){
   //}
   //}
+
+  // else if (InputManager::GetInstance.KeyPress(SDLK_KP_2)) {
+  //   shader->
+  // }
+
 }

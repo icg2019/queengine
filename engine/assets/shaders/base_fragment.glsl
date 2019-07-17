@@ -1,7 +1,10 @@
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
+    // Normalized pixel coordinates (from 0 to 1)
+    vec2 uv = fragCoord/iResolution.xy;
+
     // Time varying pixel color
-    vec3 col = vec3(1.0, 1.0, 1.0);
+    vec3 col = 1.0 + 1.0*cos(uv.xyx+vec3(1.0, 0.1, 1.0));
 
     // Output to screen
     fragColor = vec4(col, 0.1);

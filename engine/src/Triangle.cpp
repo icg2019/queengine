@@ -1,6 +1,6 @@
 #include "../include/Triangle.hpp"
 
-Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
+Triangle::Triangle(Shader shader, vector<Shader> *shaders) : bufferSet(shader.program_id) {
   std::vector<glm::vec3> coordinates = {
       glm::vec3(0.0, 0.0, 0.0), glm::vec3(1.0, 0.0, 0.0),
       glm::vec3(0.0, 1.0, 0.0),
@@ -12,6 +12,8 @@ Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
   std::vector<glm::vec1> indices = {
       glm::vec1(0.0), glm::vec1(1.0), glm::vec1(2.0),
   };
+
+  this->shaders = *shaders;
 
   this->coordinates = coordinates;
   this->texture_path = texture_path;
@@ -31,9 +33,11 @@ Triangle::Triangle(Shader shader) : bufferSet(shader.program_id) {
   this->bufferSet.add(&tex_coords, "tex_coords");
 }
 
-Triangle::Triangle(Shader shader, std::vector<glm::vec3> coordinates,
+Triangle::Triangle(Shader shader, vector<Shader> *shaders,
+                   std::vector<glm::vec3> coordinates,
                    std::vector<glm::vec1> indices)
     : bufferSet(shader.program_id), coordinates(coordinates), indices(indices) {
+
   this->texture_coordinates = std::vector<glm::vec2>(3);
   this->texture_coordinates[0] = glm::vec2(0.0, 0.0);
   this->texture_coordinates[1] = glm::vec2(1.0, 0.0);

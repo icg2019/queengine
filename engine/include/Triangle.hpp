@@ -21,8 +21,12 @@ private:
   BufferSet bufferSet;
 
 public:
-  Triangle(Shader shader);
-  Triangle(Shader shader, std::vector<glm::vec3> coordinates,
+  vector<Shader> shaders;
+  Shader shader_used;
+
+  Triangle(Shader shader, vector<Shader> *shaders);
+  Triangle(Shader shader, vector<Shader> *shaders,
+           std::vector<glm::vec3> coordinates,
            std::vector<glm::vec1> indices);
 
   std::vector<glm::vec3> get_coordinates();
