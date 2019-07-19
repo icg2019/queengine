@@ -1,42 +1,46 @@
-#ifndef RECTANGLE_HPP 
+#ifndef RECTANGLE_HPP
 #define RECTANGLE_HPP
 
 // #include <bits/stdc++.h>
-#include <string>
-#include <vector>
-#include <glm/glm.hpp>
-#include <glm/gtc/vec1.hpp>
-#include "Triangle.hpp"
-#include "Shader.h"
 #include "BufferSet.hpp"
 #include "GameObject.hpp"
+#include "Shader.h"
+#include "Triangle.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/vec1.hpp>
+#include <string>
+#include <vector>
 
 class Rectangle : public GameObject {
-	private:
-        Triangle upper_triangle;
-        Triangle lower_triangle;
-		BufferSet bufferSet;
+private:
+  std::vector<glm::vec3> coordinates;
+  std::vector<glm::vec2> texture_coordinates;
+  std::string texture_path;
+  std::vector<glm::vec1> indices;
+  BufferSet bufferSet;
 
-	public:
-        Rectangle(Shader shader);
-		Rectangle(
-			Shader shader,
-			std::vector<glm::vec3> coordinates
-		);
+public:
+  Rectangle(Shader shader);
 
-		std::vector<glm::vec3> get_coordinates();
-		void set_coordinates(std::vector<glm::vec3>);
+  std::vector<glm::vec3> get_coordinates();
+  void set_coordinates(std::vector<glm::vec3>);
 
-        unsigned int get_coordinates_size();
+  unsigned int get_coordinates_size();
 
-		std::vector<unsigned int> get_indices();
-		void set_indices(std::vector<glm::vec1>);
+  std::vector<glm::vec2> get_texture_coordinates();
+  void set_texture_coordinates(std::vector<glm::vec2>);
 
-        unsigned int get_indices_size();
+  std::string get_texture_path();
+  void set_texture_path(const std::string &);
 
-		std::vector<glm::vec2> get_texture_coordinates();
+  std::vector<unsigned int> get_indices();
+  void set_indices(std::vector<glm::vec1>);
 
-		BufferSet get_buffer_set();
+  unsigned int get_indices_size();
+
+  BufferSet get_buffer_set();
+  int get_vertice(glm::vec3);
+  bool point_is_inside(glm::vec3);
 };
 
 #endif
