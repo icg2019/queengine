@@ -8,6 +8,8 @@ e tem as seguintes funcionalidades
 
 # Como jogar
 
+Na pasta bin do repositório tem o executável do jogo..Se vc tiver o maquina virtual java, é soh executar :P
+
 - A tecla *C* faz isso
 - a tecla  *q* faz aueg
 
