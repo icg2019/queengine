@@ -16,9 +16,17 @@ e tem as seguintes funcionalidades
 
 Você precis ter instalado maquina virtual do java na seguinte configuraçao
 
-``java 10.0.1 2018-04-17
-Java(TM) SE Runtime Environment 18.3 (build 10.0.1+10)
-Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.1+10, mixed mode)``
+```java 10.0.1 2018-04-17```
+
+```Java(TM) SE Runtime Environment 18.3 (build 10.0.1+10) ```
+
+```Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.1+10, mixed mode)```
+
+Se vc estiver usando eclipse, realize as seguintes operação:
+1. crie um projeto
+2. crie um pacote "jogo"
+3. copie os arquivos da pasta X no projet
+4. compile
 
 # Queengine
 
