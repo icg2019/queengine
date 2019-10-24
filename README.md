@@ -1,3 +1,25 @@
+# Jogo Cobrinha da Carlinha
+
+O jogo da cobrinha eh pra disciplijna oo,jjbjbjbbgjbgj
+e tem as seguintes funcionalidades
+- 3 tipos de cobra (gfnskjgang)
+- 5 tipos de frutas
+- a cobra faz x coisa
+
+# Como jogar
+
+- A tecla *C* faz isso
+- a tecla  *q* faz aueg
+
+
+# Como instalar
+
+Você precis ter instalado maquina virtual do java na seguinte configuraçao
+
+``java 10.0.1 2018-04-17
+Java(TM) SE Runtime Environment 18.3 (build 10.0.1+10)
+Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.1+10, mixed mode)``
+
 # Queengine
 
 ## Dependências
